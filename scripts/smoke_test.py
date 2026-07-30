@@ -14,6 +14,7 @@ sys.path.insert(0, ROOT)
 
 from shortcut_builder import (  # noqa: E402
     build_shortcut_plist,
+    compile_recipe,
     get_template,
     inspect_shortcut_file,
     list_supported_actions,
@@ -244,6 +245,83 @@ def test_examples_load() -> None:
         assert_true(v["ok"], "{0}: {1}".format(fn, v))
 
 
+def test_magic_variables() -> None:
+    recipe = [
+        {"type": "text", "params": {"text": "A"}, "as": "A"},
+        {
+            "type": "text",
+            "params": {"text": "Hello ${as:A}"},
+            "as": "B",
+        },
+        {
+            "type": "show_result",
+            "params": {"text": {"$ref": "as:B"}},
+        },
+    ]
+    v = validate_actions(recipe)
+    assert_true(v["ok"], v)
+    compiled = compile_recipe(recipe)
+    assert_true(compiled["aliases"] == {"A": 0, "B": 1}, compiled["aliases"])
+    # second action text is WFTextTokenString
+    text_param = compiled["wf_actions"][1]["WFWorkflowActionParameters"][
+        "WFTextActionText"
+    ]
+    assert_true(
+        isinstance(text_param, dict)
+        and text_param.get("WFSerializationType") == "WFTextTokenString",
+        text_param,
+    )
+    # third action references prior UUID
+    show = compiled["wf_actions"][2]["WFWorkflowActionParameters"]["Text"]
+    assert_true(
+        show.get("WFSerializationType") == "WFTextTokenAttachment",
+        show,
+    )
+    assert_true(
+        show["Value"]["OutputUUID"]
+        == compiled["wf_actions"][1]["WFWorkflowActionParameters"]["UUID"],
+        show,
+    )
+
+    forward = validate_actions(
+        [
+            {"type": "show_result", "params": {"text": {"$action": 1}}},
+            {"type": "text", "params": {"text": "x"}},
+        ]
+    )
+    assert_true(not forward["ok"], forward)
+
+    # template
+    tpl = get_template("magic_chain")
+    assert_true(validate_actions(tpl["actions"])["ok"], tpl)
+
+    # tool surface
+    exp = mcp_server.handle_tool_call("explain_magic_vars", {})
+    assert_true(not exp.get("isError"), exp)
+    assert_true("forms" in exp["structuredContent"], exp)
+    prev = mcp_server.handle_tool_call(
+        "compile_recipe_preview",
+        {"actions": recipe, "name": "t"},
+    )
+    assert_true(not prev.get("isError"), prev)
+    assert_true(prev["structuredContent"]["action_count"] == 3, prev)
+
+
+def test_golden_fixtures() -> None:
+    check = os.path.join(ROOT, "scripts", "check_fixtures.py")
+    assert_true(os.path.isfile(check), "check_fixtures.py missing")
+    res = subprocess.run(
+        [sys.executable, check],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert_true(
+        res.returncode == 0,
+        "golden fixture mismatch:\n{0}\n{1}".format(res.stdout, res.stderr),
+    )
+
+
 def test_ndjson_initialize() -> None:
     """Spin server briefly with initialize + tools/list over NDJSON."""
     proc = subprocess.Popen(
@@ -291,7 +369,7 @@ def test_ndjson_initialize() -> None:
     assert_true(len(lines) >= 4, "unexpected stdout: {0!r}\nstderr={1!r}".format(out, err))
     init = json.loads(lines[0])
     assert_true(init["result"]["serverInfo"]["name"] == "ios-shortcuts-mcp", init)
-    assert_true(init["result"]["serverInfo"]["version"] == "2.2.0", init)
+    assert_true(init["result"]["serverInfo"]["version"] == "2.3.0", init)
     tools = json.loads(lines[1])
     assert_true(len(tools["result"]["tools"]) >= 10, tools)
     # annotations present on first tool
@@ -419,6 +497,8 @@ def main() -> int:
         test_path_sandbox_and_structured_errors,
         test_tool_annotations_and_doctor,
         test_examples_load,
+        test_magic_variables,
+        test_golden_fixtures,
         test_ndjson_initialize,
         test_protocol_error_recovery,
         test_content_length_transport,

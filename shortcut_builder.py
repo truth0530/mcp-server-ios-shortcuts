@@ -16,6 +16,16 @@ import plistlib
 import subprocess
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+from magic_vars import (
+    RecipeContext,
+    collect_aliases,
+    explain_magic_syntax,
+    resolve_params,
+    stamp_action_uuids,
+    validate_magic_refs,
+    workflow_actions_golden,
+)
+
 # ---------------------------------------------------------------------------
 # Action catalog
 # ---------------------------------------------------------------------------
@@ -430,16 +440,50 @@ TEMPLATES: Dict[str, Dict[str, Any]] = {
         ],
     },
     "clipboard_to_notification": {
-        "description": "Read clipboard and show it as a notification",
+        "description": "Read clipboard, store as variable, show result via magic ref",
         "actions": [
-            {"type": "get_clipboard", "params": {}},
+            {"type": "get_clipboard", "params": {}, "as": "ClipOut"},
             {"type": "set_variable", "params": {"var_name": "Clip"}},
             {
                 "type": "show_notification",
-                "params": {"title": "Clipboard", "body": "See content on stack / variable Clip"},
+                "params": {
+                    "title": "Clipboard",
+                    "body": "Captured via magic alias ClipOut",
+                },
             },
-            {"type": "get_variable", "params": {"var_name": "Clip"}},
-            {"type": "show_result", "params": {"text": ""}},
+            {
+                "type": "show_result",
+                "params": {"text": {"$ref": "as:ClipOut"}},
+            },
+        ],
+    },
+    "magic_chain": {
+        "description": "Demo action-output chaining with $ref and ${} interpolation",
+        "actions": [
+            {
+                "type": "text",
+                "params": {"text": "Agent"},
+                "as": "Name",
+            },
+            {
+                "type": "text",
+                "params": {"text": "Hello ${as:Name} from Shortcuts MCP"},
+                "as": "Greeting",
+            },
+            {
+                "type": "show_notification",
+                "params": {
+                    "title": {"$ref": "as:Name"},
+                    "body": {"$ref": "as:Greeting"},
+                },
+            },
+            {
+                "type": "speak_text",
+                "params": {
+                    "text": {"$action": 1},
+                    "wait": True,
+                },
+            },
         ],
     },
     "volume_max_and_notify": {
@@ -572,7 +616,11 @@ ACTION_RECIPE_ITEM_SCHEMA: Dict[str, Any] = {
         },
         "params": {
             "type": "object",
-            "description": "High-level parameters for the action",
+            "description": (
+                "High-level parameters. Values may be magic refs: "
+                "{$ref:{action_index:0}}, {$var:'X'}, or strings with "
+                "${action:0}/${var:X}/${as:Alias}/${input}."
+            ),
             "additionalProperties": True,
         },
         "arguments": {
@@ -584,6 +632,13 @@ ACTION_RECIPE_ITEM_SCHEMA: Dict[str, Any] = {
             "type": "object",
             "description": "Raw Workflow parameter dict escape hatch",
             "additionalProperties": True,
+        },
+        "as": {
+            "type": "string",
+            "description": (
+                "Optional output alias for this step. Later steps can use "
+                "{$ref:'as:Name'} or ${as:Name}."
+            ),
         },
     },
     "anyOf": [{"required": ["type"]}, {"required": ["action"]}],
@@ -939,6 +994,9 @@ def _compile_action(item: dict) -> List[dict]:
 
     if atype == "set_volume":
         vol = args.get("volume", 1.0)
+        if isinstance(vol, dict):
+            # Already-resolved magic ref / token attachment
+            return [create_action("set_volume", {"WFVolume": vol})]
         if isinstance(vol, str):
             return [
                 create_action(
@@ -997,9 +1055,11 @@ def _compile_action(item: dict) -> List[dict]:
 
     if atype == "show_result":
         # Empty text → show whatever is on the magic variable stack.
+        # Non-empty string or resolved magic-ref dict → explicit Text.
         params = {}
-        if args.get("text"):
-            params["Text"] = args["text"]
+        text = args.get("text")
+        if isinstance(text, dict) or (text is not None and str(text) != ""):
+            params["Text"] = text
         return [create_action("show_result", params)]
 
     if atype == "ask":
@@ -1036,8 +1096,11 @@ def _compile_action(item: dict) -> List[dict]:
         }
         # If text provided, prepend a Text action so the stack has content.
         if args.get("text") is not None:
+            text_val = args["text"]
+            if not isinstance(text_val, dict):
+                text_val = str(text_val)
             return [
-                create_action("text", {"WFTextActionText": str(args["text"])}),
+                create_action("text", {"WFTextActionText": text_val}),
                 create_action("set_clipboard", params),
             ]
         return [create_action("set_clipboard", params)]
@@ -1434,7 +1497,9 @@ def _semantic_check_action(
 
     if atype in {"set_volume"}:
         vol = params.get("volume", 1.0)
-        if not isinstance(vol, str):
+        if isinstance(vol, dict):
+            pass  # magic ref
+        elif not isinstance(vol, str):
             try:
                 v = float(vol)
                 if v < 0.0 or v > 1.0:
@@ -1452,7 +1517,9 @@ def _semantic_check_action(
 
     if atype in {"open_url"}:
         url = params.get("url")
-        if not url or not str(url).strip():
+        if isinstance(url, dict):
+            pass  # magic ref — checked by validate_magic_refs
+        elif not url or not str(url).strip():
             errors.append("{0}: params.url is required".format(prefix))
         elif not re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", str(url)):
             warnings.append(
@@ -1470,13 +1537,16 @@ def _semantic_check_action(
             )
 
     if atype in {"speak_text"}:
-        if not str(params.get("text", "")).strip():
+        text = params.get("text", "")
+        if not isinstance(text, dict) and not str(text).strip():
             warnings.append("{0}: empty speak text".format(prefix))
 
     if atype in {"show_notification"}:
-        if not str(params.get("title", "")).strip() and not str(
-            params.get("body", params.get("text", ""))
-        ).strip():
+        title = params.get("title", "")
+        body = params.get("body", params.get("text", ""))
+        title_empty = not isinstance(title, dict) and not str(title).strip()
+        body_empty = not isinstance(body, dict) and not str(body).strip()
+        if title_empty and body_empty:
             warnings.append("{0}: notification title/body both empty".format(prefix))
 
     if atype in {"set_variable", "get_variable", "add_to_variable"}:
@@ -1484,11 +1554,13 @@ def _semantic_check_action(
             errors.append("{0}: params.var_name is required".format(prefix))
 
     if atype in {"get_contents_of_url", "get_headers_of_url"}:
-        if not str(params.get("url", "")).strip():
+        url = params.get("url", "")
+        if not isinstance(url, dict) and not str(url).strip():
             errors.append("{0}: params.url is required".format(prefix))
 
     if atype in {"run_shell_script", "run_applescript"}:
-        if not str(params.get("script", params.get("source", ""))).strip():
+        script = params.get("script", params.get("source", ""))
+        if not isinstance(script, dict) and not str(script).strip():
             errors.append("{0}: params.script is required".format(prefix))
 
     if atype in {"run_shortcut"}:
@@ -1551,6 +1623,14 @@ def validate_actions(
     if len(actions_config) == 0 and not allow_empty:
         errors.append("'actions' must contain at least one action")
 
+    aliases, alias_errors = collect_aliases(actions_config)
+    errors.extend(alias_errors)
+    magic_errors, magic_warnings = validate_magic_refs(
+        actions_config, aliases=aliases
+    )
+    errors.extend(magic_errors)
+    warnings.extend(magic_warnings)
+
     for i, item in enumerate(actions_config):
         try:
             if not isinstance(item, dict):
@@ -1576,7 +1656,19 @@ def validate_actions(
                 if str(atype) in DANGEROUS_ACTIONS or str(atype).lower() in DANGEROUS_ACTIONS:
                     risks.append(str(atype))
 
-            parts = _compile_action(item)
+            # Resolve magic refs for compile dry-run (same as real build)
+            ctx = RecipeContext(
+                step_count=len(actions_config),
+                aliases=aliases,
+                current_index=i,
+            )
+            try:
+                resolved_item = dict(item)
+                resolved_item["params"] = resolve_params(params, ctx)
+                parts = _compile_action(resolved_item)
+            except Exception:
+                # Fall back to unresolved compile for non-ref recipes
+                parts = _compile_action(item)
             compiled += len(parts)
             gid = params.get("group_id") if isinstance(params, dict) else None
             if atype in start_types:
@@ -1690,6 +1782,59 @@ def actions_summary(actions_config: list) -> List[Dict[str, Any]]:
     return out
 
 
+def compile_recipe(
+    actions_config: list,
+    *,
+    safe_mode: bool = False,
+) -> Dict[str, Any]:
+    """
+    Compile a high-level recipe into WF actions with magic-var resolution
+    and deterministic UUIDs.
+
+    Returns:
+      {
+        "wf_actions": [...],
+        "aliases": {...},
+        "validation": {...},
+        "golden_actions": [...],  # normalized for fixture compare
+      }
+    """
+    validation = validate_actions(actions_config, safe_mode=safe_mode)
+    if not validation["ok"]:
+        raise ValueError(
+            "Invalid action recipe:\n- " + "\n- ".join(validation["errors"])
+        )
+
+    aliases, _ = collect_aliases(actions_config)
+    n = len(actions_config or [])
+    wf_actions: List[dict] = []
+
+    for i, item in enumerate(actions_config or []):
+        if not isinstance(item, dict):
+            raise ValueError("actions[{0}] must be an object".format(i))
+        params = item.get("params") or item.get("arguments") or {}
+        if params is None:
+            params = {}
+        if not isinstance(params, dict):
+            raise ValueError("actions[{0}].params must be an object".format(i))
+
+        ctx = RecipeContext(step_count=n, aliases=aliases, current_index=i)
+        resolved = dict(item)
+        resolved["params"] = resolve_params(params, ctx)
+        # Drop top-level 'as' before compile (not a WF field)
+        resolved.pop("as", None)
+        parts = _compile_action(resolved)
+        parts = stamp_action_uuids(parts, step_index=i)
+        wf_actions.extend(parts)
+
+    return {
+        "wf_actions": wf_actions,
+        "aliases": aliases,
+        "validation": validation,
+        "golden_actions": workflow_actions_golden(wf_actions),
+    }
+
+
 def build_shortcut_dict(
     actions_config: list,
     name: str = "Untitled",
@@ -1702,15 +1847,8 @@ def build_shortcut_dict(
     safe_mode: bool = False,
 ) -> dict:
     """Compile recipe → in-memory shortcut plist dictionary (unsigned)."""
-    validation = validate_actions(actions_config, safe_mode=safe_mode)
-    if not validation["ok"]:
-        raise ValueError(
-            "Invalid action recipe:\n- " + "\n- ".join(validation["errors"])
-        )
-
-    wf_actions: List[dict] = []
-    for item in actions_config:
-        wf_actions.extend(_compile_action(item))
+    compiled = compile_recipe(actions_config, safe_mode=safe_mode)
+    wf_actions = compiled["wf_actions"]
 
     if isinstance(icon_color, str):
         color_val = ICON_COLORS.get(icon_color.lower(), ICON_COLORS["red"])
@@ -1735,6 +1873,24 @@ def build_shortcut_dict(
         "WFWorkflowTypes": list(types),
         # Optional metadata (ignored by older clients, useful for debugging)
         "WFWorkflowName": name,
+    }
+
+
+def build_golden_document(
+    actions_config: list,
+    *,
+    name: str = "fixture",
+    safe_mode: bool = False,
+) -> Dict[str, Any]:
+    """Build a JSON-serializable golden document for fixture storage."""
+    compiled = compile_recipe(actions_config, safe_mode=safe_mode)
+    return {
+        "name": name,
+        "version": 1,
+        "action_count": len(compiled["wf_actions"]),
+        "aliases": compiled["aliases"],
+        "actions": compiled["golden_actions"],
+        "magic": explain_magic_syntax(),
     }
 
 
@@ -1960,4 +2116,9 @@ def build_shortcut_plist(
         "actions_summary": actions_summary(actions_config),
         "warnings": validation.get("warnings") or [],
         "risks": validation.get("risks") or [],
+        "aliases": {
+            str(item.get("as")): idx
+            for idx, item in enumerate(actions_config or [])
+            if isinstance(item, dict) and item.get("as")
+        },
     }

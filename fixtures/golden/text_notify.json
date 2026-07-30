@@ -1,0 +1,32 @@
+{
+  "name": "text_notify",
+  "version": 1,
+  "action_count": 2,
+  "aliases": {
+    "Msg": 0
+  },
+  "actions": [
+    {
+      "identifier": "is.workflow.actions.gettext",
+      "params": {
+        "UUID": "UUID#0",
+        "WFTextActionText": "Hello golden"
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.notification",
+      "params": {
+        "UUID": "UUID#1",
+        "WFNotificationActionBody": {
+          "Value": {
+            "OutputUUID": "UUID#0",
+            "Type": "ActionOutput"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        },
+        "WFNotificationActionSound": true,
+        "WFNotificationActionTitle": "Fixture"
+      }
+    }
+  ]
+}

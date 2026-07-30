@@ -1,0 +1,29 @@
+{
+  "name": "magic_chain",
+  "actions": [
+    {
+      "type": "text",
+      "params": { "text": "Agent" },
+      "as": "Name"
+    },
+    {
+      "type": "text",
+      "params": { "text": "Hello ${as:Name} from Shortcuts MCP" },
+      "as": "Greeting"
+    },
+    {
+      "type": "show_notification",
+      "params": {
+        "title": { "$ref": "as:Name" },
+        "body": { "$ref": "as:Greeting" }
+      }
+    },
+    {
+      "type": "speak_text",
+      "params": {
+        "text": { "$action": 1 },
+        "wait": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "conditional_basic",
+  "actions": [
+    { "type": "text", "params": { "text": "status: ok" }, "as": "Status" },
+    {
+      "type": "conditional_start",
+      "params": {
+        "group_id": "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE",
+        "condition": "contains",
+        "value": "ok"
+      }
+    },
+    {
+      "type": "show_notification",
+      "params": { "title": "Yes", "body": { "$ref": "as:Status" } }
+    },
+    {
+      "type": "conditional_else",
+      "params": { "group_id": "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE" }
+    },
+    {
+      "type": "show_notification",
+      "params": { "title": "No", "body": "no match" }
+    },
+    {
+      "type": "conditional_end",
+      "params": { "group_id": "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE" }
+    }
+  ]
+}

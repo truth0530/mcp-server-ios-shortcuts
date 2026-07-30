@@ -1,0 +1,67 @@
+{
+  "name": "conditional_basic",
+  "version": 1,
+  "action_count": 6,
+  "aliases": {
+    "Status": 0
+  },
+  "actions": [
+    {
+      "identifier": "is.workflow.actions.gettext",
+      "params": {
+        "UUID": "UUID#0",
+        "WFTextActionText": "status: ok"
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.conditional",
+      "params": {
+        "GroupingIdentifier": "UUID#1",
+        "UUID": "UUID#2",
+        "WFCondition": 99,
+        "WFConditionalActionString": "ok",
+        "WFControlFlowMode": 0
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.notification",
+      "params": {
+        "UUID": "UUID#3",
+        "WFNotificationActionBody": {
+          "Value": {
+            "OutputUUID": "UUID#0",
+            "Type": "ActionOutput"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        },
+        "WFNotificationActionSound": true,
+        "WFNotificationActionTitle": "Yes"
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.conditional",
+      "params": {
+        "GroupingIdentifier": "UUID#1",
+        "UUID": "UUID#4",
+        "WFControlFlowMode": 1
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.notification",
+      "params": {
+        "UUID": "UUID#5",
+        "WFNotificationActionBody": "no match",
+        "WFNotificationActionSound": true,
+        "WFNotificationActionTitle": "No"
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.conditional",
+      "params": {
+        "GroupingIdentifier": "UUID#1",
+        "UUID": "UUID#6",
+        "WFControlFlowMode": 2
+      }
+    }
+  ]
+}

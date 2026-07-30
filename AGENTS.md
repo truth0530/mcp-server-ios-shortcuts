@@ -1,4 +1,4 @@
-# Agent notes — ios-shortcuts MCP (v2.2)
+# Agent notes — ios-shortcuts MCP (v2.3)
 
 ## Purpose
 
@@ -8,11 +8,13 @@ Build, sign, import, list, run, and inspect macOS/iOS Shortcuts (`.shortcut`) vi
 
 1. `doctor` — confirm CLI + **sign probe** + allow roots  
 2. `list_actions` / `resources/read shortcut://catalog/actions` — discover primitives  
-3. `validate_recipe` — control-flow + semantic + safe_mode checks  
-4. `build_shortcut` or `build_and_install`  
-5. Prefer `inspect_shortcut` on returned `path` (auto-uses `raw_path` sibling)  
-6. `run_shortcut` smoke test (disabled when `SAFE_MODE=1`)  
-7. `send_imessage` only when shipping a file to iPhone (manual send; blocked in safe mode)
+3. `explain_magic_vars` when chaining outputs between steps  
+4. `validate_recipe` — control-flow + semantic + **magic refs** + safe_mode  
+5. Optional `compile_recipe_preview` to inspect golden-normalized WF actions  
+6. `build_shortcut` or `build_and_install`  
+7. Prefer `inspect_shortcut` on returned `path` (auto-uses `raw_path` sibling)  
+8. `run_shortcut` smoke test (disabled when `SAFE_MODE=1`)  
+9. `send_imessage` only when shipping a file to iPhone (manual send; blocked in safe mode)
 
 ## Build result shape
 
@@ -34,11 +36,15 @@ Import tools report `import_status: "import_prompted"` — GUI confirm may still
 ## Recipe rules
 
 - Each action: `{ "type": "...", "params": { ... } }` (min 1 action)  
+- Optional `"as": "Alias"` tags the step output for later `${as:Alias}` / `{$ref:"as:Alias"}`  
+- Magic refs: `{$ref:{action_index:0}}`, `{$var:"X"}`, `{$action:0}`, `{$input:true}`, or `"Hello ${as:Name}"`  
+- **No forward refs** — only earlier steps  
 - Control flow (`conditional_*`, `repeat_*`, `menu_*`) **must** nest correctly and share one `group_id` per block  
 - Semantic checks: `volume`/`brightness` ∈ [0,1], `delay.seconds` ≥ 0, URLs required for HTTP/open_url, etc.  
 - Prefer short names (`open_app`, `speak_text`); full `is.workflow.actions.*` allowed  
 - Escape hatch: `wf_params` for raw Workflow parameters  
-- Messaging defaults to compose UI (`show_compose: true`)
+- Messaging defaults to compose UI (`show_compose: true`)  
+- Details: `docs/MAGIC_VARIABLES.md`
 
 ## Client config
 

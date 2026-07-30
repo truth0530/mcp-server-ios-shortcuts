@@ -1,0 +1,43 @@
+{
+  "name": "var_and_input",
+  "version": 1,
+  "action_count": 3,
+  "aliases": {},
+  "actions": [
+    {
+      "identifier": "is.workflow.actions.gettext",
+      "params": {
+        "UUID": "UUID#0",
+        "WFTextActionText": "stored"
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.setvariable",
+      "params": {
+        "UUID": "UUID#1",
+        "WFVariableName": "Stored"
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.showresult",
+      "params": {
+        "Text": {
+          "Value": {
+            "attachmentsByRange": {
+              "{12, 1}": {
+                "Type": "ExtensionInput"
+              },
+              "{4, 1}": {
+                "Type": "Variable",
+                "VariableName": "Stored"
+              }
+            },
+            "string": "var=￼ input=￼"
+          },
+          "WFSerializationType": "WFTextTokenString"
+        },
+        "UUID": "UUID#2"
+      }
+    }
+  ]
+}

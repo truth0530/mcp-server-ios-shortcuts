@@ -21,12 +21,14 @@ import sys
 import traceback
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+from magic_vars import explain_magic_syntax
 from shortcut_builder import (
     ACTION_MAPPINGS,
     ACTION_RECIPE_ITEM_SCHEMA,
     DANGEROUS_ACTIONS,
     TEMPLATES,
     build_shortcut_plist,
+    compile_recipe,
     get_template,
     inspect_shortcut_file,
     list_supported_actions,
@@ -36,7 +38,7 @@ from shortcut_builder import (
 )
 
 SERVER_NAME = "ios-shortcuts-mcp"
-SERVER_VERSION = "2.2.0"
+SERVER_VERSION = "2.3.0"
 PROTOCOL_VERSION = "2024-11-05"
 SUPPORTED_PROTOCOL_VERSIONS = (
     "2024-11-05",
@@ -267,10 +269,26 @@ TOOLS: List[Dict[str, Any]] = [
         "validate_recipe",
         "Dry-run compile an action recipe without writing files. "
         "Returns ok/errors/warnings/risks and compiled action count. "
+        "Validates magic-variable refs ($ref / $var / $action / ${…}). "
         "Respects server safe_mode for dangerous actions.",
         {"actions": ACTIONS_ARRAY_SCHEMA},
         ["actions"],
         annotations=_ann(title="Validate Recipe", read_only=True, idempotent=True),
+    ),
+    _tool(
+        "explain_magic_vars",
+        "Document magic-variable / action-chaining syntax for recipes "
+        "($ref, $var, $action, $input, ${as:Name}, step 'as' aliases).",
+        {},
+        annotations=_ann(title="Explain Magic Vars", read_only=True, idempotent=True),
+    ),
+    _tool(
+        "compile_recipe_preview",
+        "Compile a recipe to a golden-normalized WF action list (no files written). "
+        "Useful for debugging magic refs and comparing to fixtures.",
+        {"actions": ACTIONS_ARRAY_SCHEMA, "name": {"type": "string"}},
+        ["actions"],
+        annotations=_ann(title="Compile Recipe Preview", read_only=True, idempotent=True),
     ),
     _tool(
         "build_shortcut",
@@ -590,6 +608,25 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
                 safe_mode=SAFE_MODE,
             )
             return _ok_json(result)
+
+        if tool_name == "explain_magic_vars":
+            return _ok_json(explain_magic_syntax())
+
+        if tool_name == "compile_recipe_preview":
+            compiled = compile_recipe(
+                args.get("actions", []),
+                safe_mode=SAFE_MODE,
+            )
+            return _ok_json(
+                {
+                    "name": args.get("name") or "preview",
+                    "action_count": len(compiled["wf_actions"]),
+                    "aliases": compiled["aliases"],
+                    "actions": compiled["golden_actions"],
+                    "warnings": (compiled.get("validation") or {}).get("warnings") or [],
+                    "risks": (compiled.get("validation") or {}).get("risks") or [],
+                }
+            )
 
         if tool_name == "build_shortcut":
             name = args["name"]
@@ -1166,6 +1203,7 @@ def handle_request(req: dict, *, framed: bool) -> None:
                         "Build, sign, import, list, run, and inspect iOS/macOS "
                         "Shortcuts on this Mac. Prefer list_actions → validate_recipe "
                         "→ build_shortcut (or build_and_install). Use doctor for env checks. "
+                        "Use explain_magic_vars for $ref / ${as:Name} action chaining. "
                         "Builds always keep *_raw.shortcut for inspect. "
                         "Writes are sandboxed to allow roots; safe_mode blocks shell/JXA."
                     ),
@@ -1236,6 +1274,12 @@ def handle_request(req: dict, *, framed: bool) -> None:
                             "description": "Built-in recipe templates",
                             "mimeType": "application/json",
                         },
+                        {
+                            "uri": "shortcut://docs/magic_vars",
+                            "name": "Magic variables",
+                            "description": "Action chaining / $ref syntax",
+                            "mimeType": "application/json",
+                        },
                     ]
                 },
             },
@@ -1257,6 +1301,8 @@ def handle_request(req: dict, *, framed: bool) -> None:
                 ensure_ascii=False,
                 indent=2,
             )
+        elif uri == "shortcut://docs/magic_vars":
+            body = json.dumps(explain_magic_syntax(), ensure_ascii=False, indent=2)
         else:
             if not is_notification:
                 respond(

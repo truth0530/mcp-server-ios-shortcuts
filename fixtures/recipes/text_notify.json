@@ -1,0 +1,17 @@
+{
+  "name": "text_notify",
+  "actions": [
+    {
+      "type": "text",
+      "params": { "text": "Hello golden" },
+      "as": "Msg"
+    },
+    {
+      "type": "show_notification",
+      "params": {
+        "title": "Fixture",
+        "body": { "$ref": "as:Msg" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "volume_delay",
+  "version": 1,
+  "action_count": 3,
+  "aliases": {},
+  "actions": [
+    {
+      "identifier": "is.workflow.actions.setvolume",
+      "params": {
+        "UUID": "UUID#0",
+        "WFVolume": 0.75
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.delay",
+      "params": {
+        "UUID": "UUID#1",
+        "WFDelayTime": 0.5
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.notification",
+      "params": {
+        "UUID": "UUID#2",
+        "WFNotificationActionBody": "Set to 75%",
+        "WFNotificationActionSound": true,
+        "WFNotificationActionTitle": "Volume"
+      }
+    }
+  ]
+}

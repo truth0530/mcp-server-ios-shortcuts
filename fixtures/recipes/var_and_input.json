@@ -1,0 +1,19 @@
+{
+  "name": "var_and_input",
+  "actions": [
+    {
+      "type": "text",
+      "params": { "text": "stored" }
+    },
+    {
+      "type": "set_variable",
+      "params": { "var_name": "Stored" }
+    },
+    {
+      "type": "show_result",
+      "params": {
+        "text": "var=${var:Stored} input=${input}"
+      }
+    }
+  ]
+}

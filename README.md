@@ -6,7 +6,7 @@ Zero-dependency **Model Context Protocol (MCP)** server for macOS that lets AI c
 
 | | |
 |---|---|
-| **Version** | 2.2.0 |
+| **Version** | 2.3.0 |
 | **Runtime** | Python 3.8+ (stdlib only — no `pip install`) |
 | **OS** | macOS Monterey+ (`shortcuts` CLI) |
 | **License** | MIT |
@@ -32,7 +32,9 @@ build_and_install
 | `list_actions` | Discover supported action types + param docs |
 | `list_templates` | Built-in recipe templates |
 | `get_template` | Fetch a template’s full action list |
-| `validate_recipe` | Dry-run compile (errors/warnings/risks; semantic + control-flow) |
+| `validate_recipe` | Dry-run compile (semantic + control-flow + **magic refs**) |
+| `explain_magic_vars` | Document `$ref` / `$var` / `${as:Name}` chaining syntax |
+| `compile_recipe_preview` | Golden-normalized WF preview (no files) |
 | `build_shortcut` | Build + auto-sign; returns `raw_path` + `signed_path` + summary |
 | `create_from_template` | Build from a named template |
 | `build_and_install` | Build + sign + **import prompt** (GUI, not confirmed install) |
@@ -314,7 +316,34 @@ dist/                  # Build output (gitignored artifacts)
 - `send_imessage` never auto-sends; messaging actions default to compose UI
 - Tool annotations (`readOnlyHint`, `destructiveHint`, `openWorldHint`) for client approval UX
 
-**Resources:** `shortcut://catalog/actions`, `shortcut://catalog/templates`
+**Resources:** `shortcut://catalog/actions`, `shortcut://catalog/templates`, `shortcut://docs/magic_vars`
+
+### Magic variables (v2.3)
+
+Chain prior step outputs into later params:
+
+```json
+[
+  { "type": "text", "params": { "text": "Agent" }, "as": "Name" },
+  {
+    "type": "speak_text",
+    "params": { "text": "Hello ${as:Name}", "wait": true }
+  },
+  {
+    "type": "show_result",
+    "params": { "text": { "$ref": "as:Name" } }
+  }
+]
+```
+
+See [docs/MAGIC_VARIABLES.md](./docs/MAGIC_VARIABLES.md). Template: `magic_chain`.
+
+### Golden fixtures
+
+```bash
+python3 scripts/generate_fixtures.py   # rebuild fixtures/golden
+python3 scripts/check_fixtures.py      # compare compiled output
+```
 
 ---
 
@@ -332,8 +361,9 @@ dist/                  # Build output (gitignored artifacts)
 ## Development
 
 ```bash
-# Unit / smoke (12 tests)
+# Unit / smoke (14 tests) + golden fixtures
 python3 scripts/smoke_test.py
+python3 scripts/check_fixtures.py
 
 # Build a sample without MCP
 python3 - <<'PY'
@@ -357,6 +387,15 @@ PY
 ---
 
 ## Changelog
+
+### 2.3.0
+
+- Magic variables / action chaining: `$ref`, `$var`, `$action`, `$input`, `${…}` interpolation, step `as` aliases
+- Deterministic action UUIDs (`uuid5`) for stable refs + fixtures
+- Golden fixture suite (`fixtures/recipes` → `fixtures/golden`) with generate/check scripts
+- Tools: `explain_magic_vars`, `compile_recipe_preview`
+- Template `magic_chain`; resource `shortcut://docs/magic_vars`
+- Smoke tests expanded to 14 cases
 
 ### 2.2.0
 

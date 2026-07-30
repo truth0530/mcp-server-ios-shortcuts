@@ -1,0 +1,73 @@
+{
+  "name": "magic_chain",
+  "version": 1,
+  "action_count": 4,
+  "aliases": {
+    "Name": 0,
+    "Greeting": 1
+  },
+  "actions": [
+    {
+      "identifier": "is.workflow.actions.gettext",
+      "params": {
+        "UUID": "UUID#0",
+        "WFTextActionText": "Agent"
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.gettext",
+      "params": {
+        "UUID": "UUID#1",
+        "WFTextActionText": {
+          "Value": {
+            "attachmentsByRange": {
+              "{6, 1}": {
+                "OutputUUID": "UUID#0",
+                "Type": "ActionOutput"
+              }
+            },
+            "string": "Hello ￼ from Shortcuts MCP"
+          },
+          "WFSerializationType": "WFTextTokenString"
+        }
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.notification",
+      "params": {
+        "UUID": "UUID#2",
+        "WFNotificationActionBody": {
+          "Value": {
+            "OutputUUID": "UUID#1",
+            "Type": "ActionOutput"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        },
+        "WFNotificationActionSound": true,
+        "WFNotificationActionTitle": {
+          "Value": {
+            "OutputUUID": "UUID#0",
+            "Type": "ActionOutput"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        }
+      }
+    },
+    {
+      "identifier": "is.workflow.actions.speaktext",
+      "params": {
+        "UUID": "UUID#3",
+        "WFSpeakTextLanguage": "Default",
+        "WFSpeakTextRate": 0.45,
+        "WFSpeakTextText": {
+          "Value": {
+            "OutputUUID": "UUID#1",
+            "Type": "ActionOutput"
+          },
+          "WFSerializationType": "WFTextTokenAttachment"
+        },
+        "WFSpeakTextWait": true
+      }
+    }
+  ]
+}

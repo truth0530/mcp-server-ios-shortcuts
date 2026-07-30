@@ -1,0 +1,11 @@
+{
+  "name": "volume_delay",
+  "actions": [
+    { "type": "set_volume", "params": { "volume": 0.75 } },
+    { "type": "delay", "params": { "seconds": 0.5 } },
+    {
+      "type": "show_notification",
+      "params": { "title": "Volume", "body": "Set to 75%" }
+    }
+  ]
+}
