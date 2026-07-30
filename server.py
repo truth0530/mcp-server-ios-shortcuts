@@ -40,7 +40,7 @@ from shortcut_builder import (
 )
 
 SERVER_NAME = "ios-shortcuts-mcp"
-SERVER_VERSION = "2.6.0"
+SERVER_VERSION = "2.7.0"
 PROTOCOL_VERSION = "2024-11-05"
 SUPPORTED_PROTOCOL_VERSIONS = (
     "2024-11-05",
@@ -329,20 +329,39 @@ TOOLS: List[Dict[str, Any]] = [
     ),
     _tool(
         "learn_from_corpus",
-        "Mine WF parameter key shapes from seeds, templates, fixtures, and "
-        ".shortcut files under learn roots. Writes data/learned_param_maps.json "
-        "so the generic compiler can map short keys (text, wait) → WF… keys.",
+        "Trusted learning (v2.7): mine WF param shapes from Apple Gallery .wflow, "
+        "system workflows, optional Shortcuts.sqlite (needs Full Disk Access), "
+        "and user export roots. Excludes self-built dist by default (echo-chamber guard). "
+        "Validates maps via reverse compile+sign; only accepted maps are applied. "
+        "Writes data/learned_param_maps.json + accepted_param_maps.json.",
         {
             "roots": {
                 "type": "array",
                 "items": {"type": "string"},
-                "description": "Extra directories/files to scan for .shortcut (optional)",
+                "description": "User export directories (optional)",
             },
-            "include_seeds": {"type": "boolean", "description": "default true"},
-            "include_templates": {"type": "boolean", "description": "default true"},
-            "include_fixtures": {"type": "boolean", "description": "default true"},
+            "include_gallery": {"type": "boolean", "description": "default true"},
+            "include_sqlite": {"type": "boolean", "description": "default true"},
+            "allow_self_bootstrap": {
+                "type": "boolean",
+                "description": "Include seed/template (UNTRUSTED; default false)",
+            },
+            "validate": {
+                "type": "boolean",
+                "description": "Reverse compile+sign accept filter (default true)",
+            },
         },
         annotations=_ann(title="Learn From Corpus", destructive=False),
+    ),
+    _tool(
+        "extract_system_library",
+        "Extract external shortcut plists: Apple Gallery .wflow + try Shortcuts.sqlite. "
+        "Reports TCC/Full Disk Access status if sqlite is blocked.",
+        {
+            "include_sqlite": {"type": "boolean", "description": "default true"},
+            "db_path": {"type": "string", "description": "Optional Shortcuts.sqlite path"},
+        },
+        annotations=_ann(title="Extract System Library", read_only=True),
     ),
     _tool(
         "get_learned_params",
@@ -738,7 +757,6 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
 
         if tool_name == "learn_from_corpus":
             from param_learning import (
-                default_learn_roots,
                 get_learned,
                 learned_stats,
                 run_learning,
@@ -746,15 +764,20 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
                 top_learned_actions,
             )
 
-            roots = list(default_learn_roots())
+            roots = []
             for r in args.get("roots") or []:
                 if r:
                     roots.append(str(r))
+            allow_self = _as_bool(args.get("allow_self_bootstrap", False), False)
             doc = run_learning(
-                roots=roots,
-                include_seeds=_as_bool(args.get("include_seeds", True), True),
-                include_templates=_as_bool(args.get("include_templates", True), True),
-                include_fixtures=_as_bool(args.get("include_fixtures", True), True),
+                export_roots=roots or None,
+                include_gallery=_as_bool(args.get("include_gallery", True), True),
+                include_sqlite=_as_bool(args.get("include_sqlite", True), True),
+                include_self_bootstrap=allow_self,
+                include_seeds=allow_self,
+                include_templates=allow_self,
+                include_fixtures=allow_self,
+                validate=_as_bool(args.get("validate", True), True),
             )
             path = save_learned(doc)
             get_learned(force_reload=True)
@@ -763,6 +786,43 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
                     "wrote": path,
                     "stats": learned_stats(),
                     "top": top_learned_actions(20),
+                    "extractor": doc.get("extractor"),
+                    "validation": doc.get("validation_report"),
+                }
+            )
+
+        if tool_name == "extract_system_library":
+            from library_extractor import extract_all_external
+
+            data = extract_all_external(
+                include_gallery=True,
+                include_dictation=True,
+                include_sqlite=_as_bool(args.get("include_sqlite", True), True),
+                export_roots=None,
+                db_path=args.get("db_path"),
+            )
+            # Do not return full plists (huge); summarize
+            samples = []
+            for w in (data.get("workflows") or [])[:30]:
+                acts = (w.get("plist") or {}).get("WFWorkflowActions") or []
+                samples.append(
+                    {
+                        "name": w.get("name"),
+                        "source": w.get("source"),
+                        "source_class": w.get("source_class"),
+                        "action_count": len(acts),
+                        "identifiers": [
+                            a.get("WFWorkflowActionIdentifier") for a in acts[:12]
+                        ],
+                    }
+                )
+            return _ok_json(
+                {
+                    "count": data.get("count"),
+                    "trusted_external": data.get("trusted_external"),
+                    "meta": data.get("meta"),
+                    "errors": data.get("errors"),
+                    "samples": samples,
                 }
             )
 

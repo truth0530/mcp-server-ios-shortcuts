@@ -1,1400 +1,617 @@
 {
-  "version": 1,
-  "generated_at": "2026-07-30T13:26:38Z",
+  "version": 2,
+  "generated_at": "2026-07-30T13:47:50Z",
   "sources": [
-    "seed:seed_basics",
-    "seed:seed_control",
-    "template:hello_world",
-    "template:clipboard_to_notification",
-    "template:magic_chain",
-    "template:volume_max_and_notify",
-    "template:screenshot_ocr",
-    "template:open_url_and_wait",
-    "template:shell_echo",
-    "template:morning_focus",
-    "template:http_get_sample",
-    "fixture:conditional_basic.json",
-    "fixture:magic_chain.json",
-    "fixture:text_notify.json",
-    "fixture:var_and_input.json",
-    "fixture:volume_delay.json"
+    "gallery:ActionItems.wflow",
+    "gallery:DocumentReview.wflow",
+    "gallery:GetStartedWithModels.wflow",
+    "gallery:Haiku.wflow",
+    "gallery:LeftoverRecipes.wflow",
+    "gallery:MorningReport.wflow",
+    "gallery:SummarizePDF.wflow"
   ],
-  "action_count_observed": 94,
-  "file_count": 0,
-  "recipe_count": 16,
+  "source_class_counts": {
+    "external_apple": 7
+  },
+  "action_count_observed": 44,
+  "trusted_action_count_observed": 44,
+  "file_count": 7,
+  "recipe_count": 0,
   "actions": {
-    "is.workflow.actions.comment": {
-      "identifier": "is.workflow.actions.comment",
-      "short_names": [
-        "comment"
-      ],
-      "key_freq": {
-        "WFCommentActionText": 1
-      },
-      "value_kinds": {
-        "WFCommentActionText": {
-          "string": 1
-        }
-      },
-      "short_to_wf": {
-        "comment_action_text": "WFCommentActionText",
-        "text": "WFCommentActionText",
-        "action_text": "WFCommentActionText"
-      },
-      "wf_to_short": {
-        "WFCommentActionText": "text"
-      },
-      "samples": 1,
-      "curated_alias": "comment",
-      "key_confidence": {
-        "WFCommentActionText": 1.0
-      },
-      "primary_keys": [
-        "WFCommentActionText"
-      ]
-    },
-    "is.workflow.actions.gettext": {
-      "identifier": "is.workflow.actions.gettext",
-      "short_names": [
-        "text",
-        "gettext"
-      ],
-      "key_freq": {
-        "WFTextActionText": 10
-      },
-      "value_kinds": {
-        "WFTextActionText": {
-          "string": 8,
-          "WFTextTokenString": 2
-        }
-      },
-      "short_to_wf": {
-        "text_action_text": "WFTextActionText",
-        "text": "WFTextActionText",
-        "action_text": "WFTextActionText"
-      },
-      "wf_to_short": {
-        "WFTextActionText": "text"
-      },
-      "samples": 10,
-      "curated_alias": "text",
-      "key_confidence": {
-        "WFTextActionText": 1.0
-      },
-      "primary_keys": [
-        "WFTextActionText"
-      ]
-    },
-    "is.workflow.actions.setvariable": {
-      "identifier": "is.workflow.actions.setvariable",
-      "short_names": [
-        "set_variable",
-        "setvariable"
-      ],
-      "key_freq": {
-        "WFVariableName": 4
-      },
-      "value_kinds": {
-        "WFVariableName": {
-          "string": 4
-        }
-      },
-      "short_to_wf": {
-        "variable_name": "WFVariableName",
-        "name": "WFVariableName",
-        "var_name": "WFVariableName"
-      },
-      "wf_to_short": {
-        "WFVariableName": "name"
-      },
-      "samples": 4,
-      "curated_alias": "set_variable",
-      "key_confidence": {
-        "WFVariableName": 1.0
-      },
-      "primary_keys": [
-        "WFVariableName"
-      ]
-    },
-    "is.workflow.actions.getvariable": {
-      "identifier": "is.workflow.actions.getvariable",
-      "short_names": [
-        "get_variable",
-        "getvariable"
-      ],
-      "key_freq": {
-        "WFVariable": 2
-      },
-      "value_kinds": {
-        "WFVariable": {
-          "WFTextTokenAttachment": 2
-        }
-      },
-      "short_to_wf": {
-        "variable": "WFVariable"
-      },
-      "wf_to_short": {
-        "WFVariable": "variable"
-      },
-      "samples": 2,
-      "curated_alias": "get_variable",
-      "key_confidence": {
-        "WFVariable": 1.0
-      },
-      "primary_keys": [
-        "WFVariable"
-      ]
-    },
-    "is.workflow.actions.delay": {
-      "identifier": "is.workflow.actions.delay",
-      "short_names": [
-        "delay"
-      ],
-      "key_freq": {
-        "WFDelayTime": 4
-      },
-      "value_kinds": {
-        "WFDelayTime": {
-          "float": 4
-        }
-      },
-      "short_to_wf": {
-        "delay_time": "WFDelayTime",
-        "time": "WFDelayTime",
-        "seconds": "WFDelayTime",
-        "delay": "WFDelayTime"
-      },
-      "wf_to_short": {
-        "WFDelayTime": "time"
-      },
-      "samples": 4,
-      "curated_alias": "delay",
-      "key_confidence": {
-        "WFDelayTime": 1.0
-      },
-      "primary_keys": [
-        "WFDelayTime"
-      ]
-    },
-    "is.workflow.actions.setvolume": {
-      "identifier": "is.workflow.actions.setvolume",
-      "short_names": [
-        "set_volume",
-        "setvolume"
-      ],
-      "key_freq": {
-        "WFVolume": 3
-      },
-      "value_kinds": {
-        "WFVolume": {
-          "float": 3
-        }
-      },
-      "short_to_wf": {
-        "volume": "WFVolume"
-      },
-      "wf_to_short": {
-        "WFVolume": "volume"
-      },
-      "samples": 3,
-      "curated_alias": "set_volume",
-      "key_confidence": {
-        "WFVolume": 1.0
-      },
-      "primary_keys": [
-        "WFVolume"
-      ]
-    },
-    "is.workflow.actions.speaktext": {
-      "identifier": "is.workflow.actions.speaktext",
-      "short_names": [
-        "speak_text",
-        "speaktext"
-      ],
-      "key_freq": {
-        "WFSpeakTextText": 4,
-        "WFSpeakTextWait": 4,
-        "WFSpeakTextRate": 4,
-        "WFSpeakTextLanguage": 4
-      },
-      "value_kinds": {
-        "WFSpeakTextText": {
-          "string": 2,
-          "WFTextTokenAttachment": 2
-        },
-        "WFSpeakTextWait": {
-          "bool": 4
-        },
-        "WFSpeakTextRate": {
-          "float": 4
-        },
-        "WFSpeakTextLanguage": {
-          "string": 4
-        }
-      },
-      "short_to_wf": {
-        "speak_text_text": "WFSpeakTextText",
-        "text": "WFSpeakTextText",
-        "text_text": "WFSpeakTextText",
-        "speak_text_wait": "WFSpeakTextWait",
-        "wait": "WFSpeakTextWait",
-        "text_wait": "WFSpeakTextWait",
-        "speak_text_rate": "WFSpeakTextRate",
-        "rate": "WFSpeakTextRate",
-        "text_rate": "WFSpeakTextRate",
-        "speak_text_language": "WFSpeakTextLanguage",
-        "language": "WFSpeakTextLanguage",
-        "text_language": "WFSpeakTextLanguage"
-      },
-      "wf_to_short": {
-        "WFSpeakTextText": "text",
-        "WFSpeakTextWait": "wait",
-        "WFSpeakTextRate": "rate",
-        "WFSpeakTextLanguage": "language"
-      },
-      "samples": 4,
-      "curated_alias": "speak_text",
-      "key_confidence": {
-        "WFSpeakTextText": 1.0,
-        "WFSpeakTextWait": 1.0,
-        "WFSpeakTextRate": 1.0,
-        "WFSpeakTextLanguage": 1.0
-      },
-      "primary_keys": [
-        "WFSpeakTextText",
-        "WFSpeakTextWait",
-        "WFSpeakTextRate",
-        "WFSpeakTextLanguage"
-      ]
-    },
-    "is.workflow.actions.notification": {
-      "identifier": "is.workflow.actions.notification",
-      "short_names": [
-        "show_notification",
-        "notification"
-      ],
-      "key_freq": {
-        "WFNotificationActionTitle": 14,
-        "WFNotificationActionBody": 14,
-        "WFNotificationActionSound": 14
-      },
-      "value_kinds": {
-        "WFNotificationActionTitle": {
-          "string": 12,
-          "WFTextTokenAttachment": 2
-        },
-        "WFNotificationActionBody": {
-          "string": 10,
-          "WFTextTokenAttachment": 4
-        },
-        "WFNotificationActionSound": {
-          "bool": 14
-        }
-      },
-      "short_to_wf": {
-        "notification_action_title": "WFNotificationActionTitle",
-        "title": "WFNotificationActionTitle",
-        "action_title": "WFNotificationActionTitle",
-        "notification_action_body": "WFNotificationActionBody",
-        "body": "WFNotificationActionBody",
-        "action_body": "WFNotificationActionBody",
-        "notification_action_sound": "WFNotificationActionSound",
-        "sound": "WFNotificationActionSound",
-        "action_sound": "WFNotificationActionSound"
-      },
-      "wf_to_short": {
-        "WFNotificationActionTitle": "title",
-        "WFNotificationActionBody": "body",
-        "WFNotificationActionSound": "sound"
-      },
-      "samples": 14,
-      "curated_alias": "show_notification",
-      "key_confidence": {
-        "WFNotificationActionTitle": 1.0,
-        "WFNotificationActionBody": 1.0,
-        "WFNotificationActionSound": 1.0
-      },
-      "primary_keys": [
-        "WFNotificationActionTitle",
-        "WFNotificationActionBody",
-        "WFNotificationActionSound"
-      ]
-    },
-    "is.workflow.actions.alert": {
-      "identifier": "is.workflow.actions.alert",
-      "short_names": [
-        "show_alert",
-        "alert"
-      ],
-      "key_freq": {
-        "WFAlertActionTitle": 1,
-        "WFAlertActionMessage": 1,
-        "WFAlertActionCancelButtonShown": 1
-      },
-      "value_kinds": {
-        "WFAlertActionTitle": {
-          "string": 1
-        },
-        "WFAlertActionMessage": {
-          "string": 1
-        },
-        "WFAlertActionCancelButtonShown": {
-          "bool": 1
-        }
-      },
-      "short_to_wf": {
-        "alert_action_title": "WFAlertActionTitle",
-        "title": "WFAlertActionTitle",
-        "action_title": "WFAlertActionTitle",
-        "alert_action_message": "WFAlertActionMessage",
-        "message": "WFAlertActionMessage",
-        "action_message": "WFAlertActionMessage",
-        "body": "WFAlertActionMessage",
-        "alert_action_cancel_button_shown": "WFAlertActionCancelButtonShown",
-        "shown": "WFAlertActionCancelButtonShown",
-        "button_shown": "WFAlertActionCancelButtonShown"
-      },
-      "wf_to_short": {
-        "WFAlertActionTitle": "title",
-        "WFAlertActionMessage": "body",
-        "WFAlertActionCancelButtonShown": "shown"
-      },
-      "samples": 1,
-      "curated_alias": "show_alert",
-      "key_confidence": {
-        "WFAlertActionTitle": 1.0,
-        "WFAlertActionMessage": 1.0,
-        "WFAlertActionCancelButtonShown": 1.0
-      },
-      "primary_keys": [
-        "WFAlertActionTitle",
-        "WFAlertActionMessage",
-        "WFAlertActionCancelButtonShown"
-      ]
-    },
-    "is.workflow.actions.showresult": {
-      "identifier": "is.workflow.actions.showresult",
-      "short_names": [
-        "show_result",
-        "showresult"
-      ],
-      "key_freq": {
-        "Text": 3
-      },
-      "value_kinds": {
-        "Text": {
-          "string": 1,
-          "WFTextTokenAttachment": 1,
-          "WFTextTokenString": 1
-        }
-      },
-      "short_to_wf": {
-        "text": "Text"
-      },
-      "wf_to_short": {
-        "Text": "text"
-      },
-      "samples": 6,
-      "curated_alias": "show_result",
-      "key_confidence": {
-        "Text": 1.0
-      },
-      "primary_keys": [
-        "Text"
-      ]
-    },
-    "is.workflow.actions.openurl": {
-      "identifier": "is.workflow.actions.openurl",
-      "short_names": [
-        "open_url",
-        "openurl"
-      ],
-      "key_freq": {
-        "WFInput": 2
-      },
-      "value_kinds": {
-        "WFInput": {
-          "string": 2
-        }
-      },
-      "short_to_wf": {
-        "input": "WFInput",
-        "url": "WFInput",
-        "text": "WFInput"
-      },
-      "wf_to_short": {
-        "WFInput": "url"
-      },
-      "samples": 2,
-      "curated_alias": "open_url",
-      "key_confidence": {
-        "WFInput": 1.0
-      },
-      "primary_keys": [
-        "WFInput"
-      ]
-    },
-    "is.workflow.actions.openapp": {
-      "identifier": "is.workflow.actions.openapp",
-      "short_names": [
-        "open_app",
-        "openapp"
-      ],
-      "key_freq": {
-        "WFAppIdentifier": 1,
-        "WFSelectedApp": 1
-      },
-      "value_kinds": {
-        "WFAppIdentifier": {
-          "string": 1
-        },
-        "WFSelectedApp": {
-          "app_ref": 1
-        }
-      },
-      "short_to_wf": {
-        "app_identifier": "WFAppIdentifier",
-        "identifier": "WFAppIdentifier",
-        "bundle_id": "WFAppIdentifier",
-        "selected_app": "WFSelectedApp",
-        "app": "WFSelectedApp"
-      },
-      "wf_to_short": {
-        "WFAppIdentifier": "bundle_id",
-        "WFSelectedApp": "app"
-      },
-      "samples": 1,
-      "curated_alias": "open_app",
-      "key_confidence": {
-        "WFAppIdentifier": 1.0,
-        "WFSelectedApp": 1.0
-      },
-      "primary_keys": [
-        "WFAppIdentifier",
-        "WFSelectedApp"
-      ]
-    },
-    "is.workflow.actions.getclipboard": {
-      "identifier": "is.workflow.actions.getclipboard",
-      "short_names": [
-        "get_clipboard",
-        "getclipboard"
-      ],
-      "key_freq": {},
-      "value_kinds": {},
-      "short_to_wf": {},
-      "wf_to_short": {},
-      "samples": 2,
-      "curated_alias": "get_clipboard"
-    },
-    "is.workflow.actions.setclipboard": {
-      "identifier": "is.workflow.actions.setclipboard",
-      "short_names": [
-        "set_clipboard",
-        "setclipboard"
-      ],
-      "key_freq": {
-        "WFLocalOnly": 1,
-        "WFExpirationDate": 1
-      },
-      "value_kinds": {
-        "WFLocalOnly": {
-          "bool": 1
-        },
-        "WFExpirationDate": {
-          "string": 1
-        }
-      },
-      "short_to_wf": {
-        "local_only": "WFLocalOnly",
-        "only": "WFLocalOnly",
-        "expiration_date": "WFExpirationDate",
-        "date": "WFExpirationDate"
-      },
-      "wf_to_short": {
-        "WFLocalOnly": "only",
-        "WFExpirationDate": "date"
-      },
-      "samples": 1,
-      "curated_alias": "set_clipboard",
-      "key_confidence": {
-        "WFLocalOnly": 1.0,
-        "WFExpirationDate": 1.0
-      },
-      "primary_keys": [
-        "WFLocalOnly",
-        "WFExpirationDate"
-      ]
-    },
-    "is.workflow.actions.nothing": {
-      "identifier": "is.workflow.actions.nothing",
-      "short_names": [
-        "nothing"
-      ],
-      "key_freq": {},
-      "value_kinds": {},
-      "short_to_wf": {},
-      "wf_to_short": {},
-      "samples": 1,
-      "curated_alias": "nothing"
-    },
-    "is.workflow.actions.exit": {
-      "identifier": "is.workflow.actions.exit",
-      "short_names": [
-        "exit_shortcut",
-        "exit"
-      ],
-      "key_freq": {},
-      "value_kinds": {},
-      "short_to_wf": {},
-      "wf_to_short": {},
-      "samples": 1,
-      "curated_alias": "exit_shortcut"
-    },
-    "is.workflow.actions.downloadurl": {
-      "identifier": "is.workflow.actions.downloadurl",
-      "short_names": [
-        "get_contents_of_url",
-        "downloadurl"
-      ],
-      "key_freq": {
-        "WFURL": 2,
-        "WFHTTPMethod": 2
-      },
-      "value_kinds": {
-        "WFURL": {
-          "string": 2
-        },
-        "WFHTTPMethod": {
-          "string": 2
-        }
-      },
-      "short_to_wf": {
-        "url": "WFURL",
-        "http_method": "WFHTTPMethod",
-        "method": "WFHTTPMethod"
-      },
-      "wf_to_short": {
-        "WFURL": "url",
-        "WFHTTPMethod": "method"
-      },
-      "samples": 2,
-      "curated_alias": "get_contents_of_url",
-      "key_confidence": {
-        "WFURL": 1.0,
-        "WFHTTPMethod": 1.0
-      },
-      "primary_keys": [
-        "WFURL",
-        "WFHTTPMethod"
-      ]
-    },
-    "is.workflow.actions.runshellscript": {
-      "identifier": "is.workflow.actions.runshellscript",
-      "short_names": [
-        "run_shell_script",
-        "runshellscript"
-      ],
-      "key_freq": {
-        "WFShellScript": 2,
-        "WFShellScriptShell": 2,
-        "WFInput": 2
-      },
-      "value_kinds": {
-        "WFShellScript": {
-          "string": 2
-        },
-        "WFShellScriptShell": {
-          "string": 2
-        },
-        "WFInput": {
-          "string": 2
-        }
-      },
-      "short_to_wf": {
-        "shell_script": "WFShellScript",
-        "script": "WFShellScript",
-        "shell_script_shell": "WFShellScriptShell",
-        "shell": "WFShellScriptShell",
-        "script_shell": "WFShellScriptShell",
-        "input": "WFInput",
-        "url": "WFInput",
-        "text": "WFInput"
-      },
-      "wf_to_short": {
-        "WFShellScript": "script",
-        "WFShellScriptShell": "shell",
-        "WFInput": "url"
-      },
-      "samples": 2,
-      "curated_alias": "run_shell_script",
-      "key_confidence": {
-        "WFShellScript": 1.0,
-        "WFShellScriptShell": 1.0,
-        "WFInput": 1.0
-      },
-      "primary_keys": [
-        "WFShellScript",
-        "WFShellScriptShell",
-        "WFInput"
-      ]
-    },
-    "is.workflow.actions.applescript": {
-      "identifier": "is.workflow.actions.applescript",
-      "short_names": [
-        "run_applescript",
-        "applescript"
-      ],
-      "key_freq": {
-        "WFInput": 1
-      },
-      "value_kinds": {
-        "WFInput": {
-          "string": 1
-        }
-      },
-      "short_to_wf": {
-        "input": "WFInput",
-        "url": "WFInput",
-        "text": "WFInput"
-      },
-      "wf_to_short": {
-        "WFInput": "url"
-      },
-      "samples": 1,
-      "curated_alias": "run_applescript",
-      "key_confidence": {
-        "WFInput": 1.0
-      },
-      "primary_keys": [
-        "WFInput"
-      ]
-    },
-    "is.workflow.actions.list": {
-      "identifier": "is.workflow.actions.list",
-      "short_names": [
-        "list"
-      ],
-      "key_freq": {
-        "WFItems": 1
-      },
-      "value_kinds": {
-        "WFItems": {
-          "list": 1
-        }
-      },
-      "short_to_wf": {
-        "items": "WFItems"
-      },
-      "wf_to_short": {
-        "WFItems": "items"
-      },
-      "samples": 1,
-      "curated_alias": "list",
-      "key_confidence": {
-        "WFItems": 1.0
-      },
-      "primary_keys": [
-        "WFItems"
-      ]
-    },
-    "is.workflow.actions.dictionary": {
-      "identifier": "is.workflow.actions.dictionary",
-      "short_names": [
-        "dictionary"
-      ],
-      "key_freq": {
-        "WFItems": 1
-      },
-      "value_kinds": {
-        "WFItems": {
-          "dict": 1
-        }
-      },
-      "short_to_wf": {
-        "items": "WFItems"
-      },
-      "wf_to_short": {
-        "WFItems": "items"
-      },
-      "samples": 1,
-      "curated_alias": "dictionary",
-      "key_confidence": {
-        "WFItems": 1.0
-      },
-      "primary_keys": [
-        "WFItems"
-      ]
-    },
-    "is.workflow.actions.count": {
-      "identifier": "is.workflow.actions.count",
-      "short_names": [
-        "count"
-      ],
-      "key_freq": {
-        "WFCountType": 1
-      },
-      "value_kinds": {
-        "WFCountType": {
-          "string": 1
-        }
-      },
-      "short_to_wf": {
-        "count_type": "WFCountType",
-        "type": "WFCountType"
-      },
-      "wf_to_short": {
-        "WFCountType": "type"
-      },
-      "samples": 1,
-      "curated_alias": "count",
-      "key_confidence": {
-        "WFCountType": 1.0
-      },
-      "primary_keys": [
-        "WFCountType"
-      ]
-    },
-    "is.workflow.actions.calculate": {
-      "identifier": "is.workflow.actions.calculate",
-      "short_names": [
-        "calculate"
-      ],
-      "key_freq": {
-        "WFMathOperation": 1,
-        "WFNumberOperand": 1
-      },
-      "value_kinds": {
-        "WFMathOperation": {
-          "string": 1
-        },
-        "WFNumberOperand": {
-          "float": 1
-        }
-      },
-      "short_to_wf": {
-        "math_operation": "WFMathOperation",
-        "operation": "WFMathOperation",
-        "number_operand": "WFNumberOperand",
-        "operand": "WFNumberOperand"
-      },
-      "wf_to_short": {
-        "WFMathOperation": "operation",
-        "WFNumberOperand": "operand"
-      },
-      "samples": 1,
-      "curated_alias": "calculate",
-      "key_confidence": {
-        "WFMathOperation": 1.0,
-        "WFNumberOperand": 1.0
-      },
-      "primary_keys": [
-        "WFMathOperation",
-        "WFNumberOperand"
-      ]
-    },
-    "is.workflow.actions.text.changecase": {
-      "identifier": "is.workflow.actions.text.changecase",
-      "short_names": [
-        "change_case",
-        "text_changecase"
-      ],
-      "key_freq": {
-        "Show-text_case": 1,
-        "WFCaseType": 1
-      },
-      "value_kinds": {
-        "Show-text_case": {
-          "bool": 1
-        },
-        "WFCaseType": {
-          "string": 1
-        }
-      },
-      "short_to_wf": {
-        "show-text_case": "Show-text_case",
-        "case": "Show-text_case",
-        "case_type": "WFCaseType",
-        "type": "WFCaseType"
-      },
-      "wf_to_short": {
-        "Show-text_case": "case",
-        "WFCaseType": "type"
-      },
-      "samples": 1,
-      "curated_alias": "change_case",
-      "key_confidence": {
-        "Show-text_case": 1.0,
-        "WFCaseType": 1.0
-      },
-      "primary_keys": [
-        "Show-text_case",
-        "WFCaseType"
-      ]
-    },
-    "is.workflow.actions.text.replace": {
-      "identifier": "is.workflow.actions.text.replace",
-      "short_names": [
-        "replace_text",
-        "text_replace"
-      ],
-      "key_freq": {
-        "WFReplaceTextFind": 1,
-        "WFReplaceTextReplace": 1,
-        "WFReplaceTextCaseSensitive": 1,
-        "WFReplaceTextRegularExpression": 1
-      },
-      "value_kinds": {
-        "WFReplaceTextFind": {
-          "string": 1
-        },
-        "WFReplaceTextReplace": {
-          "string": 1
-        },
-        "WFReplaceTextCaseSensitive": {
-          "bool": 1
-        },
-        "WFReplaceTextRegularExpression": {
-          "bool": 1
-        }
-      },
-      "short_to_wf": {
-        "replace_text_find": "WFReplaceTextFind",
-        "find": "WFReplaceTextFind",
-        "text_find": "WFReplaceTextFind",
-        "replace_text_replace": "WFReplaceTextReplace",
-        "replace": "WFReplaceTextReplace",
-        "text_replace": "WFReplaceTextReplace",
-        "replace_text_case_sensitive": "WFReplaceTextCaseSensitive",
-        "sensitive": "WFReplaceTextCaseSensitive",
-        "case_sensitive": "WFReplaceTextCaseSensitive",
-        "replace_text_regular_expression": "WFReplaceTextRegularExpression",
-        "expression": "WFReplaceTextRegularExpression",
-        "regular_expression": "WFReplaceTextRegularExpression"
-      },
-      "wf_to_short": {
-        "WFReplaceTextFind": "find",
-        "WFReplaceTextReplace": "replace",
-        "WFReplaceTextCaseSensitive": "sensitive",
-        "WFReplaceTextRegularExpression": "expression"
-      },
-      "samples": 1,
-      "curated_alias": "replace_text",
-      "key_confidence": {
-        "WFReplaceTextFind": 1.0,
-        "WFReplaceTextReplace": 1.0,
-        "WFReplaceTextCaseSensitive": 1.0,
-        "WFReplaceTextRegularExpression": 1.0
-      },
-      "primary_keys": [
-        "WFReplaceTextFind",
-        "WFReplaceTextReplace",
-        "WFReplaceTextCaseSensitive",
-        "WFReplaceTextRegularExpression"
-      ]
-    },
-    "is.workflow.actions.text.split": {
-      "identifier": "is.workflow.actions.text.split",
-      "short_names": [
-        "split_text",
-        "text_split"
-      ],
-      "key_freq": {
-        "WFTextSeparator": 1
-      },
-      "value_kinds": {
-        "WFTextSeparator": {
-          "string": 1
-        }
-      },
-      "short_to_wf": {
-        "text_separator": "WFTextSeparator",
-        "separator": "WFTextSeparator"
-      },
-      "wf_to_short": {
-        "WFTextSeparator": "separator"
-      },
-      "samples": 1,
-      "curated_alias": "split_text",
-      "key_confidence": {
-        "WFTextSeparator": 1.0
-      },
-      "primary_keys": [
-        "WFTextSeparator"
-      ]
-    },
-    "is.workflow.actions.text.combine": {
-      "identifier": "is.workflow.actions.text.combine",
-      "short_names": [
-        "combine_text",
-        "text_combine"
-      ],
-      "key_freq": {
-        "WFTextSeparator": 1
-      },
-      "value_kinds": {
-        "WFTextSeparator": {
-          "string": 1
-        }
-      },
-      "short_to_wf": {
-        "text_separator": "WFTextSeparator",
-        "separator": "WFTextSeparator"
-      },
-      "wf_to_short": {
-        "WFTextSeparator": "separator"
-      },
-      "samples": 1,
-      "curated_alias": "combine_text",
-      "key_confidence": {
-        "WFTextSeparator": 1.0
-      },
-      "primary_keys": [
-        "WFTextSeparator"
-      ]
-    },
-    "is.workflow.actions.takescreenshot": {
-      "identifier": "is.workflow.actions.takescreenshot",
-      "short_names": [
-        "take_screenshot",
-        "takescreenshot"
-      ],
-      "key_freq": {},
-      "value_kinds": {},
-      "short_to_wf": {},
-      "wf_to_short": {},
-      "samples": 2,
-      "curated_alias": "take_screenshot"
-    },
-    "is.workflow.actions.extracttextfromimage": {
-      "identifier": "is.workflow.actions.extracttextfromimage",
-      "short_names": [
-        "ocr_extract_text",
-        "extracttextfromimage"
-      ],
-      "key_freq": {},
-      "value_kinds": {},
-      "short_to_wf": {},
-      "wf_to_short": {},
-      "samples": 2,
-      "curated_alias": "ocr_extract_text"
-    },
-    "is.workflow.actions.getbatterylevel": {
-      "identifier": "is.workflow.actions.getbatterylevel",
-      "short_names": [
-        "get_battery",
-        "getbatterylevel"
-      ],
-      "key_freq": {},
-      "value_kinds": {},
-      "short_to_wf": {},
-      "wf_to_short": {},
-      "samples": 1,
-      "curated_alias": "get_battery"
-    },
-    "is.workflow.actions.getdevicedetails": {
-      "identifier": "is.workflow.actions.getdevicedetails",
-      "short_names": [
-        "get_device_details",
-        "getdevicedetails"
-      ],
-      "key_freq": {
-        "WFDeviceDetail": 1
-      },
-      "value_kinds": {
-        "WFDeviceDetail": {
-          "string": 1
-        }
-      },
-      "short_to_wf": {
-        "device_detail": "WFDeviceDetail",
-        "detail": "WFDeviceDetail"
-      },
-      "wf_to_short": {
-        "WFDeviceDetail": "detail"
-      },
-      "samples": 1,
-      "curated_alias": "get_device_details",
-      "key_confidence": {
-        "WFDeviceDetail": 1.0
-      },
-      "primary_keys": [
-        "WFDeviceDetail"
-      ]
-    },
-    "is.workflow.actions.wifi.set": {
-      "identifier": "is.workflow.actions.wifi.set",
-      "short_names": [
-        "set_wifi",
-        "wifi_set"
-      ],
-      "key_freq": {
-        "OnValue": 1
-      },
-      "value_kinds": {
-        "OnValue": {
-          "bool": 1
-        }
-      },
-      "short_to_wf": {
-        "on_value": "OnValue",
-        "value": "OnValue"
-      },
-      "wf_to_short": {
-        "OnValue": "value"
-      },
-      "samples": 1,
-      "curated_alias": "set_wifi",
-      "key_confidence": {
-        "OnValue": 1.0
-      },
-      "primary_keys": [
-        "OnValue"
-      ]
-    },
-    "is.workflow.actions.bluetooth.set": {
-      "identifier": "is.workflow.actions.bluetooth.set",
-      "short_names": [
-        "set_bluetooth",
-        "bluetooth_set"
-      ],
-      "key_freq": {
-        "OnValue": 1
-      },
-      "value_kinds": {
-        "OnValue": {
-          "bool": 1
-        }
-      },
-      "short_to_wf": {
-        "on_value": "OnValue",
-        "value": "OnValue"
-      },
-      "wf_to_short": {
-        "OnValue": "value"
-      },
-      "samples": 1,
-      "curated_alias": "set_bluetooth",
-      "key_confidence": {
-        "OnValue": 1.0
-      },
-      "primary_keys": [
-        "OnValue"
-      ]
-    },
-    "is.workflow.actions.dnd.set": {
-      "identifier": "is.workflow.actions.dnd.set",
-      "short_names": [
-        "set_focus",
-        "dnd_set"
-      ],
-      "key_freq": {
-        "FocusMode": 2,
-        "UntilTurnedOff": 2
-      },
-      "value_kinds": {
-        "FocusMode": {
-          "string": 2
-        },
-        "UntilTurnedOff": {
-          "bool": 2
-        }
-      },
-      "short_to_wf": {
-        "focus_mode": "FocusMode",
-        "mode": "FocusMode",
-        "until_turned_off": "UntilTurnedOff",
-        "off": "UntilTurnedOff",
-        "turned_off": "UntilTurnedOff"
-      },
-      "wf_to_short": {
-        "FocusMode": "mode",
-        "UntilTurnedOff": "off"
-      },
-      "samples": 2,
-      "curated_alias": "set_focus",
-      "key_confidence": {
-        "FocusMode": 1.0,
-        "UntilTurnedOff": 1.0
-      },
-      "primary_keys": [
-        "FocusMode",
-        "UntilTurnedOff"
-      ]
-    },
     "is.workflow.actions.ask": {
       "identifier": "is.workflow.actions.ask",
       "short_names": [
         "ask"
       ],
       "key_freq": {
-        "WFAskActionPrompt": 1,
-        "WFAskActionDefaultAnswer": 1,
-        "WFInputType": 1
+        "WFAskActionPrompt": 3
+      },
+      "key_freq_trusted": {
+        "WFAskActionPrompt": 3
       },
       "value_kinds": {
         "WFAskActionPrompt": {
-          "string": 1
-        },
-        "WFAskActionDefaultAnswer": {
-          "string": 1
-        },
-        "WFInputType": {
-          "string": 1
+          "string": 3
         }
+      },
+      "value_kinds_trusted": {
+        "WFAskActionPrompt": {
+          "string": 3
+        }
+      },
+      "string_samples": {
+        "WFAskActionPrompt": [
+          "What’s the meeting note name?",
+          "What’s the topic?",
+          "What do you have left in your fridge?"
+        ]
+      },
+      "string_samples_trusted": {
+        "WFAskActionPrompt": [
+          "What’s the meeting note name?",
+          "What’s the topic?",
+          "What do you have left in your fridge?"
+        ]
+      },
+      "source_classes": {
+        "external_apple": 3
       },
       "short_to_wf": {
         "ask_action_prompt": "WFAskActionPrompt",
-        "prompt": "WFAskActionPrompt",
         "action_prompt": "WFAskActionPrompt",
-        "ask_action_default_answer": "WFAskActionDefaultAnswer",
-        "answer": "WFAskActionDefaultAnswer",
-        "default_answer": "WFAskActionDefaultAnswer",
-        "input_type": "WFInputType",
-        "type": "WFInputType"
+        "prompt": "WFAskActionPrompt"
+      },
+      "short_to_wf_trusted": {
+        "ask_action_prompt": "WFAskActionPrompt",
+        "action_prompt": "WFAskActionPrompt",
+        "prompt": "WFAskActionPrompt"
+      },
+      "accepted_short_to_wf": {
+        "ask_action_prompt": "WFAskActionPrompt",
+        "action_prompt": "WFAskActionPrompt",
+        "prompt": "WFAskActionPrompt"
+      },
+      "param_schema": {
+        "WFAskActionPrompt": {
+          "kind": "free_text",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        }
       },
       "wf_to_short": {
-        "WFAskActionPrompt": "prompt",
-        "WFAskActionDefaultAnswer": "answer",
-        "WFInputType": "type"
+        "WFAskActionPrompt": "prompt"
       },
-      "samples": 1,
+      "samples": 3,
+      "samples_trusted": 3,
       "curated_alias": "ask",
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFAskActionPrompt"
+        ]
+      },
+      "maps_from_trusted": true,
       "key_confidence": {
-        "WFAskActionPrompt": 1.0,
-        "WFAskActionDefaultAnswer": 1.0,
-        "WFInputType": 1.0
+        "WFAskActionPrompt": 1.0
       },
       "primary_keys": [
-        "WFAskActionPrompt",
-        "WFAskActionDefaultAnswer",
-        "WFInputType"
+        "WFAskActionPrompt"
       ]
     },
-    "is.workflow.actions.vibrate": {
-      "identifier": "is.workflow.actions.vibrate",
+    "is.workflow.actions.filter.notes": {
+      "identifier": "is.workflow.actions.filter.notes",
       "short_names": [
-        "vibrate"
-      ],
-      "key_freq": {},
-      "value_kinds": {},
-      "short_to_wf": {},
-      "wf_to_short": {},
-      "samples": 1,
-      "curated_alias": "vibrate"
-    },
-    "is.workflow.actions.playsound": {
-      "identifier": "is.workflow.actions.playsound",
-      "short_names": [
-        "play_sound",
-        "playsound"
-      ],
-      "key_freq": {},
-      "value_kinds": {},
-      "short_to_wf": {},
-      "wf_to_short": {},
-      "samples": 1,
-      "curated_alias": "play_sound"
-    },
-    "is.workflow.actions.sendmessage": {
-      "identifier": "is.workflow.actions.sendmessage",
-      "short_names": [
-        "send_message",
-        "sendmessage"
+        "filter_notes"
       ],
       "key_freq": {
-        "WFSendMessageActionRecipients": 1,
-        "WFSendMessageContent": 1,
-        "ShowWhenRun": 1
+        "WFContentItemFilter": 1,
+        "AppIntentDescriptor": 1
+      },
+      "key_freq_trusted": {
+        "WFContentItemFilter": 1,
+        "AppIntentDescriptor": 1
       },
       "value_kinds": {
-        "WFSendMessageActionRecipients": {
-          "list": 1
+        "WFContentItemFilter": {
+          "WFContentPredicateTableTemplate": 1
         },
-        "WFSendMessageContent": {
-          "string": 1
-        },
-        "ShowWhenRun": {
-          "bool": 1
+        "AppIntentDescriptor": {
+          "app_ref": 1
         }
       },
-      "short_to_wf": {
-        "send_message_action_recipients": "WFSendMessageActionRecipients",
-        "recipients": "WFSendMessageActionRecipients",
-        "action_recipients": "WFSendMessageActionRecipients",
-        "send_message_content": "WFSendMessageContent",
-        "content": "WFSendMessageContent",
-        "message_content": "WFSendMessageContent",
-        "show_when_run": "ShowWhenRun",
-        "run": "ShowWhenRun",
-        "when_run": "ShowWhenRun"
-      },
-      "wf_to_short": {
-        "WFSendMessageActionRecipients": "recipients",
-        "WFSendMessageContent": "content",
-        "ShowWhenRun": "run"
-      },
-      "samples": 1,
-      "curated_alias": "send_message",
-      "key_confidence": {
-        "WFSendMessageActionRecipients": 1.0,
-        "WFSendMessageContent": 1.0,
-        "ShowWhenRun": 1.0
-      },
-      "primary_keys": [
-        "WFSendMessageActionRecipients",
-        "WFSendMessageContent",
-        "ShowWhenRun"
-      ]
-    },
-    "is.workflow.actions.sendemail": {
-      "identifier": "is.workflow.actions.sendemail",
-      "short_names": [
-        "send_email",
-        "sendemail"
-      ],
-      "key_freq": {
-        "WFSendEmailActionToRecipients": 1,
-        "WFSendEmailActionSubject": 1,
-        "WFSendEmailActionBody": 1,
-        "ShowWhenRun": 1
-      },
-      "value_kinds": {
-        "WFSendEmailActionToRecipients": {
-          "list": 1
+      "value_kinds_trusted": {
+        "WFContentItemFilter": {
+          "WFContentPredicateTableTemplate": 1
         },
-        "WFSendEmailActionSubject": {
-          "string": 1
-        },
-        "WFSendEmailActionBody": {
-          "string": 1
-        },
-        "ShowWhenRun": {
-          "bool": 1
+        "AppIntentDescriptor": {
+          "app_ref": 1
         }
       },
+      "string_samples": {},
+      "string_samples_trusted": {},
+      "source_classes": {
+        "external_apple": 1
+      },
       "short_to_wf": {
-        "send_email_action_to_recipients": "WFSendEmailActionToRecipients",
-        "recipients": "WFSendEmailActionToRecipients",
-        "to_recipients": "WFSendEmailActionToRecipients",
-        "send_email_action_subject": "WFSendEmailActionSubject",
-        "subject": "WFSendEmailActionSubject",
-        "action_subject": "WFSendEmailActionSubject",
-        "send_email_action_body": "WFSendEmailActionBody",
-        "body": "WFSendEmailActionBody",
-        "action_body": "WFSendEmailActionBody",
-        "show_when_run": "ShowWhenRun",
-        "run": "ShowWhenRun",
-        "when_run": "ShowWhenRun"
+        "app_intent_descriptor": "AppIntentDescriptor",
+        "content_item_filter": "WFContentItemFilter",
+        "intent_descriptor": "AppIntentDescriptor",
+        "item_filter": "WFContentItemFilter",
+        "descriptor": "AppIntentDescriptor",
+        "filter": "WFContentItemFilter"
       },
-      "wf_to_short": {
-        "WFSendEmailActionToRecipients": "recipients",
-        "WFSendEmailActionSubject": "subject",
-        "WFSendEmailActionBody": "body",
-        "ShowWhenRun": "run"
+      "short_to_wf_trusted": {
+        "app_intent_descriptor": "AppIntentDescriptor",
+        "content_item_filter": "WFContentItemFilter",
+        "intent_descriptor": "AppIntentDescriptor",
+        "item_filter": "WFContentItemFilter",
+        "descriptor": "AppIntentDescriptor",
+        "filter": "WFContentItemFilter"
       },
-      "samples": 1,
-      "curated_alias": "send_email",
-      "key_confidence": {
-        "WFSendEmailActionToRecipients": 1.0,
-        "WFSendEmailActionSubject": 1.0,
-        "WFSendEmailActionBody": 1.0,
-        "ShowWhenRun": 1.0
+      "accepted_short_to_wf": {
+        "app_intent_descriptor": "AppIntentDescriptor",
+        "content_item_filter": "WFContentItemFilter",
+        "intent_descriptor": "AppIntentDescriptor",
+        "item_filter": "WFContentItemFilter",
+        "descriptor": "AppIntentDescriptor",
+        "filter": "WFContentItemFilter"
       },
-      "primary_keys": [
-        "WFSendEmailActionToRecipients",
-        "WFSendEmailActionSubject",
-        "WFSendEmailActionBody",
-        "ShowWhenRun"
-      ]
-    },
-    "is.workflow.actions.runworkflow": {
-      "identifier": "is.workflow.actions.runworkflow",
-      "short_names": [
-        "run_shortcut",
-        "runworkflow"
-      ],
-      "key_freq": {
-        "WFWorkflowName": 1,
-        "WFShowWorkflow": 1
-      },
-      "value_kinds": {
-        "WFWorkflowName": {
-          "string": 1
+      "param_schema": {
+        "WFContentItemFilter": {
+          "kind": "unknown",
+          "coerce": "off",
+          "confidence": 0.0
         },
-        "WFShowWorkflow": {
-          "bool": 1
+        "AppIntentDescriptor": {
+          "kind": "unknown",
+          "coerce": "off",
+          "confidence": 0.0
         }
       },
-      "short_to_wf": {
-        "workflow_name": "WFWorkflowName",
-        "name": "WFWorkflowName",
-        "show_workflow": "WFShowWorkflow",
-        "workflow": "WFShowWorkflow"
-      },
       "wf_to_short": {
-        "WFWorkflowName": "name",
-        "WFShowWorkflow": "workflow"
+        "AppIntentDescriptor": "descriptor",
+        "WFContentItemFilter": "filter"
       },
       "samples": 1,
-      "curated_alias": "run_shortcut",
+      "samples_trusted": 1,
+      "curated_alias": null,
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "AppIntentDescriptor",
+          "WFContentItemFilter"
+        ]
+      },
+      "maps_from_trusted": true,
       "key_confidence": {
-        "WFWorkflowName": 1.0,
-        "WFShowWorkflow": 1.0
+        "WFContentItemFilter": 1.0,
+        "AppIntentDescriptor": 1.0
       },
       "primary_keys": [
-        "WFWorkflowName",
-        "WFShowWorkflow"
+        "WFContentItemFilter",
+        "AppIntentDescriptor"
       ]
     },
-    "is.workflow.actions.conditional": {
-      "identifier": "is.workflow.actions.conditional",
+    "is.workflow.actions.askllm": {
+      "identifier": "is.workflow.actions.askllm",
       "short_names": [
-        "conditional"
+        "askllm"
       ],
       "key_freq": {
-        "GroupingIdentifier": 6,
-        "WFControlFlowMode": 6,
-        "WFCondition": 2,
-        "WFConditionalActionString": 2
+        "WFGenerativeResultType": 5,
+        "WFLLMPrompt": 8,
+        "WFLLMModel": 4,
+        "FollowUp": 2
+      },
+      "key_freq_trusted": {
+        "WFGenerativeResultType": 5,
+        "WFLLMPrompt": 8,
+        "WFLLMModel": 4,
+        "FollowUp": 2
       },
       "value_kinds": {
+        "WFGenerativeResultType": {
+          "string": 5
+        },
+        "WFLLMPrompt": {
+          "WFTextTokenString": 7,
+          "string": 1
+        },
+        "WFLLMModel": {
+          "string": 4
+        },
+        "FollowUp": {
+          "bool": 2
+        }
+      },
+      "value_kinds_trusted": {
+        "WFGenerativeResultType": {
+          "string": 5
+        },
+        "WFLLMPrompt": {
+          "WFTextTokenString": 7,
+          "string": 1
+        },
+        "WFLLMModel": {
+          "string": 4
+        },
+        "FollowUp": {
+          "bool": 2
+        }
+      },
+      "string_samples": {
+        "WFGenerativeResultType": [
+          "List",
+          "Dictionary",
+          "Text",
+          "Automatic"
+        ],
+        "WFLLMPrompt": [
+          "Here's the contents of a meeting note. Can you help me identify any outstanding action items that haven't been addressed yet?\n\n￼",
+          "Compare and contrast these two documents with a high-level summary of each and any key differences between the documents.\n\n￼",
+          "Write me a concise, fun summary of today's weather: ￼",
+          "Sort these fruits from largest to smallest, and remove any items that are not fruits.\n\n￼",
+          "List every planet in the solar system and its diameter. The keys should be the planet name and the values should be the corresponding diameter in kilometers.",
+          "Create a funny haiku for this topic: ￼",
+          "Help me with a recipe based on what I have left in my fridge: ￼",
+          "Give me a morning report summarizing my day based on this info -- format it nicely with bold text, headers, separators, bullet points, and emoji if needed, and start with the weather (with the high and low)! Be very concise about the calendar events! If you don't see any calendar events or reminders, just tell me there is nothing planned for the day.\n\n￼\n￼\n￼"
+        ],
+        "WFLLMModel": [
+          "Apple Intelligence"
+        ]
+      },
+      "string_samples_trusted": {
+        "WFGenerativeResultType": [
+          "List",
+          "Dictionary",
+          "Text",
+          "Automatic"
+        ],
+        "WFLLMModel": [
+          "Apple Intelligence"
+        ],
+        "WFLLMPrompt": [
+          "List every planet in the solar system and its diameter. The keys should be the planet name and the values should be the corresponding diameter in kilometers."
+        ]
+      },
+      "source_classes": {
+        "external_apple": 8
+      },
+      "short_to_wf": {
+        "llm_prompt": "WFLLMPrompt",
+        "prompt": "WFLLMPrompt",
+        "generative_result_type": "WFGenerativeResultType",
+        "result_type": "WFGenerativeResultType",
+        "type": "WFGenerativeResultType",
+        "llm_model": "WFLLMModel",
+        "model": "WFLLMModel",
+        "follow_up": "FollowUp",
+        "up": "FollowUp"
+      },
+      "short_to_wf_trusted": {
+        "llm_prompt": "WFLLMPrompt",
+        "prompt": "WFLLMPrompt",
+        "generative_result_type": "WFGenerativeResultType",
+        "result_type": "WFGenerativeResultType",
+        "type": "WFGenerativeResultType",
+        "llm_model": "WFLLMModel",
+        "model": "WFLLMModel",
+        "follow_up": "FollowUp",
+        "up": "FollowUp"
+      },
+      "accepted_short_to_wf": {
+        "llm_prompt": "WFLLMPrompt",
+        "prompt": "WFLLMPrompt",
+        "generative_result_type": "WFGenerativeResultType",
+        "result_type": "WFGenerativeResultType",
+        "type": "WFGenerativeResultType",
+        "llm_model": "WFLLMModel",
+        "model": "WFLLMModel",
+        "follow_up": "FollowUp",
+        "up": "FollowUp"
+      },
+      "param_schema": {
+        "WFGenerativeResultType": {
+          "kind": "enum",
+          "coerce": "plain_string",
+          "values": [
+            "List",
+            "Dictionary",
+            "Text",
+            "Automatic"
+          ],
+          "confidence": 1.0
+        },
+        "WFLLMPrompt": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 0.875
+        },
+        "WFLLMModel": {
+          "kind": "free_text",
+          "coerce": "plain_string",
+          "confidence": 1.0
+        },
+        "FollowUp": {
+          "kind": "bool",
+          "coerce": "plain_bool",
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "WFLLMPrompt": "prompt",
+        "WFGenerativeResultType": "type",
+        "WFLLMModel": "model",
+        "FollowUp": "up"
+      },
+      "samples": 8,
+      "samples_trusted": 8,
+      "curated_alias": null,
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFLLMPrompt",
+          "WFGenerativeResultType",
+          "WFLLMModel",
+          "FollowUp"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFGenerativeResultType": 0.625,
+        "WFLLMPrompt": 1.0,
+        "WFLLMModel": 0.5,
+        "FollowUp": 0.25
+      },
+      "primary_keys": [
+        "WFLLMPrompt",
+        "WFGenerativeResultType",
+        "WFLLMModel",
+        "FollowUp"
+      ]
+    },
+    "is.workflow.actions.repeat.each": {
+      "identifier": "is.workflow.actions.repeat.each",
+      "short_names": [
+        "repeat_each"
+      ],
+      "key_freq": {
+        "WFInput": 1,
+        "GroupingIdentifier": 2,
+        "WFControlFlowMode": 2
+      },
+      "key_freq_trusted": {
+        "WFInput": 1,
+        "GroupingIdentifier": 2,
+        "WFControlFlowMode": 2
+      },
+      "value_kinds": {
+        "WFInput": {
+          "WFTextTokenAttachment": 1
+        },
         "GroupingIdentifier": {
-          "string": 6
+          "string": 2
         },
         "WFControlFlowMode": {
-          "int": 6
-        },
-        "WFCondition": {
           "int": 2
-        },
-        "WFConditionalActionString": {
-          "string": 2
         }
       },
+      "value_kinds_trusted": {
+        "WFInput": {
+          "WFTextTokenAttachment": 1
+        },
+        "GroupingIdentifier": {
+          "string": 2
+        },
+        "WFControlFlowMode": {
+          "int": 2
+        }
+      },
+      "string_samples": {
+        "GroupingIdentifier": [
+          "4FE52545-1A5A-444C-B8F9-DEAB1825B1B7"
+        ]
+      },
+      "string_samples_trusted": {
+        "GroupingIdentifier": [
+          "4FE52545-1A5A-444C-B8F9-DEAB1825B1B7"
+        ]
+      },
+      "source_classes": {
+        "external_apple": 2
+      },
       "short_to_wf": {
-        "condition": "WFCondition",
-        "conditional_action_string": "WFConditionalActionString",
-        "string": "WFConditionalActionString",
-        "action_string": "WFConditionalActionString"
+        "input": "WFInput"
+      },
+      "short_to_wf_trusted": {
+        "input": "WFInput"
+      },
+      "accepted_short_to_wf": {
+        "input": "WFInput"
+      },
+      "param_schema": {
+        "WFInput": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        },
+        "GroupingIdentifier": {
+          "kind": "enum",
+          "coerce": "plain_string",
+          "values": [
+            "4FE52545-1A5A-444C-B8F9-DEAB1825B1B7"
+          ],
+          "confidence": 1.0
+        },
+        "WFControlFlowMode": {
+          "kind": "unknown",
+          "coerce": "off",
+          "confidence": 0.0
+        }
       },
       "wf_to_short": {
-        "WFCondition": "condition",
-        "WFConditionalActionString": "string"
+        "WFInput": "input"
       },
-      "samples": 6,
-      "curated_alias": "conditional",
+      "samples": 2,
+      "samples_trusted": 2,
+      "curated_alias": "repeat_each",
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFInput"
+        ]
+      },
+      "maps_from_trusted": true,
       "key_confidence": {
+        "WFInput": 0.5,
         "GroupingIdentifier": 1.0,
-        "WFControlFlowMode": 1.0,
-        "WFCondition": 0.333,
-        "WFConditionalActionString": 0.333
+        "WFControlFlowMode": 1.0
       },
       "primary_keys": [
         "GroupingIdentifier",
         "WFControlFlowMode",
-        "WFCondition",
-        "WFConditionalActionString"
+        "WFInput"
+      ]
+    },
+    "is.workflow.actions.addnewreminder": {
+      "identifier": "is.workflow.actions.addnewreminder",
+      "short_names": [
+        "addnewreminder"
+      ],
+      "key_freq": {
+        "WFCalendarDescriptor": 1,
+        "WFCalendarItemTitle": 1,
+        "WFCalendarItemCalendar": 1
+      },
+      "key_freq_trusted": {
+        "WFCalendarDescriptor": 1,
+        "WFCalendarItemTitle": 1,
+        "WFCalendarItemCalendar": 1
+      },
+      "value_kinds": {
+        "WFCalendarDescriptor": {
+          "dict": 1
+        },
+        "WFCalendarItemTitle": {
+          "WFTextTokenString": 1
+        },
+        "WFCalendarItemCalendar": {
+          "string": 1
+        }
+      },
+      "value_kinds_trusted": {
+        "WFCalendarDescriptor": {
+          "dict": 1
+        },
+        "WFCalendarItemTitle": {
+          "WFTextTokenString": 1
+        },
+        "WFCalendarItemCalendar": {
+          "string": 1
+        }
+      },
+      "string_samples": {
+        "WFCalendarItemTitle": [
+          "￼"
+        ],
+        "WFCalendarItemCalendar": [
+          "Personal"
+        ]
+      },
+      "string_samples_trusted": {
+        "WFCalendarItemCalendar": [
+          "Personal"
+        ]
+      },
+      "source_classes": {
+        "external_apple": 1
+      },
+      "short_to_wf": {
+        "calendar_item_calendar": "WFCalendarItemCalendar",
+        "calendar_descriptor": "WFCalendarDescriptor",
+        "calendar_item_title": "WFCalendarItemTitle",
+        "item_calendar": "WFCalendarItemCalendar",
+        "descriptor": "WFCalendarDescriptor",
+        "item_title": "WFCalendarItemTitle",
+        "calendar": "WFCalendarItemCalendar",
+        "title": "WFCalendarItemTitle"
+      },
+      "short_to_wf_trusted": {
+        "calendar_item_calendar": "WFCalendarItemCalendar",
+        "calendar_descriptor": "WFCalendarDescriptor",
+        "calendar_item_title": "WFCalendarItemTitle",
+        "item_calendar": "WFCalendarItemCalendar",
+        "descriptor": "WFCalendarDescriptor",
+        "item_title": "WFCalendarItemTitle",
+        "calendar": "WFCalendarItemCalendar",
+        "title": "WFCalendarItemTitle"
+      },
+      "accepted_short_to_wf": {
+        "calendar_item_calendar": "WFCalendarItemCalendar",
+        "calendar_descriptor": "WFCalendarDescriptor",
+        "calendar_item_title": "WFCalendarItemTitle",
+        "item_calendar": "WFCalendarItemCalendar",
+        "descriptor": "WFCalendarDescriptor",
+        "item_title": "WFCalendarItemTitle",
+        "calendar": "WFCalendarItemCalendar",
+        "title": "WFCalendarItemTitle"
+      },
+      "param_schema": {
+        "WFCalendarDescriptor": {
+          "kind": "unknown",
+          "coerce": "off",
+          "confidence": 0.0
+        },
+        "WFCalendarItemTitle": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        },
+        "WFCalendarItemCalendar": {
+          "kind": "enum",
+          "coerce": "plain_string",
+          "values": [
+            "Personal"
+          ],
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "WFCalendarItemCalendar": "calendar",
+        "WFCalendarDescriptor": "descriptor",
+        "WFCalendarItemTitle": "title"
+      },
+      "samples": 1,
+      "samples_trusted": 1,
+      "curated_alias": null,
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFCalendarItemCalendar",
+          "WFCalendarDescriptor",
+          "WFCalendarItemTitle"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFCalendarDescriptor": 1.0,
+        "WFCalendarItemTitle": 1.0,
+        "WFCalendarItemCalendar": 1.0
+      },
+      "primary_keys": [
+        "WFCalendarDescriptor",
+        "WFCalendarItemTitle",
+        "WFCalendarItemCalendar"
       ]
     },
     "is.workflow.actions.repeat.count": {
@@ -1404,46 +621,1384 @@
         "repeat_count"
       ],
       "key_freq": {
+        "WFRepeatCount": 1,
         "GroupingIdentifier": 2,
-        "WFControlFlowMode": 2,
-        "WFRepeatCount": 1
+        "WFControlFlowMode": 2
+      },
+      "key_freq_trusted": {
+        "WFRepeatCount": 1,
+        "GroupingIdentifier": 2,
+        "WFControlFlowMode": 2
       },
       "value_kinds": {
+        "WFRepeatCount": {
+          "float": 1
+        },
         "GroupingIdentifier": {
           "string": 2
         },
         "WFControlFlowMode": {
           "int": 2
-        },
-        "WFRepeatCount": {
-          "int": 1
         }
+      },
+      "value_kinds_trusted": {
+        "WFRepeatCount": {
+          "float": 1
+        },
+        "GroupingIdentifier": {
+          "string": 2
+        },
+        "WFControlFlowMode": {
+          "int": 2
+        }
+      },
+      "string_samples": {
+        "GroupingIdentifier": [
+          "C53DD091-5266-4AA9-A1D0-ACFDE9081EAC"
+        ]
+      },
+      "string_samples_trusted": {
+        "GroupingIdentifier": [
+          "C53DD091-5266-4AA9-A1D0-ACFDE9081EAC"
+        ]
+      },
+      "source_classes": {
+        "external_apple": 2
       },
       "short_to_wf": {
         "repeat_count": "WFRepeatCount",
         "count": "WFRepeatCount"
       },
+      "short_to_wf_trusted": {
+        "repeat_count": "WFRepeatCount",
+        "count": "WFRepeatCount"
+      },
+      "accepted_short_to_wf": {
+        "repeat_count": "WFRepeatCount",
+        "count": "WFRepeatCount"
+      },
+      "param_schema": {
+        "WFRepeatCount": {
+          "kind": "number",
+          "coerce": "plain_number",
+          "confidence": 1.0
+        },
+        "GroupingIdentifier": {
+          "kind": "enum",
+          "coerce": "plain_string",
+          "values": [
+            "C53DD091-5266-4AA9-A1D0-ACFDE9081EAC"
+          ],
+          "confidence": 1.0
+        },
+        "WFControlFlowMode": {
+          "kind": "unknown",
+          "coerce": "off",
+          "confidence": 0.0
+        }
+      },
       "wf_to_short": {
         "WFRepeatCount": "count"
       },
       "samples": 2,
+      "samples_trusted": 2,
       "curated_alias": "repeat",
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFRepeatCount"
+        ]
+      },
+      "maps_from_trusted": true,
       "key_confidence": {
+        "WFRepeatCount": 0.5,
         "GroupingIdentifier": 1.0,
-        "WFControlFlowMode": 1.0,
-        "WFRepeatCount": 0.5
+        "WFControlFlowMode": 1.0
       },
       "primary_keys": [
         "GroupingIdentifier",
         "WFControlFlowMode",
         "WFRepeatCount"
       ]
+    },
+    "is.workflow.actions.choosefrommenu": {
+      "identifier": "is.workflow.actions.choosefrommenu",
+      "short_names": [
+        "choose_from_menu",
+        "choosefrommenu"
+      ],
+      "key_freq": {
+        "WFMenuPrompt": 1,
+        "WFControlFlowMode": 4,
+        "WFMenuItems": 1,
+        "GroupingIdentifier": 4,
+        "WFMenuItemTitle": 2
+      },
+      "key_freq_trusted": {
+        "WFMenuPrompt": 1,
+        "WFControlFlowMode": 4,
+        "WFMenuItems": 1,
+        "GroupingIdentifier": 4,
+        "WFMenuItemTitle": 2
+      },
+      "value_kinds": {
+        "WFMenuPrompt": {
+          "string": 1
+        },
+        "WFControlFlowMode": {
+          "int": 4
+        },
+        "WFMenuItems": {
+          "list": 1
+        },
+        "GroupingIdentifier": {
+          "string": 4
+        },
+        "WFMenuItemTitle": {
+          "string": 2
+        }
+      },
+      "value_kinds_trusted": {
+        "WFMenuPrompt": {
+          "string": 1
+        },
+        "WFControlFlowMode": {
+          "int": 4
+        },
+        "WFMenuItems": {
+          "list": 1
+        },
+        "GroupingIdentifier": {
+          "string": 4
+        },
+        "WFMenuItemTitle": {
+          "string": 2
+        }
+      },
+      "string_samples": {
+        "WFMenuPrompt": [
+          "Select a file, or input a URL to a document"
+        ],
+        "GroupingIdentifier": [
+          "4D9D4BA4-F00A-4BD7-8AD5-4E558704E03A"
+        ],
+        "WFMenuItemTitle": [
+          "File",
+          "URL"
+        ]
+      },
+      "string_samples_trusted": {
+        "WFMenuPrompt": [
+          "Select a file, or input a URL to a document"
+        ],
+        "GroupingIdentifier": [
+          "4D9D4BA4-F00A-4BD7-8AD5-4E558704E03A"
+        ],
+        "WFMenuItemTitle": [
+          "File",
+          "URL"
+        ]
+      },
+      "source_classes": {
+        "external_apple": 4
+      },
+      "short_to_wf": {
+        "menu_item_title": "WFMenuItemTitle",
+        "item_title": "WFMenuItemTitle",
+        "title": "WFMenuItemTitle",
+        "menu_prompt": "WFMenuPrompt",
+        "menu_items": "WFMenuItems",
+        "prompt": "WFMenuPrompt",
+        "items": "WFMenuItems"
+      },
+      "short_to_wf_trusted": {
+        "menu_item_title": "WFMenuItemTitle",
+        "item_title": "WFMenuItemTitle",
+        "title": "WFMenuItemTitle",
+        "menu_prompt": "WFMenuPrompt",
+        "menu_items": "WFMenuItems",
+        "prompt": "WFMenuPrompt",
+        "items": "WFMenuItems"
+      },
+      "accepted_short_to_wf": {
+        "menu_item_title": "WFMenuItemTitle",
+        "item_title": "WFMenuItemTitle",
+        "title": "WFMenuItemTitle",
+        "menu_prompt": "WFMenuPrompt",
+        "menu_items": "WFMenuItems",
+        "prompt": "WFMenuPrompt",
+        "items": "WFMenuItems"
+      },
+      "param_schema": {
+        "WFMenuPrompt": {
+          "kind": "free_text",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        },
+        "WFControlFlowMode": {
+          "kind": "unknown",
+          "coerce": "off",
+          "confidence": 0.0
+        },
+        "WFMenuItems": {
+          "kind": "unknown",
+          "coerce": "off",
+          "confidence": 0.0
+        },
+        "GroupingIdentifier": {
+          "kind": "enum",
+          "coerce": "plain_string",
+          "values": [
+            "4D9D4BA4-F00A-4BD7-8AD5-4E558704E03A"
+          ],
+          "confidence": 1.0
+        },
+        "WFMenuItemTitle": {
+          "kind": "enum",
+          "coerce": "plain_string",
+          "values": [
+            "File",
+            "URL"
+          ],
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "WFMenuItemTitle": "title",
+        "WFMenuPrompt": "prompt",
+        "WFMenuItems": "items"
+      },
+      "samples": 4,
+      "samples_trusted": 4,
+      "curated_alias": "choose_from_menu",
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFMenuItemTitle",
+          "WFMenuPrompt",
+          "WFMenuItems"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFMenuPrompt": 0.25,
+        "WFControlFlowMode": 1.0,
+        "WFMenuItems": 0.25,
+        "GroupingIdentifier": 1.0,
+        "WFMenuItemTitle": 0.5
+      },
+      "primary_keys": [
+        "WFControlFlowMode",
+        "GroupingIdentifier",
+        "WFMenuItemTitle",
+        "WFMenuPrompt",
+        "WFMenuItems"
+      ]
+    },
+    "is.workflow.actions.file": {
+      "identifier": "is.workflow.actions.file",
+      "short_names": [
+        "file"
+      ],
+      "key_freq": {
+        "WFFile": 1
+      },
+      "key_freq_trusted": {
+        "WFFile": 1
+      },
+      "value_kinds": {
+        "WFFile": {
+          "WFTextTokenAttachment": 1
+        }
+      },
+      "value_kinds_trusted": {
+        "WFFile": {
+          "WFTextTokenAttachment": 1
+        }
+      },
+      "string_samples": {},
+      "string_samples_trusted": {},
+      "source_classes": {
+        "external_apple": 1
+      },
+      "short_to_wf": {
+        "file": "WFFile"
+      },
+      "short_to_wf_trusted": {
+        "file": "WFFile"
+      },
+      "accepted_short_to_wf": {
+        "file": "WFFile"
+      },
+      "param_schema": {
+        "WFFile": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "WFFile": "file"
+      },
+      "samples": 1,
+      "samples_trusted": 1,
+      "curated_alias": null,
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFFile"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFFile": 1.0
+      },
+      "primary_keys": [
+        "WFFile"
+      ]
+    },
+    "is.workflow.actions.url": {
+      "identifier": "is.workflow.actions.url",
+      "short_names": [
+        "url"
+      ],
+      "key_freq": {
+        "WFURLActionURL": 1
+      },
+      "key_freq_trusted": {
+        "WFURLActionURL": 1
+      },
+      "value_kinds": {
+        "WFURLActionURL": {
+          "WFTextTokenAttachment": 1
+        }
+      },
+      "value_kinds_trusted": {
+        "WFURLActionURL": {
+          "WFTextTokenAttachment": 1
+        }
+      },
+      "string_samples": {},
+      "string_samples_trusted": {},
+      "source_classes": {
+        "external_apple": 1
+      },
+      "short_to_wf": {
+        "url_action_url": "WFURLActionURL",
+        "action_url": "WFURLActionURL",
+        "url": "WFURLActionURL"
+      },
+      "short_to_wf_trusted": {
+        "url_action_url": "WFURLActionURL",
+        "action_url": "WFURLActionURL",
+        "url": "WFURLActionURL"
+      },
+      "accepted_short_to_wf": {
+        "url_action_url": "WFURLActionURL",
+        "action_url": "WFURLActionURL",
+        "url": "WFURLActionURL"
+      },
+      "param_schema": {
+        "WFURLActionURL": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "WFURLActionURL": "url"
+      },
+      "samples": 1,
+      "samples_trusted": 1,
+      "curated_alias": null,
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFURLActionURL"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFURLActionURL": 1.0
+      },
+      "primary_keys": [
+        "WFURLActionURL"
+      ]
+    },
+    "is.workflow.actions.downloadurl": {
+      "identifier": "is.workflow.actions.downloadurl",
+      "short_names": [
+        "get_contents_of_url",
+        "downloadurl"
+      ],
+      "key_freq": {
+        "WFURL": 1
+      },
+      "key_freq_trusted": {
+        "WFURL": 1
+      },
+      "value_kinds": {
+        "WFURL": {
+          "WFTextTokenString": 1
+        }
+      },
+      "value_kinds_trusted": {
+        "WFURL": {
+          "WFTextTokenString": 1
+        }
+      },
+      "string_samples": {
+        "WFURL": [
+          "￼"
+        ]
+      },
+      "string_samples_trusted": {},
+      "source_classes": {
+        "external_apple": 1
+      },
+      "short_to_wf": {
+        "url": "WFURL"
+      },
+      "short_to_wf_trusted": {
+        "url": "WFURL"
+      },
+      "accepted_short_to_wf": {
+        "url": "WFURL"
+      },
+      "param_schema": {
+        "WFURL": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "WFURL": "url"
+      },
+      "samples": 1,
+      "samples_trusted": 1,
+      "curated_alias": "get_contents_of_url",
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFURL"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFURL": 1.0
+      },
+      "primary_keys": [
+        "WFURL"
+      ]
+    },
+    "is.workflow.actions.showresult": {
+      "identifier": "is.workflow.actions.showresult",
+      "short_names": [
+        "show_result",
+        "showresult"
+      ],
+      "key_freq": {
+        "Text": 6
+      },
+      "key_freq_trusted": {
+        "Text": 6
+      },
+      "value_kinds": {
+        "Text": {
+          "WFTextTokenString": 6
+        }
+      },
+      "value_kinds_trusted": {
+        "Text": {
+          "WFTextTokenString": 6
+        }
+      },
+      "string_samples": {
+        "Text": [
+          "￼",
+          "The diameter of Earth is ￼ km 🌎"
+        ]
+      },
+      "string_samples_trusted": {},
+      "source_classes": {
+        "external_apple": 6
+      },
+      "short_to_wf": {
+        "text": "Text"
+      },
+      "short_to_wf_trusted": {
+        "text": "Text"
+      },
+      "accepted_short_to_wf": {
+        "text": "Text"
+      },
+      "param_schema": {
+        "Text": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "Text": "text"
+      },
+      "samples": 6,
+      "samples_trusted": 6,
+      "curated_alias": "show_result",
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "Text"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "Text": 1.0
+      },
+      "primary_keys": [
+        "Text"
+      ]
+    },
+    "is.workflow.actions.comment": {
+      "identifier": "is.workflow.actions.comment",
+      "short_names": [
+        "comment"
+      ],
+      "key_freq": {
+        "WFCommentActionText": 4
+      },
+      "key_freq_trusted": {
+        "WFCommentActionText": 4
+      },
+      "value_kinds": {
+        "WFCommentActionText": {
+          "string": 4
+        }
+      },
+      "value_kinds_trusted": {
+        "WFCommentActionText": {
+          "string": 4
+        }
+      },
+      "string_samples": {
+        "WFCommentActionText": [
+          "You can perform complex tasks and get creative with language models in your shortcuts with the “Use Model” action.\n\nThis shortcut walks through three examples to get you started!",
+          "This example gets the weather at your current location, passes it into the “Use Model” action along with a request, and then presents the final response using the “Show Content” action.",
+          "This example demonstrates how you can sort and filter lists using a language model. This also works with lists of content that are passed in, like calendar events or reminders!",
+          "Create a structured dictionary with “Use Model” by tapping the “⧁” button to expand the action and selecting “Dictionary” as the output.\n\nThis example uses a model to create a list of planets and their corresponding diameters, then gets Earth’s diameter from the list using the “Get Dictionary Value” action."
+        ]
+      },
+      "string_samples_trusted": {
+        "WFCommentActionText": [
+          "You can perform complex tasks and get creative with language models in your shortcuts with the “Use Model” action.\n\nThis shortcut walks through three examples to get you started!",
+          "This example gets the weather at your current location, passes it into the “Use Model” action along with a request, and then presents the final response using the “Show Content” action.",
+          "This example demonstrates how you can sort and filter lists using a language model. This also works with lists of content that are passed in, like calendar events or reminders!",
+          "Create a structured dictionary with “Use Model” by tapping the “⧁” button to expand the action and selecting “Dictionary” as the output.\n\nThis example uses a model to create a list of planets and their corresponding diameters, then gets Earth’s diameter from the list using the “Get Dictionary Value” action."
+        ]
+      },
+      "source_classes": {
+        "external_apple": 4
+      },
+      "short_to_wf": {
+        "comment_action_text": "WFCommentActionText",
+        "action_text": "WFCommentActionText",
+        "text": "WFCommentActionText"
+      },
+      "short_to_wf_trusted": {
+        "comment_action_text": "WFCommentActionText",
+        "action_text": "WFCommentActionText",
+        "text": "WFCommentActionText"
+      },
+      "accepted_short_to_wf": {
+        "comment_action_text": "WFCommentActionText",
+        "action_text": "WFCommentActionText",
+        "text": "WFCommentActionText"
+      },
+      "param_schema": {
+        "WFCommentActionText": {
+          "kind": "free_text",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "WFCommentActionText": "text"
+      },
+      "samples": 4,
+      "samples_trusted": 4,
+      "curated_alias": "comment",
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFCommentActionText"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFCommentActionText": 1.0
+      },
+      "primary_keys": [
+        "WFCommentActionText"
+      ]
+    },
+    "is.workflow.actions.weather.currentconditions": {
+      "identifier": "is.workflow.actions.weather.currentconditions",
+      "short_names": [
+        "weather_currentconditions"
+      ],
+      "key_freq": {},
+      "key_freq_trusted": {},
+      "value_kinds": {},
+      "value_kinds_trusted": {},
+      "string_samples": {},
+      "string_samples_trusted": {},
+      "source_classes": {
+        "external_apple": 2
+      },
+      "short_to_wf": {},
+      "short_to_wf_trusted": {},
+      "accepted_short_to_wf": {},
+      "param_schema": {},
+      "wf_to_short": {},
+      "samples": 2,
+      "samples_trusted": 2,
+      "curated_alias": null,
+      "validation": null,
+      "maps_from_trusted": false,
+      "key_confidence": {},
+      "primary_keys": []
+    },
+    "is.workflow.actions.list": {
+      "identifier": "is.workflow.actions.list",
+      "short_names": [
+        "list"
+      ],
+      "key_freq": {
+        "WFItems": 1,
+        "CustomOutputName": 1
+      },
+      "key_freq_trusted": {
+        "WFItems": 1,
+        "CustomOutputName": 1
+      },
+      "value_kinds": {
+        "WFItems": {
+          "list": 1
+        },
+        "CustomOutputName": {
+          "string": 1
+        }
+      },
+      "value_kinds_trusted": {
+        "WFItems": {
+          "list": 1
+        },
+        "CustomOutputName": {
+          "string": 1
+        }
+      },
+      "string_samples": {
+        "CustomOutputName": [
+          "Fruits"
+        ]
+      },
+      "string_samples_trusted": {
+        "CustomOutputName": [
+          "Fruits"
+        ]
+      },
+      "source_classes": {
+        "external_apple": 1
+      },
+      "short_to_wf": {
+        "custom_output_name": "CustomOutputName",
+        "output_name": "CustomOutputName",
+        "items": "WFItems",
+        "name": "CustomOutputName"
+      },
+      "short_to_wf_trusted": {
+        "custom_output_name": "CustomOutputName",
+        "output_name": "CustomOutputName",
+        "items": "WFItems",
+        "name": "CustomOutputName"
+      },
+      "accepted_short_to_wf": {
+        "custom_output_name": "CustomOutputName",
+        "output_name": "CustomOutputName",
+        "items": "WFItems",
+        "name": "CustomOutputName"
+      },
+      "param_schema": {
+        "WFItems": {
+          "kind": "unknown",
+          "coerce": "off",
+          "confidence": 0.0
+        },
+        "CustomOutputName": {
+          "kind": "enum",
+          "coerce": "plain_string",
+          "values": [
+            "Fruits"
+          ],
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "CustomOutputName": "name",
+        "WFItems": "items"
+      },
+      "samples": 1,
+      "samples_trusted": 1,
+      "curated_alias": "list",
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "CustomOutputName",
+          "WFItems"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFItems": 1.0,
+        "CustomOutputName": 1.0
+      },
+      "primary_keys": [
+        "WFItems",
+        "CustomOutputName"
+      ]
+    },
+    "is.workflow.actions.getvalueforkey": {
+      "identifier": "is.workflow.actions.getvalueforkey",
+      "short_names": [
+        "get_dictionary_value",
+        "getvalueforkey"
+      ],
+      "key_freq": {
+        "WFInput": 1,
+        "WFDictionaryKey": 1
+      },
+      "key_freq_trusted": {
+        "WFInput": 1,
+        "WFDictionaryKey": 1
+      },
+      "value_kinds": {
+        "WFInput": {
+          "WFTextTokenAttachment": 1
+        },
+        "WFDictionaryKey": {
+          "string": 1
+        }
+      },
+      "value_kinds_trusted": {
+        "WFInput": {
+          "WFTextTokenAttachment": 1
+        },
+        "WFDictionaryKey": {
+          "string": 1
+        }
+      },
+      "string_samples": {
+        "WFDictionaryKey": [
+          "Earth"
+        ]
+      },
+      "string_samples_trusted": {
+        "WFDictionaryKey": [
+          "Earth"
+        ]
+      },
+      "source_classes": {
+        "external_apple": 1
+      },
+      "short_to_wf": {
+        "dictionary_key": "WFDictionaryKey",
+        "input": "WFInput",
+        "key": "WFDictionaryKey"
+      },
+      "short_to_wf_trusted": {
+        "dictionary_key": "WFDictionaryKey",
+        "input": "WFInput",
+        "key": "WFDictionaryKey"
+      },
+      "accepted_short_to_wf": {
+        "dictionary_key": "WFDictionaryKey",
+        "input": "WFInput",
+        "key": "WFDictionaryKey"
+      },
+      "param_schema": {
+        "WFInput": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        },
+        "WFDictionaryKey": {
+          "kind": "enum",
+          "coerce": "plain_string",
+          "values": [
+            "Earth"
+          ],
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "WFDictionaryKey": "key",
+        "WFInput": "input"
+      },
+      "samples": 1,
+      "samples_trusted": 1,
+      "curated_alias": "get_dictionary_value",
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFDictionaryKey",
+          "WFInput"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFInput": 1.0,
+        "WFDictionaryKey": 1.0
+      },
+      "primary_keys": [
+        "WFInput",
+        "WFDictionaryKey"
+      ]
+    },
+    "is.workflow.actions.filter.calendarevents": {
+      "identifier": "is.workflow.actions.filter.calendarevents",
+      "short_names": [
+        "filter_calendarevents"
+      ],
+      "key_freq": {
+        "WFContentItemFilter": 1
+      },
+      "key_freq_trusted": {
+        "WFContentItemFilter": 1
+      },
+      "value_kinds": {
+        "WFContentItemFilter": {
+          "WFContentPredicateTableTemplate": 1
+        }
+      },
+      "value_kinds_trusted": {
+        "WFContentItemFilter": {
+          "WFContentPredicateTableTemplate": 1
+        }
+      },
+      "string_samples": {},
+      "string_samples_trusted": {},
+      "source_classes": {
+        "external_apple": 1
+      },
+      "short_to_wf": {
+        "content_item_filter": "WFContentItemFilter",
+        "item_filter": "WFContentItemFilter",
+        "filter": "WFContentItemFilter"
+      },
+      "short_to_wf_trusted": {
+        "content_item_filter": "WFContentItemFilter",
+        "item_filter": "WFContentItemFilter",
+        "filter": "WFContentItemFilter"
+      },
+      "accepted_short_to_wf": {
+        "content_item_filter": "WFContentItemFilter",
+        "item_filter": "WFContentItemFilter",
+        "filter": "WFContentItemFilter"
+      },
+      "param_schema": {
+        "WFContentItemFilter": {
+          "kind": "unknown",
+          "coerce": "off",
+          "confidence": 0.0
+        }
+      },
+      "wf_to_short": {
+        "WFContentItemFilter": "filter"
+      },
+      "samples": 1,
+      "samples_trusted": 1,
+      "curated_alias": null,
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFContentItemFilter"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFContentItemFilter": 1.0
+      },
+      "primary_keys": [
+        "WFContentItemFilter"
+      ]
+    },
+    "is.workflow.actions.filter.reminders": {
+      "identifier": "is.workflow.actions.filter.reminders",
+      "short_names": [
+        "filter_reminders"
+      ],
+      "key_freq": {
+        "WFContentItemFilter": 2,
+        "WFContentItemInputParameter": 1
+      },
+      "key_freq_trusted": {
+        "WFContentItemFilter": 2,
+        "WFContentItemInputParameter": 1
+      },
+      "value_kinds": {
+        "WFContentItemFilter": {
+          "WFContentPredicateTableTemplate": 2
+        },
+        "WFContentItemInputParameter": {
+          "WFTextTokenAttachment": 1
+        }
+      },
+      "value_kinds_trusted": {
+        "WFContentItemFilter": {
+          "WFContentPredicateTableTemplate": 2
+        },
+        "WFContentItemInputParameter": {
+          "WFTextTokenAttachment": 1
+        }
+      },
+      "string_samples": {},
+      "string_samples_trusted": {},
+      "source_classes": {
+        "external_apple": 2
+      },
+      "short_to_wf": {
+        "content_item_filter": "WFContentItemFilter",
+        "item_filter": "WFContentItemFilter",
+        "filter": "WFContentItemFilter",
+        "content_item_input_parameter": "WFContentItemInputParameter",
+        "input_parameter": "WFContentItemInputParameter",
+        "parameter": "WFContentItemInputParameter"
+      },
+      "short_to_wf_trusted": {
+        "content_item_filter": "WFContentItemFilter",
+        "item_filter": "WFContentItemFilter",
+        "filter": "WFContentItemFilter",
+        "content_item_input_parameter": "WFContentItemInputParameter",
+        "input_parameter": "WFContentItemInputParameter",
+        "parameter": "WFContentItemInputParameter"
+      },
+      "accepted_short_to_wf": {
+        "content_item_filter": "WFContentItemFilter",
+        "item_filter": "WFContentItemFilter",
+        "filter": "WFContentItemFilter",
+        "content_item_input_parameter": "WFContentItemInputParameter",
+        "input_parameter": "WFContentItemInputParameter",
+        "parameter": "WFContentItemInputParameter"
+      },
+      "param_schema": {
+        "WFContentItemFilter": {
+          "kind": "unknown",
+          "coerce": "off",
+          "confidence": 0.0
+        },
+        "WFContentItemInputParameter": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "WFContentItemFilter": "filter",
+        "WFContentItemInputParameter": "parameter"
+      },
+      "samples": 2,
+      "samples_trusted": 2,
+      "curated_alias": null,
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFContentItemFilter",
+          "WFContentItemInputParameter"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFContentItemFilter": 1.0,
+        "WFContentItemInputParameter": 0.5
+      },
+      "primary_keys": [
+        "WFContentItemFilter",
+        "WFContentItemInputParameter"
+      ]
+    },
+    "is.workflow.actions.gettextfrompdf": {
+      "identifier": "is.workflow.actions.gettextfrompdf",
+      "short_names": [
+        "gettextfrompdf"
+      ],
+      "key_freq": {
+        "WFInput": 1
+      },
+      "key_freq_trusted": {
+        "WFInput": 1
+      },
+      "value_kinds": {
+        "WFInput": {
+          "WFTextTokenAttachment": 1
+        }
+      },
+      "value_kinds_trusted": {
+        "WFInput": {
+          "WFTextTokenAttachment": 1
+        }
+      },
+      "string_samples": {},
+      "string_samples_trusted": {},
+      "source_classes": {
+        "external_apple": 1
+      },
+      "short_to_wf": {
+        "input": "WFInput"
+      },
+      "short_to_wf_trusted": {
+        "input": "WFInput"
+      },
+      "accepted_short_to_wf": {
+        "input": "WFInput"
+      },
+      "param_schema": {
+        "WFInput": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "WFInput": "input"
+      },
+      "samples": 1,
+      "samples_trusted": 1,
+      "curated_alias": null,
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFInput"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFInput": 1.0
+      },
+      "primary_keys": [
+        "WFInput"
+      ]
+    },
+    "com.apple.WritingTools.WritingToolsAppIntentsExtension.SummarizeTextIntent": {
+      "identifier": "com.apple.WritingTools.WritingToolsAppIntentsExtension.SummarizeTextIntent",
+      "short_names": [
+        "com_apple_writingtools_writingtoolsappintentsextension_summarizetextintent"
+      ],
+      "key_freq": {
+        "summaryType": 1,
+        "text": 1
+      },
+      "key_freq_trusted": {
+        "summaryType": 1,
+        "text": 1
+      },
+      "value_kinds": {
+        "summaryType": {
+          "string": 1
+        },
+        "text": {
+          "WFTextTokenString": 1
+        }
+      },
+      "value_kinds_trusted": {
+        "summaryType": {
+          "string": 1
+        },
+        "text": {
+          "WFTextTokenString": 1
+        }
+      },
+      "string_samples": {
+        "summaryType": [
+          "createKeyPoints"
+        ],
+        "text": [
+          "￼"
+        ]
+      },
+      "string_samples_trusted": {
+        "summaryType": [
+          "createKeyPoints"
+        ]
+      },
+      "source_classes": {
+        "external_apple": 1
+      },
+      "short_to_wf": {
+        "summary_type": "summaryType",
+        "type": "summaryType",
+        "text": "text"
+      },
+      "short_to_wf_trusted": {
+        "summary_type": "summaryType",
+        "type": "summaryType",
+        "text": "text"
+      },
+      "accepted_short_to_wf": {
+        "summary_type": "summaryType",
+        "type": "summaryType",
+        "text": "text"
+      },
+      "param_schema": {
+        "summaryType": {
+          "kind": "enum",
+          "coerce": "plain_string",
+          "values": [
+            "createKeyPoints"
+          ],
+          "confidence": 1.0
+        },
+        "text": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "summaryType": "type",
+        "text": "text"
+      },
+      "samples": 1,
+      "samples_trusted": 1,
+      "curated_alias": null,
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "summaryType",
+          "text"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "summaryType": 1.0,
+        "text": 1.0
+      },
+      "primary_keys": [
+        "summaryType",
+        "text"
+      ]
+    },
+    "is.workflow.actions.share": {
+      "identifier": "is.workflow.actions.share",
+      "short_names": [
+        "share"
+      ],
+      "key_freq": {
+        "WFInput": 1
+      },
+      "key_freq_trusted": {
+        "WFInput": 1
+      },
+      "value_kinds": {
+        "WFInput": {
+          "WFTextTokenAttachment": 1
+        }
+      },
+      "value_kinds_trusted": {
+        "WFInput": {
+          "WFTextTokenAttachment": 1
+        }
+      },
+      "string_samples": {},
+      "string_samples_trusted": {},
+      "source_classes": {
+        "external_apple": 1
+      },
+      "short_to_wf": {
+        "input": "WFInput"
+      },
+      "short_to_wf_trusted": {
+        "input": "WFInput"
+      },
+      "accepted_short_to_wf": {
+        "input": "WFInput"
+      },
+      "param_schema": {
+        "WFInput": {
+          "kind": "text_token",
+          "coerce": "text_token_string",
+          "confidence": 1.0
+        }
+      },
+      "wf_to_short": {
+        "WFInput": "input"
+      },
+      "samples": 1,
+      "samples_trusted": 1,
+      "curated_alias": "share",
+      "validation": {
+        "accepted": true,
+        "reason": "compile_ok",
+        "signed": false,
+        "probe_keys": [
+          "WFInput"
+        ]
+      },
+      "maps_from_trusted": true,
+      "key_confidence": {
+        "WFInput": 1.0
+      },
+      "primary_keys": [
+        "WFInput"
+      ]
     }
   },
   "notes": [
-    "short_to_wf maps are frequency-ranked suggestions for the generic compiler",
-    "confidence = key_freq / max_key_freq for that action",
-    "Regenerate: python3 scripts/learn_from_shortcuts.py"
+    "trusted learning uses external_apple + external_user only",
+    "accepted_short_to_wf requires reverse compile+sign validation",
+    "self/seed/template observations are bootstrap_hints only"
   ],
-  "identifier_count": 42
+  "extractor": {
+    "meta": {
+      "gallery": 7,
+      "dictation": 0,
+      "sqlite": 0,
+      "exports": 0,
+      "sqlite_status": null
+    },
+    "errors": [],
+    "count": 7,
+    "trusted_external": 7
+  },
+  "identifier_count": 20,
+  "trusted_identifier_count": 20,
+  "accepted_identifier_count": 19,
+  "validation_report": {
+    "tested": 19,
+    "accepted": 19,
+    "rejected": 0,
+    "details": [
+      {
+        "identifier": "is.workflow.actions.askllm",
+        "ok": true,
+        "map_size": 9
+      },
+      {
+        "identifier": "is.workflow.actions.showresult",
+        "ok": true,
+        "map_size": 1
+      },
+      {
+        "identifier": "is.workflow.actions.choosefrommenu",
+        "ok": true,
+        "map_size": 7
+      },
+      {
+        "identifier": "is.workflow.actions.comment",
+        "ok": true,
+        "map_size": 3
+      },
+      {
+        "identifier": "is.workflow.actions.ask",
+        "ok": true,
+        "map_size": 3
+      },
+      {
+        "identifier": "is.workflow.actions.repeat.each",
+        "ok": true,
+        "map_size": 1
+      },
+      {
+        "identifier": "is.workflow.actions.repeat.count",
+        "ok": true,
+        "map_size": 2
+      },
+      {
+        "identifier": "is.workflow.actions.filter.reminders",
+        "ok": true,
+        "map_size": 6
+      },
+      {
+        "identifier": "is.workflow.actions.filter.notes",
+        "ok": true,
+        "map_size": 6
+      },
+      {
+        "identifier": "is.workflow.actions.addnewreminder",
+        "ok": true,
+        "map_size": 8
+      },
+      {
+        "identifier": "is.workflow.actions.file",
+        "ok": true,
+        "map_size": 1
+      },
+      {
+        "identifier": "is.workflow.actions.url",
+        "ok": true,
+        "map_size": 3
+      },
+      {
+        "identifier": "is.workflow.actions.downloadurl",
+        "ok": true,
+        "map_size": 1
+      },
+      {
+        "identifier": "is.workflow.actions.list",
+        "ok": true,
+        "map_size": 4
+      },
+      {
+        "identifier": "is.workflow.actions.getvalueforkey",
+        "ok": true,
+        "map_size": 3
+      },
+      {
+        "identifier": "is.workflow.actions.filter.calendarevents",
+        "ok": true,
+        "map_size": 3
+      },
+      {
+        "identifier": "is.workflow.actions.gettextfrompdf",
+        "ok": true,
+        "map_size": 1
+      },
+      {
+        "identifier": "com.apple.WritingTools.WritingToolsAppIntentsExtension.SummarizeTextIntent",
+        "ok": true,
+        "map_size": 3
+      },
+      {
+        "identifier": "is.workflow.actions.share",
+        "ok": true,
+        "map_size": 1
+      }
+    ]
+  }
 }

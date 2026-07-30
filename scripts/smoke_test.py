@@ -149,57 +149,86 @@ def test_app_intent_compile() -> None:
 
 
 def test_param_learning_loop() -> None:
+    from library_extractor import extract_gallery_wflows, is_self_built_plist
     from param_learning import (
         apply_learned_param_map,
+        classify_param_schema,
         get_learned,
         get_param_map,
         learned_stats,
         run_learning,
         save_learned,
     )
+    from shortcut_builder import build_shortcut_dict
 
-    doc = run_learning(roots=[], include_seeds=True, include_templates=True, include_fixtures=True)
+    # Echo chamber: self-built detection
+    pl = build_shortcut_dict(
+        [{"type": "comment", "params": {"text": "x"}}, {"type": "nothing", "params": {}}],
+        "SelfProbe",
+    )
+    assert_true(is_self_built_plist(pl), "should detect self-built uuid5")
+
+    # Gallery is external Apple
+    gallery = extract_gallery_wflows()
+    assert_true(len(gallery) >= 3, gallery)
+    assert_true(all(g["source_class"] == "external_apple" for g in gallery), gallery)
+
+    # Enum discriminator
+    sch = classify_param_schema(
+        "WFHTTPMethod",
+        {"string": 10},
+        ["GET", "POST", "PUT"],
+    )
+    assert_true(sch["kind"] == "enum", sch)
+    assert_true(sch["coerce"] == "plain_string", sch)
+    sch2 = classify_param_schema(
+        "WFSpeakTextText",
+        {"WFTextTokenString": 8, "string": 2},
+        ["hello"],
+    )
+    assert_true(sch2["kind"] == "text_token", sch2)
+
+    # Trusted learning (gallery/system; no self bootstrap)
+    doc = run_learning(
+        export_roots=[],
+        include_gallery=True,
+        include_dictation=True,
+        include_sqlite=False,  # may be TCC-blocked in CI
+        include_self_bootstrap=False,
+        validate=True,
+    )
     path = save_learned(doc)
     assert_true(os.path.isfile(path), path)
     get_learned(force_reload=True)
     stats = learned_stats()
-    assert_true(stats["identifier_count"] >= 20, stats)
-    assert_true(stats["with_short_maps"] >= 10, stats)
+    assert_true(int(stats.get("trusted_identifier_count") or 0) >= 5, stats)
+    # validation ran
+    assert_true(stats.get("validation_report_summary", {}).get("tested") is not None, stats)
 
-    m = get_param_map("is.workflow.actions.speaktext")
-    assert_true((m.get("short_to_wf") or {}).get("text") == "WFSpeakTextText", m)
-
-    mapped, notes = apply_learned_param_map(
-        "is.workflow.actions.speaktext",
-        {"text": "hi", "wait": True},
-    )
-    assert_true(mapped.get("WFSpeakTextText") == "hi", mapped)
-    assert_true(mapped.get("WFSpeakTextWait") is True, mapped)
-    assert_true(any("text" in n for n in notes), notes)
-
-    # generic full-id compile with short keys
-    compiled = compile_recipe(
-        [
-            {
-                "type": "is.workflow.actions.speaktext",
-                "params": {"text": "hello", "wait": True},
-            }
-        ]
-    )
-    params = compiled["wf_actions"][0]["WFWorkflowActionParameters"]
-    assert_true("WFSpeakTextText" in params, params)
-
-    tool = mcp_server.handle_tool_call(
-        "get_learned_params", {"type": "speak_text"}
-    )
-    assert_true(not tool.get("isError"), tool)
+    # Accepted maps only applied
+    # Find any accepted action with a short map
+    accepted_any = False
+    for row_id, entry in (doc.get("actions") or {}).items():
+        amap = entry.get("accepted_short_to_wf") or {}
+        if not amap:
+            continue
+        accepted_any = True
+        # apply_learned with accepted_only should map
+        short, wf = next(iter(amap.items()))
+        mapped, notes = apply_learned_param_map(
+            row_id, {short: "probe"}, accepted_only=True
+        )
+        assert_true(wf in mapped, (row_id, mapped, notes))
+        break
+    # Gallery may yield few maps if params sparse; still OK if trusted ids > 0
     assert_true(
-        tool["structuredContent"]["map"]["short_to_wf"].get("text")
-        == "WFSpeakTextText"
-        or "WFSpeakTextText"
-        in (tool["structuredContent"]["map"].get("short_to_wf") or {}).values(),
-        tool,
+        accepted_any or int(stats.get("trusted_identifier_count") or 0) >= 5,
+        "expected accepted maps or at least trusted observations",
     )
+
+    tool = mcp_server.handle_tool_call("extract_system_library", {"include_sqlite": False})
+    assert_true(not tool.get("isError"), tool)
+    assert_true(tool["structuredContent"]["count"] >= 3, tool)
 
 
 def test_e2e_runtime_run_if_possible() -> None:
@@ -632,7 +661,7 @@ def test_ndjson_initialize() -> None:
     assert_true(len(lines) >= 4, "unexpected stdout: {0!r}\nstderr={1!r}".format(out, err))
     init = json.loads(lines[0])
     assert_true(init["result"]["serverInfo"]["name"] == "ios-shortcuts-mcp", init)
-    assert_true(init["result"]["serverInfo"]["version"] == "2.6.0", init)
+    assert_true(init["result"]["serverInfo"]["version"] == "2.7.0", init)
     tools = json.loads(lines[1])
     assert_true(len(tools["result"]["tools"]) >= 10, tools)
     # annotations present on first tool

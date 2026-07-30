@@ -6,7 +6,7 @@ Zero-dependency **Model Context Protocol (MCP)** server for macOS that lets AI c
 
 | | |
 |---|---|
-| **Version** | 2.6.0 |
+| **Version** | 2.7.0 |
 | **Runtime** | Python 3.8+ (stdlib only — no `pip install`) |
 | **OS** | macOS Monterey+ (`shortcuts` CLI) |
 | **License** | MIT |
@@ -413,29 +413,34 @@ Details: [docs/ACTION_COVERAGE.md](./docs/ACTION_COVERAGE.md)
 
 ---
 
-## Decompile learning loop (v2.6)
+## Trusted learning loop (v2.7)
+
+Echo-chamber fix: learn from **Apple Gallery / system / user exports / SQLite**, not from our own dist.
 
 ```bash
 python3 scripts/learn_from_shortcuts.py
-# optional: extra exports
+# Full Disk Access required for ~/Library/Shortcuts/Shortcuts.sqlite
 python3 scripts/learn_from_shortcuts.py --roots "$HOME/Desktop/shortcut-exports"
 ```
 
-Produces `data/learned_param_maps.json`. The generic compiler then accepts:
+- `accepted_short_to_wf` only after reverse compile validation
+- Enum params stay plain strings; text fields may become WFTextTokenString
+- MCP: `learn_from_corpus` · `extract_system_library` · `get_learned_params`
 
-```json
-{ "type": "is.workflow.actions.speaktext", "params": { "text": "hi", "wait": true } }
-```
-
-and remaps to `WFSpeakTextText` / `WFSpeakTextWait` before auto-coercion.
-
-MCP: `learn_from_corpus` · `get_learned_params` · `list_learned_actions`
-
-Env: `IOS_SHORTCUTS_MCP_LEARN_ROOTS` (extra scan paths)
+Env: `IOS_SHORTCUTS_MCP_LEARN_ROOTS`, `IOS_SHORTCUTS_MCP_LEARN_SIGN=1` (optional sign gate)
 
 ---
 
 ## Changelog
+
+### 2.7.0
+
+- **Echo-chamber guard**: trusted maps only from external_apple / external_user
+- **SQLite extractor** for Shortcuts.sqlite when Full Disk Access allows
+- **Gallery/system .wflow** as authentic Apple corpus
+- **Enum vs TextToken** discriminator (enums never WFTextTokenString-wrapped)
+- **Accept filter**: reverse compile before accepted_short_to_wf
+- `extract_system_library` tool + TCC status reporting
 
 ### 2.6.0
 

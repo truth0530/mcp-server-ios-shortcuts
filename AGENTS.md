@@ -1,4 +1,4 @@
-# Agent notes — ios-shortcuts MCP (v2.6)
+# Agent notes — ios-shortcuts MCP (v2.7)
 
 ## Purpose
 
@@ -9,9 +9,11 @@ Build, sign, import, list, run, and inspect macOS/iOS Shortcuts (`.shortcut`) vi
 1. `doctor` — confirm CLI + **sign probe** + allow roots  
 2. Prefer **curated** short names for production quality  
 3. For existing files: `decompile_shortcut` → edit recipe → `validate_recipe` → rebuild  
-4. After new exports: `learn_from_corpus` (or `scripts/learn_from_shortcuts.py`)  
-5. Generic / full ids: short keys ok if learned (`get_learned_params`); else raw `WF…`  
-6. Server applies **learned remap → auto-coercion** (still not full Apple schema)  
+4. After library changes: `learn_from_corpus` / `extract_system_library`  
+   - Needs **Full Disk Access** for Shortcuts.sqlite  
+   - Never trust self-bootstrap unless debugging  
+5. Generic short keys only if **accepted** map exists (`get_learned_params`)  
+6. Remap → schema-aware coercion (enums plain; text may token-wrap)  
 7. App Intents: `type: app_intent` with reverse-DNS `identifier`  
 8. `validate_recipe` with `target_platform` (`ios`/`macos`)  
 9. `build_shortcut` — keep `raw_path` for inspect/decompile/learn  

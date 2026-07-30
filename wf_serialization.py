@@ -172,7 +172,13 @@ def _looks_bool_key(key: str) -> bool:
     }
 
 
-def coerce_value(key: str, value: Any, *, mode: str = "smart") -> Any:
+def coerce_value(
+    key: str,
+    value: Any,
+    *,
+    mode: str = "smart",
+    schema: Optional[dict] = None,
+) -> Any:
     """
     Coerce a single parameter value.
 
@@ -181,6 +187,10 @@ def coerce_value(key: str, value: Any, *, mode: str = "smart") -> Any:
       - smart: wrap plain scalars when key heuristics match (default)
       - aggressive: wrap all plain strings as WFTextTokenString and
         all numbers as WFNumberSubstitutableState
+
+    schema (optional, from param_learning.classify_param_schema):
+      {kind: enum|text_token|number|bool|free_text, coerce: plain_string|...}
+      Enum values are NEVER wrapped (prevents picker reset / Silent Corruption).
     """
     if mode in (None, "off", "none", False):
         return value
@@ -188,6 +198,26 @@ def coerce_value(key: str, value: Any, *, mode: str = "smart") -> Any:
         return value
     if is_serialized_wf_value(value):
         return value
+
+    # Schema-driven path (learned discriminators)
+    if schema:
+        coerce = schema.get("coerce") or "off"
+        kind = schema.get("kind")
+        if kind == "enum" or coerce == "plain_string":
+            return value
+        if coerce == "plain_number":
+            return value
+        if coerce == "plain_bool":
+            return value
+        if coerce == "text_token_string" and isinstance(value, str):
+            return text_token_string(value)
+        if coerce == "number_state" and isinstance(value, (int, float)) and not isinstance(
+            value, bool
+        ):
+            return number_substitutable(float(value))
+        if coerce == "off":
+            return value
+
     # Magic-ref leftovers should already be resolved before this stage
     if isinstance(value, dict):
         return {k: coerce_value(k, v, mode=mode) for k, v in value.items()}
@@ -212,22 +242,39 @@ def coerce_value(key: str, value: Any, *, mode: str = "smart") -> Any:
     if isinstance(value, str):
         if key in _PLAIN_KEYS:
             return value
+        # Heuristic enum-ish keys: never wrap
+        if re.search(
+            r"(Method|Mode|Type|Case|Operation|Specifier|Setting|Shell)$",
+            key,
+            re.I,
+        ):
+            return value
         if aggressive or _looks_text_key(key):
-            # Empty string: still wrap so UI has a token field
             return text_token_string(value)
         return value
 
     return value
 
 
-def coerce_params(params: Optional[dict], *, mode: str = "smart") -> dict:
+def coerce_params(
+    params: Optional[dict],
+    *,
+    mode: str = "smart",
+    schema_by_key: Optional[Dict[str, dict]] = None,
+) -> dict:
     if not params:
         return {}
     if mode in (None, "off", "none", False):
         return dict(params)
     out: Dict[str, Any] = {}
+    schema_by_key = schema_by_key or {}
     for k, v in params.items():
-        out[k] = coerce_value(str(k), v, mode=mode)
+        out[k] = coerce_value(
+            str(k),
+            v,
+            mode=mode,
+            schema=schema_by_key.get(str(k)),
+        )
     return out
 
 

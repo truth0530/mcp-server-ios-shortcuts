@@ -26,19 +26,23 @@ Cover **all Apple `is.workflow.actions.*` identifiers** available on a modern ma
 | **App Intent** | `type: app_intent` + reverse-DNS identifiers |
 | **Synthetic helpers** | `conditional_*` / `repeat_*` / `menu_*` |
 
-## Learning loop (v2.6)
+## Trusted learning loop (v2.7)
 
-1. Compile seed recipes + templates + fixtures (known-good WF shapes)  
-2. Optionally scan `dist/` and `IOS_SHORTCUTS_MCP_LEARN_ROOTS` for `*.shortcut` / `*_raw.shortcut`  
-3. Aggregate per-identifier `key_freq`, `value_kinds`, `short_to_wf`  
-4. Generic compiler remaps ergonomic keys before auto-coercion  
+1. **External corpus only (default)**  
+   - Apple Gallery `.wflow` + system dictation workflows  
+   - `Shortcuts.sqlite` when Full Disk Access grants read  
+   - User export roots (`--roots` / `IOS_SHORTCUTS_MCP_LEARN_ROOTS`)  
+2. **Echo-chamber guard**: self-built uuid5 plists + seeds excluded from trusted maps  
+3. **Enum vs TextToken** via `param_schema.kind` → coercion never wraps enums  
+4. **Accept filter**: reverse compile (optional sign) → `accepted_short_to_wf` only  
+5. Generic compiler uses **accepted** maps only  
 
 ```bash
 python3 scripts/learn_from_shortcuts.py
-# or MCP: learn_from_corpus
+# Full Disk Access → Terminal, then sqlite extraction works
+python3 scripts/learn_from_shortcuts.py --roots ~/Desktop/exports
+# Debug only (pollutes trust): --allow-self-bootstrap
 ```
-
-Re-run after adding user-exported shortcuts to grow coverage beyond the seed set.
 
 ## How agents should call actions
 

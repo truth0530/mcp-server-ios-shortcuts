@@ -1383,20 +1383,27 @@ def _compile_action(item: dict, *, coerce_mode: str = "smart") -> List[dict]:
     generic_params = dict(args)
     for drop in ("type", "action", "as"):
         generic_params.pop(drop, None)
-    # Learned short→WF key maps (from decompile/compile mining)
+    # Learned short→WF key maps (accepted/validated only by default)
+    schema_by_key = {}
     try:
-        from param_learning import apply_learned_param_map  # lazy: avoid import cycle
+        from param_learning import (  # lazy: avoid import cycle
+            apply_learned_param_map,
+            get_param_schema,
+        )
 
-        generic_params, _map_notes = apply_learned_param_map(ident, generic_params)
+        generic_params, _map_notes = apply_learned_param_map(
+            ident, generic_params, accepted_only=True
+        )
+        schema_by_key = get_param_schema(ident) or {}
     except Exception:
         pass
     # Curated identifiers still benefit from coercion when used via raw id
     mode = coerce_mode
     if meta.get("serialization") == "curated" and coerce_mode == "smart":
-        # Bare values often OK for curated ids when using specialized compilers;
-        # when falling through generic path, still apply smart coercion.
         mode = "smart"
-    generic_params = coerce_params(generic_params, mode=mode)
+    generic_params = coerce_params(
+        generic_params, mode=mode, schema_by_key=schema_by_key
+    )
     return [create_action(ident, generic_params)]
 
 
