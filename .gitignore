@@ -1,5 +1,13 @@
 __pycache__/
 *.pyc
 .DS_Store
+.venv/
+venv/
 dist/*
-!.gitkeep
+!dist/.gitkeep
+*.shortcut
+!examples/**
+.idea/
+.vscode/
+*.egg-info/
+.pytest_cache/

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "ios-shortcuts": {
+      "command": "python3",
+      "args": [
+        "/ABSOLUTE/PATH/TO/mcp-server-ios-shortcuts/server.py"
+      ]
+    }
+  }
+}

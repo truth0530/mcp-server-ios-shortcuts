@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ios-shortcuts": {
+      "command": "python3",
+      "args": ["${workspaceFolder}/server.py"]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "name": "OffToWork",
+  "icon_color": "blue",
+  "actions": [
+    {
+      "type": "comment",
+      "params": { "text": "Work check-in helper — volume, app, wait, capture, speak" }
+    },
+    {
+      "type": "set_volume",
+      "params": { "volume": 1.0 }
+    },
+    {
+      "type": "open_app",
+      "params": {
+        "bundle_id": "com.apple.MobileSMS",
+        "app_name": "Messages"
+      }
+    },
+    {
+      "type": "delay",
+      "params": { "seconds": 3 }
+    },
+    {
+      "type": "take_screenshot",
+      "params": {}
+    },
+    {
+      "type": "speak_text",
+      "params": {
+        "text": "Check-in confirmed",
+        "wait": true
+      }
+    },
+    {
+      "type": "show_notification",
+      "params": {
+        "title": "OffToWork",
+        "body": "Check-in flow finished"
+      }
+    }
+  ]
+}

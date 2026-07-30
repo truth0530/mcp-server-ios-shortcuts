@@ -1,0 +1,14 @@
+# Grok Build — paste into ~/.grok/config.toml
+# or: grok mcp add ios-shortcuts -- python3 /ABSOLUTE/PATH/mcp-server-ios-shortcuts/server.py
+#
+# Docs: https://github.com/truth0530/mcp-server-ios-shortcuts
+
+[mcp_servers.ios-shortcuts]
+command = "python3"
+args = ["/ABSOLUTE/PATH/TO/mcp-server-ios-shortcuts/server.py"]
+enabled = true
+startup_timeout_sec = 15
+tool_timeout_sec = 300
+
+# Optional: override default dist directory
+# env = { IOS_SHORTCUTS_MCP_DIST = "/tmp/shortcuts-dist" }

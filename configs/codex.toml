@@ -1,0 +1,17 @@
+# Codex CLI — paste into ~/.codex/config.toml
+# Docs: https://github.com/truth0530/mcp-server-ios-shortcuts
+
+[mcp_servers.ios-shortcuts]
+command = "python3"
+args = ["/ABSOLUTE/PATH/TO/mcp-server-ios-shortcuts/server.py"]
+startup_timeout_sec = 15
+
+# Optional: require approval for side-effecting tools
+# [mcp_servers.ios-shortcuts.tools.run_shortcut]
+# approval_mode = "approve"
+#
+# [mcp_servers.ios-shortcuts.tools.build_and_install]
+# approval_mode = "approve"
+#
+# [mcp_servers.ios-shortcuts.tools.send_imessage]
+# approval_mode = "approve"

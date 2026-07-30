@@ -1,0 +1,32 @@
+{
+  "name": "HttpAndNotify",
+  "icon_color": "teal",
+  "actions": [
+    {
+      "type": "get_contents_of_url",
+      "params": {
+        "url": "https://httpbin.org/get",
+        "method": "GET"
+      }
+    },
+    {
+      "type": "set_variable",
+      "params": { "var_name": "Response" }
+    },
+    {
+      "type": "show_notification",
+      "params": {
+        "title": "HTTP done",
+        "body": "Response stored in variable Response"
+      }
+    },
+    {
+      "type": "get_variable",
+      "params": { "var_name": "Response" }
+    },
+    {
+      "type": "show_result",
+      "params": { "text": "" }
+    }
+  ]
+}

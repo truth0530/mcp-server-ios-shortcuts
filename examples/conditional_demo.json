@@ -1,0 +1,34 @@
+{
+  "name": "ConditionalDemo",
+  "icon_color": "purple",
+  "actions": [
+    {
+      "type": "text",
+      "params": { "text": "status: ok" }
+    },
+    {
+      "type": "conditional_start",
+      "params": {
+        "group_id": "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE",
+        "condition": "contains",
+        "value": "ok"
+      }
+    },
+    {
+      "type": "show_notification",
+      "params": { "title": "Branch", "body": "Matched OK" }
+    },
+    {
+      "type": "conditional_else",
+      "params": { "group_id": "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE" }
+    },
+    {
+      "type": "show_notification",
+      "params": { "title": "Branch", "body": "No match" }
+    },
+    {
+      "type": "conditional_end",
+      "params": { "group_id": "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE" }
+    }
+  ]
+}
