@@ -1,0 +1,6703 @@
+{
+  "version": 1,
+  "generator": "scripts/build_action_catalog_db.py",
+  "identifier_count": 415,
+  "curated_count": 100,
+  "actions": {
+    "is.workflow.actions.addframetogif": {
+      "short_names": [
+        "addframetogif"
+      ],
+      "primary_short": "addframetogif",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.addmusictoupnext": {
+      "short_names": [
+        "addmusictoupnext"
+      ],
+      "primary_short": "addmusictoupnext",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.addnewcalendar": {
+      "short_names": [
+        "addnewcalendar"
+      ],
+      "primary_short": "addnewcalendar",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.addnewcontact": {
+      "short_names": [
+        "addnewcontact"
+      ],
+      "primary_short": "addnewcontact",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.addnewevent": {
+      "short_names": [
+        "addnewevent"
+      ],
+      "primary_short": "addnewevent",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.addnewreminder": {
+      "short_names": [
+        "addnewreminder"
+      ],
+      "primary_short": "addnewreminder",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.addquickreminder": {
+      "short_names": [
+        "addquickreminder"
+      ],
+      "primary_short": "addquickreminder",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.address": {
+      "short_names": [
+        "address"
+      ],
+      "primary_short": "address",
+      "category": "location",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.addtoplaylist": {
+      "short_names": [
+        "addtoplaylist"
+      ],
+      "primary_short": "addtoplaylist",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.adjustdate": {
+      "short_names": [
+        "adjust_date",
+        "adjustdate"
+      ],
+      "primary_short": "adjust_date",
+      "category": "calendar",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.airdrop": {
+      "short_names": [
+        "airdrop"
+      ],
+      "primary_short": "airdrop",
+      "category": "communication",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.airdropdocument": {
+      "short_names": [
+        "airdropdocument"
+      ],
+      "primary_short": "airdropdocument",
+      "category": "communication",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.airplanemode": {
+      "short_names": [
+        "airplanemode"
+      ],
+      "primary_short": "airplanemode",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.airplanemode.set": {
+      "short_names": [
+        "set_airplane_mode",
+        "airplanemode_set"
+      ],
+      "primary_short": "set_airplane_mode",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.alarm.create": {
+      "short_names": [
+        "alarm_create"
+      ],
+      "primary_short": "alarm_create",
+      "category": "calendar",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.alarm.toggle": {
+      "short_names": [
+        "alarm_toggle"
+      ],
+      "primary_short": "alarm_toggle",
+      "category": "calendar",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.alert": {
+      "short_names": [
+        "show_alert",
+        "alert"
+      ],
+      "primary_short": "show_alert",
+      "category": "interaction",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.announcenotifications.set": {
+      "short_names": [
+        "announcenotifications_set"
+      ],
+      "primary_short": "announcenotifications_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.appearance": {
+      "short_names": [
+        "appearance"
+      ],
+      "primary_short": "appearance",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.appendnote": {
+      "short_names": [
+        "appendnote"
+      ],
+      "primary_short": "appendnote",
+      "category": "notes",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.appendvariable": {
+      "short_names": [
+        "add_to_variable",
+        "appendvariable"
+      ],
+      "primary_short": "add_to_variable",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.applescript": {
+      "short_names": [
+        "run_applescript",
+        "applescript"
+      ],
+      "primary_short": "run_applescript",
+      "category": "scripting",
+      "platforms": [
+        "macos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.ask": {
+      "short_names": [
+        "ask"
+      ],
+      "primary_short": "ask",
+      "category": "interaction",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.askllm": {
+      "short_names": [
+        "askllm"
+      ],
+      "primary_short": "askllm",
+      "category": "interaction",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.avairyeditphoto": {
+      "short_names": [
+        "avairyeditphoto"
+      ],
+      "primary_short": "avairyeditphoto",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.base64encode": {
+      "short_names": [
+        "base64_encode",
+        "base64encode"
+      ],
+      "primary_short": "base64_encode",
+      "category": "data",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.bluetooth.set": {
+      "short_names": [
+        "set_bluetooth",
+        "bluetooth_set"
+      ],
+      "primary_short": "set_bluetooth",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.calculate": {
+      "short_names": [
+        "calculate"
+      ],
+      "primary_short": "calculate",
+      "category": "data",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.calculateexpression": {
+      "short_names": [
+        "calculateexpression"
+      ],
+      "primary_short": "calculateexpression",
+      "category": "data",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.cellular.rat.set": {
+      "short_names": [
+        "cellular_rat_set"
+      ],
+      "primary_short": "cellular_rat_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.cellulardata.set": {
+      "short_names": [
+        "set_cellular",
+        "cellulardata_set"
+      ],
+      "primary_short": "set_cellular",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.choosefromlist": {
+      "short_names": [
+        "choose_from_list",
+        "choosefromlist"
+      ],
+      "primary_short": "choose_from_list",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.choosefrommenu": {
+      "short_names": [
+        "choose_from_menu",
+        "choosefrommenu"
+      ],
+      "primary_short": "choose_from_menu",
+      "category": "control",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.clearupnext": {
+      "short_names": [
+        "clearupnext"
+      ],
+      "primary_short": "clearupnext",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.cloudapp.upload": {
+      "short_names": [
+        "cloudapp_upload"
+      ],
+      "primary_short": "cloudapp_upload",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.comment": {
+      "short_names": [
+        "comment"
+      ],
+      "primary_short": "comment",
+      "category": "control",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": true
+    },
+    "is.workflow.actions.compresspdf": {
+      "short_names": [
+        "compresspdf"
+      ],
+      "primary_short": "compresspdf",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.conditional": {
+      "short_names": [
+        "conditional"
+      ],
+      "primary_short": "conditional",
+      "category": "control",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.connecttoservers": {
+      "short_names": [
+        "connecttoservers"
+      ],
+      "primary_short": "connecttoservers",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.contacts": {
+      "short_names": [
+        "contacts"
+      ],
+      "primary_short": "contacts",
+      "category": "communication",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.converttimezone": {
+      "short_names": [
+        "converttimezone"
+      ],
+      "primary_short": "converttimezone",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.correctspelling": {
+      "short_names": [
+        "correctspelling"
+      ],
+      "primary_short": "correctspelling",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.count": {
+      "short_names": [
+        "count"
+      ],
+      "primary_short": "count",
+      "category": "data",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.createplaylist": {
+      "short_names": [
+        "createplaylist"
+      ],
+      "primary_short": "createplaylist",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.cropimage": {
+      "short_names": [
+        "crop_image",
+        "cropimage"
+      ],
+      "primary_short": "crop_image",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.currentdate": {
+      "short_names": [
+        "currentdate"
+      ],
+      "primary_short": "currentdate",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.date": {
+      "short_names": [
+        "date"
+      ],
+      "primary_short": "date",
+      "category": "calendar",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.debug.contentattribution": {
+      "short_names": [
+        "debug_contentattribution"
+      ],
+      "primary_short": "debug_contentattribution",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.delay": {
+      "short_names": [
+        "delay"
+      ],
+      "primary_short": "delay",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": true
+    },
+    "is.workflow.actions.deletephotos": {
+      "short_names": [
+        "deletephotos"
+      ],
+      "primary_short": "deletephotos",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.deskconnect.send": {
+      "short_names": [
+        "deskconnect_send"
+      ],
+      "primary_short": "deskconnect_send",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detect.address": {
+      "short_names": [
+        "detect_address"
+      ],
+      "primary_short": "detect_address",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detect.contacts": {
+      "short_names": [
+        "detect_contacts"
+      ],
+      "primary_short": "detect_contacts",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detect.date": {
+      "short_names": [
+        "detect_date"
+      ],
+      "primary_short": "detect_date",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detect.dicionary": {
+      "short_names": [
+        "detect_dicionary"
+      ],
+      "primary_short": "detect_dicionary",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detect.dictionary": {
+      "short_names": [
+        "detect_dictionary"
+      ],
+      "primary_short": "detect_dictionary",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detect.emailaddress": {
+      "short_names": [
+        "detect_emailaddress"
+      ],
+      "primary_short": "detect_emailaddress",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detect.images": {
+      "short_names": [
+        "detect_images"
+      ],
+      "primary_short": "detect_images",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detect.link": {
+      "short_names": [
+        "detect_link"
+      ],
+      "primary_short": "detect_link",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detect.number": {
+      "short_names": [
+        "detect_number"
+      ],
+      "primary_short": "detect_number",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detect.phonenumber": {
+      "short_names": [
+        "detect_phonenumber"
+      ],
+      "primary_short": "detect_phonenumber",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detect.text": {
+      "short_names": [
+        "get_text_from_input",
+        "detect_text"
+      ],
+      "primary_short": "get_text_from_input",
+      "category": "text",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.detectlanguage": {
+      "short_names": [
+        "detectlanguage"
+      ],
+      "primary_short": "detectlanguage",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dictatetext": {
+      "short_names": [
+        "dictate_text",
+        "dictatetext"
+      ],
+      "primary_short": "dictate_text",
+      "category": "interaction",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dictionary": {
+      "short_names": [
+        "dictionary"
+      ],
+      "primary_short": "dictionary",
+      "category": "data",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dismisssiri": {
+      "short_names": [
+        "dismisssiri"
+      ],
+      "primary_short": "dismisssiri",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.display.always-on.set": {
+      "short_names": [
+        "display_always_on_set"
+      ],
+      "primary_short": "display_always_on_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.displaysleep": {
+      "short_names": [
+        "displaysleep"
+      ],
+      "primary_short": "displaysleep",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dnd": {
+      "short_names": [
+        "dnd"
+      ],
+      "primary_short": "dnd",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dnd.getfocus": {
+      "short_names": [
+        "dnd_getfocus"
+      ],
+      "primary_short": "dnd_getfocus",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dnd.set": {
+      "short_names": [
+        "set_focus",
+        "dnd_set"
+      ],
+      "primary_short": "set_focus",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dnd.set.com.apple.donotdisturb.mode.default.toggle": {
+      "short_names": [
+        "dnd_set_com_apple_donotdisturb_mode_default_toggle"
+      ],
+      "primary_short": "dnd_set_com_apple_donotdisturb_mode_default_toggle",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dnd.set.com.apple.donotdisturb.mode.driving.toggle": {
+      "short_names": [
+        "dnd_set_com_apple_donotdisturb_mode_driving_toggle"
+      ],
+      "primary_short": "dnd_set_com_apple_donotdisturb_mode_driving_toggle",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.documentpicker.open": {
+      "short_names": [
+        "get_file",
+        "documentpicker_open"
+      ],
+      "primary_short": "get_file",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.documentpicker.save": {
+      "short_names": [
+        "save_file",
+        "documentpicker_save"
+      ],
+      "primary_short": "save_file",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.downloadurl": {
+      "short_names": [
+        "get_contents_of_url",
+        "downloadurl"
+      ],
+      "primary_short": "get_contents_of_url",
+      "category": "web",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dropbox.append": {
+      "short_names": [
+        "dropbox_append"
+      ],
+      "primary_short": "dropbox_append",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dropbox.appendfile": {
+      "short_names": [
+        "dropbox_appendfile"
+      ],
+      "primary_short": "dropbox_appendfile",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dropbox.createfolder": {
+      "short_names": [
+        "dropbox_createfolder"
+      ],
+      "primary_short": "dropbox_createfolder",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dropbox.delete": {
+      "short_names": [
+        "dropbox_delete"
+      ],
+      "primary_short": "dropbox_delete",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dropbox.delete2": {
+      "short_names": [
+        "dropbox_delete2"
+      ],
+      "primary_short": "dropbox_delete2",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dropbox.getlink": {
+      "short_names": [
+        "dropbox_getlink"
+      ],
+      "primary_short": "dropbox_getlink",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dropbox.open": {
+      "short_names": [
+        "dropbox_open"
+      ],
+      "primary_short": "dropbox_open",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dropbox.pick": {
+      "short_names": [
+        "dropbox_pick"
+      ],
+      "primary_short": "dropbox_pick",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dropbox.save": {
+      "short_names": [
+        "dropbox_save"
+      ],
+      "primary_short": "dropbox_save",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.dropbox.savefile": {
+      "short_names": [
+        "dropbox_savefile"
+      ],
+      "primary_short": "dropbox_savefile",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.ejectdisk": {
+      "short_names": [
+        "ejectdisk"
+      ],
+      "primary_short": "ejectdisk",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.email": {
+      "short_names": [
+        "email"
+      ],
+      "primary_short": "email",
+      "category": "communication",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.encodemedia": {
+      "short_names": [
+        "encode_media",
+        "encodemedia"
+      ],
+      "primary_short": "encode_media",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.evernote.append": {
+      "short_names": [
+        "evernote_append"
+      ],
+      "primary_short": "evernote_append",
+      "category": "notes",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.evernote.delete": {
+      "short_names": [
+        "evernote_delete"
+      ],
+      "primary_short": "evernote_delete",
+      "category": "notes",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.evernote.get": {
+      "short_names": [
+        "evernote_get"
+      ],
+      "primary_short": "evernote_get",
+      "category": "notes",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.evernote.getlink": {
+      "short_names": [
+        "evernote_getlink"
+      ],
+      "primary_short": "evernote_getlink",
+      "category": "notes",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.evernote.new": {
+      "short_names": [
+        "evernote_new"
+      ],
+      "primary_short": "evernote_new",
+      "category": "notes",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.exit": {
+      "short_names": [
+        "exit_shortcut",
+        "exit"
+      ],
+      "primary_short": "exit_shortcut",
+      "category": "control",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.exportsong": {
+      "short_names": [
+        "exportsong"
+      ],
+      "primary_short": "exportsong",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.extracttextfromimage": {
+      "short_names": [
+        "ocr_extract_text",
+        "extracttextfromimage"
+      ],
+      "primary_short": "ocr_extract_text",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.facebook.messenger.send": {
+      "short_names": [
+        "facebook_messenger_send"
+      ],
+      "primary_short": "facebook_messenger_send",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file": {
+      "short_names": [
+        "file"
+      ],
+      "primary_short": "file",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file.append": {
+      "short_names": [
+        "file_append"
+      ],
+      "primary_short": "file_append",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file.createfolder": {
+      "short_names": [
+        "create_folder",
+        "file_createfolder"
+      ],
+      "primary_short": "create_folder",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file.delete": {
+      "short_names": [
+        "delete_files",
+        "file_delete"
+      ],
+      "primary_short": "delete_files",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file.get": {
+      "short_names": [
+        "get_file_from_folder",
+        "file_get"
+      ],
+      "primary_short": "get_file_from_folder",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file.getfoldercontents": {
+      "short_names": [
+        "file_getfoldercontents"
+      ],
+      "primary_short": "file_getfoldercontents",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file.getlink": {
+      "short_names": [
+        "file_getlink"
+      ],
+      "primary_short": "file_getlink",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file.label": {
+      "short_names": [
+        "file_label"
+      ],
+      "primary_short": "file_label",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file.move": {
+      "short_names": [
+        "file_move"
+      ],
+      "primary_short": "file_move",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file.rename": {
+      "short_names": [
+        "rename_file",
+        "file_rename"
+      ],
+      "primary_short": "rename_file",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file.reveal": {
+      "short_names": [
+        "file_reveal"
+      ],
+      "primary_short": "file_reveal",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.file.select": {
+      "short_names": [
+        "file_select"
+      ],
+      "primary_short": "file_select",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.apps": {
+      "short_names": [
+        "filter_apps"
+      ],
+      "primary_short": "filter_apps",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.articles": {
+      "short_names": [
+        "filter_articles"
+      ],
+      "primary_short": "filter_articles",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.calendarevents": {
+      "short_names": [
+        "filter_calendarevents"
+      ],
+      "primary_short": "filter_calendarevents",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.contacts": {
+      "short_names": [
+        "filter_contacts"
+      ],
+      "primary_short": "filter_contacts",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.displays": {
+      "short_names": [
+        "filter_displays"
+      ],
+      "primary_short": "filter_displays",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.eventattendees": {
+      "short_names": [
+        "filter_eventattendees"
+      ],
+      "primary_short": "filter_eventattendees",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.files": {
+      "short_names": [
+        "filter_files"
+      ],
+      "primary_short": "filter_files",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.health.quantity": {
+      "short_names": [
+        "filter_health_quantity"
+      ],
+      "primary_short": "filter_health_quantity",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.images": {
+      "short_names": [
+        "filter_images"
+      ],
+      "primary_short": "filter_images",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.locations": {
+      "short_names": [
+        "filter_locations"
+      ],
+      "primary_short": "filter_locations",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.media": {
+      "short_names": [
+        "filter_media"
+      ],
+      "primary_short": "filter_media",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.music": {
+      "short_names": [
+        "filter_music"
+      ],
+      "primary_short": "filter_music",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.notes": {
+      "short_names": [
+        "filter_notes"
+      ],
+      "primary_short": "filter_notes",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.photos": {
+      "short_names": [
+        "filter_photos"
+      ],
+      "primary_short": "filter_photos",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.reminders": {
+      "short_names": [
+        "filter_reminders"
+      ],
+      "primary_short": "filter_reminders",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.filter.windows": {
+      "short_names": [
+        "filter_windows"
+      ],
+      "primary_short": "filter_windows",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.finder.getselectedfiles": {
+      "short_names": [
+        "finder_getselectedfiles"
+      ],
+      "primary_short": "finder_getselectedfiles",
+      "category": "other",
+      "platforms": [
+        "macos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.flashlight": {
+      "short_names": [
+        "set_flashlight",
+        "flashlight"
+      ],
+      "primary_short": "set_flashlight",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.folder": {
+      "short_names": [
+        "folder"
+      ],
+      "primary_short": "folder",
+      "category": "files",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.format.date": {
+      "short_names": [
+        "format_date"
+      ],
+      "primary_short": "format_date",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.format.filesize": {
+      "short_names": [
+        "format_filesize"
+      ],
+      "primary_short": "format_filesize",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.format.number": {
+      "short_names": [
+        "format_number"
+      ],
+      "primary_short": "format_number",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.formatdate": {
+      "short_names": [
+        "format_date",
+        "formatdate"
+      ],
+      "primary_short": "format_date",
+      "category": "calendar",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.generatebarcode": {
+      "short_names": [
+        "generatebarcode"
+      ],
+      "primary_short": "generatebarcode",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.get.playlist": {
+      "short_names": [
+        "get_playlist"
+      ],
+      "primary_short": "get_playlist",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getaddressesfrominput": {
+      "short_names": [
+        "get_addresses",
+        "getaddressesfrominput"
+      ],
+      "primary_short": "get_addresses",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getarticle": {
+      "short_names": [
+        "getarticle"
+      ],
+      "primary_short": "getarticle",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getbatterylevel": {
+      "short_names": [
+        "get_battery",
+        "getbatterylevel"
+      ],
+      "primary_short": "get_battery",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getbrightness": {
+      "short_names": [
+        "get_brightness",
+        "getbrightness"
+      ],
+      "primary_short": "get_brightness",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getclassaction": {
+      "short_names": [
+        "getclassaction"
+      ],
+      "primary_short": "getclassaction",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getclipboard": {
+      "short_names": [
+        "get_clipboard",
+        "getclipboard"
+      ],
+      "primary_short": "get_clipboard",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getcurrentapp": {
+      "short_names": [
+        "getcurrentapp"
+      ],
+      "primary_short": "getcurrentapp",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getcurrentlocation": {
+      "short_names": [
+        "get_location",
+        "getcurrentlocation"
+      ],
+      "primary_short": "get_location",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getcurrentsong": {
+      "short_names": [
+        "getcurrentsong"
+      ],
+      "primary_short": "getcurrentsong",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getdevicedetails": {
+      "short_names": [
+        "get_device_details",
+        "getdevicedetails"
+      ],
+      "primary_short": "get_device_details",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getdirection": {
+      "short_names": [
+        "getdirection"
+      ],
+      "primary_short": "getdirection",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getdirections": {
+      "short_names": [
+        "getdirections"
+      ],
+      "primary_short": "getdirections",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getdistance": {
+      "short_names": [
+        "getdistance"
+      ],
+      "primary_short": "getdistance",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getenddate": {
+      "short_names": [
+        "getenddate"
+      ],
+      "primary_short": "getenddate",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getepisodesforpodcast": {
+      "short_names": [
+        "getepisodesforpodcast"
+      ],
+      "primary_short": "getepisodesforpodcast",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getframesfromimage": {
+      "short_names": [
+        "getframesfromimage"
+      ],
+      "primary_short": "getframesfromimage",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.gethalfwaypoint": {
+      "short_names": [
+        "get_halfway_point",
+        "gethalfwaypoint"
+      ],
+      "primary_short": "get_halfway_point",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.gethomeaccessorystate": {
+      "short_names": [
+        "gethomeaccessorystate"
+      ],
+      "primary_short": "gethomeaccessorystate",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.gethtmlfromrichtext": {
+      "short_names": [
+        "gethtmlfromrichtext"
+      ],
+      "primary_short": "gethtmlfromrichtext",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getipaddress": {
+      "short_names": [
+        "getipaddress"
+      ],
+      "primary_short": "getipaddress",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getitemfromlist": {
+      "short_names": [
+        "get_item_from_list",
+        "getitemfromlist"
+      ],
+      "primary_short": "get_item_from_list",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getitemname": {
+      "short_names": [
+        "getitemname"
+      ],
+      "primary_short": "getitemname",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getitemtype": {
+      "short_names": [
+        "getitemtype"
+      ],
+      "primary_short": "getitemtype",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getlastphoto": {
+      "short_names": [
+        "getlastphoto"
+      ],
+      "primary_short": "getlastphoto",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getlastscreenshot": {
+      "short_names": [
+        "getlastscreenshot"
+      ],
+      "primary_short": "getlastscreenshot",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getlastvideo": {
+      "short_names": [
+        "getlastvideo"
+      ],
+      "primary_short": "getlastvideo",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getlatestbursts": {
+      "short_names": [
+        "getlatestbursts"
+      ],
+      "primary_short": "getlatestbursts",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getlatestlivephotos": {
+      "short_names": [
+        "getlatestlivephotos"
+      ],
+      "primary_short": "getlatestlivephotos",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getlatestphotoimport": {
+      "short_names": [
+        "getlatestphotoimport"
+      ],
+      "primary_short": "getlatestphotoimport",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getmapslink": {
+      "short_names": [
+        "get_maps_url",
+        "getmapslink"
+      ],
+      "primary_short": "get_maps_url",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getmarkdownfromrichtext": {
+      "short_names": [
+        "getmarkdownfromrichtext"
+      ],
+      "primary_short": "getmarkdownfromrichtext",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getmyworkflows": {
+      "short_names": [
+        "get_my_shortcuts",
+        "getmyworkflows"
+      ],
+      "primary_short": "get_my_shortcuts",
+      "category": "apps",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getnameofemoji": {
+      "short_names": [
+        "getnameofemoji"
+      ],
+      "primary_short": "getnameofemoji",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getonscreencontent": {
+      "short_names": [
+        "getonscreencontent"
+      ],
+      "primary_short": "getonscreencontent",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getparentdirectory": {
+      "short_names": [
+        "getparentdirectory"
+      ],
+      "primary_short": "getparentdirectory",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getparkedcarlocation": {
+      "short_names": [
+        "getparkedcarlocation"
+      ],
+      "primary_short": "getparkedcarlocation",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getpodcastsfromlibrary": {
+      "short_names": [
+        "getpodcastsfromlibrary"
+      ],
+      "primary_short": "getpodcastsfromlibrary",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getrichtextfromhtml": {
+      "short_names": [
+        "getrichtextfromhtml"
+      ],
+      "primary_short": "getrichtextfromhtml",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getrichtextfrommarkdown": {
+      "short_names": [
+        "getrichtextfrommarkdown"
+      ],
+      "primary_short": "getrichtextfrommarkdown",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getstartdate": {
+      "short_names": [
+        "getstartdate"
+      ],
+      "primary_short": "getstartdate",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.gettext": {
+      "short_names": [
+        "text",
+        "gettext"
+      ],
+      "primary_short": "text",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": true
+    },
+    "is.workflow.actions.gettextfrompdf": {
+      "short_names": [
+        "gettextfrompdf"
+      ],
+      "primary_short": "gettextfrompdf",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.gettimebetweendates": {
+      "short_names": [
+        "gettimebetweendates"
+      ],
+      "primary_short": "gettimebetweendates",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.gettraveltime": {
+      "short_names": [
+        "get_travel_time",
+        "gettraveltime"
+      ],
+      "primary_short": "get_travel_time",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.gettypeaction": {
+      "short_names": [
+        "gettypeaction"
+      ],
+      "primary_short": "gettypeaction",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getupcomingevents": {
+      "short_names": [
+        "getupcomingevents"
+      ],
+      "primary_short": "getupcomingevents",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getupcomingreminders": {
+      "short_names": [
+        "getupcomingreminders"
+      ],
+      "primary_short": "getupcomingreminders",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.geturlcomponent": {
+      "short_names": [
+        "geturlcomponent"
+      ],
+      "primary_short": "geturlcomponent",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getvalueforkey": {
+      "short_names": [
+        "get_dictionary_value",
+        "getvalueforkey"
+      ],
+      "primary_short": "get_dictionary_value",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getvariable": {
+      "short_names": [
+        "get_variable",
+        "getvariable"
+      ],
+      "primary_short": "get_variable",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getvolume": {
+      "short_names": [
+        "get_volume",
+        "getvolume"
+      ],
+      "primary_short": "get_volume",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getwebpagecontents": {
+      "short_names": [
+        "getwebpagecontents"
+      ],
+      "primary_short": "getwebpagecontents",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.getwifi": {
+      "short_names": [
+        "get_network_details",
+        "getwifi"
+      ],
+      "primary_short": "get_network_details",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.giphy": {
+      "short_names": [
+        "giphy"
+      ],
+      "primary_short": "giphy",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.goodreader.open": {
+      "short_names": [
+        "goodreader_open"
+      ],
+      "primary_short": "goodreader_open",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.handoff": {
+      "short_names": [
+        "handoff"
+      ],
+      "primary_short": "handoff",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.handoffplayback": {
+      "short_names": [
+        "handoffplayback"
+      ],
+      "primary_short": "handoffplayback",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.hash": {
+      "short_names": [
+        "hash"
+      ],
+      "primary_short": "hash",
+      "category": "data",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.health.quantity.log": {
+      "short_names": [
+        "health_quantity_log"
+      ],
+      "primary_short": "health_quantity_log",
+      "category": "health",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.health.workout.log": {
+      "short_names": [
+        "health_workout_log"
+      ],
+      "primary_short": "health_workout_log",
+      "category": "health",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.hide.app": {
+      "short_names": [
+        "hide_app"
+      ],
+      "primary_short": "hide_app",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.homeaccessory": {
+      "short_names": [
+        "homeaccessory"
+      ],
+      "primary_short": "homeaccessory",
+      "category": "home",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.image.combine": {
+      "short_names": [
+        "image_combine"
+      ],
+      "primary_short": "image_combine",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.image.convert": {
+      "short_names": [
+        "image_convert"
+      ],
+      "primary_short": "image_convert",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.image.convert.finder": {
+      "short_names": [
+        "image_convert_finder"
+      ],
+      "primary_short": "image_convert_finder",
+      "category": "media",
+      "platforms": [
+        "macos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.image.crop": {
+      "short_names": [
+        "image_crop"
+      ],
+      "primary_short": "image_crop",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.image.flip": {
+      "short_names": [
+        "image_flip"
+      ],
+      "primary_short": "image_flip",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.image.mask": {
+      "short_names": [
+        "image_mask"
+      ],
+      "primary_short": "image_mask",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.image.removebackground": {
+      "short_names": [
+        "image_removebackground"
+      ],
+      "primary_short": "image_removebackground",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.image.resize": {
+      "short_names": [
+        "resize_image",
+        "image_resize"
+      ],
+      "primary_short": "resize_image",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.image.rotate": {
+      "short_names": [
+        "image_rotate"
+      ],
+      "primary_short": "image_rotate",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.image.rotate.left": {
+      "short_names": [
+        "image_rotate_left"
+      ],
+      "primary_short": "image_rotate_left",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.image.rotate.right": {
+      "short_names": [
+        "image_rotate_right"
+      ],
+      "primary_short": "image_rotate_right",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.imagerotate": {
+      "short_names": [
+        "rotate_image",
+        "imagerotate"
+      ],
+      "primary_short": "rotate_image",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.imgur.upload": {
+      "short_names": [
+        "imgur_upload"
+      ],
+      "primary_short": "imgur_upload",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.importaudiofiles": {
+      "short_names": [
+        "importaudiofiles"
+      ],
+      "primary_short": "importaudiofiles",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.input": {
+      "short_names": [
+        "input"
+      ],
+      "primary_short": "input",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.instapaper.add": {
+      "short_names": [
+        "instapaper_add"
+      ],
+      "primary_short": "instapaper_add",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.instapaper.get": {
+      "short_names": [
+        "instapaper_get"
+      ],
+      "primary_short": "instapaper_get",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.intercom": {
+      "short_names": [
+        "intercom"
+      ],
+      "primary_short": "intercom",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.lightroom.import": {
+      "short_names": [
+        "lightroom_import"
+      ],
+      "primary_short": "lightroom_import",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.list": {
+      "short_names": [
+        "list"
+      ],
+      "primary_short": "list",
+      "category": "data",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.listeningmode.set": {
+      "short_names": [
+        "listeningmode_set"
+      ],
+      "primary_short": "listeningmode_set",
+      "category": "data",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.location": {
+      "short_names": [
+        "location"
+      ],
+      "primary_short": "location",
+      "category": "location",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.lock.app": {
+      "short_names": [
+        "lock_app"
+      ],
+      "primary_short": "lock_app",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.lockscreen": {
+      "short_names": [
+        "lock_screen",
+        "lockscreen"
+      ],
+      "primary_short": "lock_screen",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.logout": {
+      "short_names": [
+        "logout"
+      ],
+      "primary_short": "logout",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.lowpowermode": {
+      "short_names": [
+        "set_low_power_mode",
+        "lowpowermode"
+      ],
+      "primary_short": "set_low_power_mode",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.lowpowermode.set": {
+      "short_names": [
+        "lowpowermode_set"
+      ],
+      "primary_short": "lowpowermode_set",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.makediskimage": {
+      "short_names": [
+        "makediskimage"
+      ],
+      "primary_short": "makediskimage",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.makegif": {
+      "short_names": [
+        "makegif"
+      ],
+      "primary_short": "makegif",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.makeimagefrompdfpage": {
+      "short_names": [
+        "makeimagefrompdfpage"
+      ],
+      "primary_short": "makeimagefrompdfpage",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.makeimagefromrichtext": {
+      "short_names": [
+        "makeimagefromrichtext"
+      ],
+      "primary_short": "makeimagefromrichtext",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.makepdf": {
+      "short_names": [
+        "make_pdf",
+        "makepdf"
+      ],
+      "primary_short": "make_pdf",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.makespokenaudiofromtext": {
+      "short_names": [
+        "makespokenaudiofromtext"
+      ],
+      "primary_short": "makespokenaudiofromtext",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.makevideofromgif": {
+      "short_names": [
+        "makevideofromgif"
+      ],
+      "primary_short": "makevideofromgif",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.makezip": {
+      "short_names": [
+        "makezip"
+      ],
+      "primary_short": "makezip",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.math": {
+      "short_names": [
+        "math"
+      ],
+      "primary_short": "math",
+      "category": "data",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.measurement.convert": {
+      "short_names": [
+        "measurement_convert"
+      ],
+      "primary_short": "measurement_convert",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.measurement.create": {
+      "short_names": [
+        "measurement_create"
+      ],
+      "primary_short": "measurement_create",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.mountdiskimage": {
+      "short_names": [
+        "mountdiskimage"
+      ],
+      "primary_short": "mountdiskimage",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.movewindow": {
+      "short_names": [
+        "movewindow"
+      ],
+      "primary_short": "movewindow",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.nightshift.set": {
+      "short_names": [
+        "nightshift_set"
+      ],
+      "primary_short": "nightshift_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.nothing": {
+      "short_names": [
+        "nothing"
+      ],
+      "primary_short": "nothing",
+      "category": "control",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": true
+    },
+    "is.workflow.actions.notification": {
+      "short_names": [
+        "show_notification",
+        "notification"
+      ],
+      "primary_short": "show_notification",
+      "category": "interaction",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": true
+    },
+    "is.workflow.actions.number": {
+      "short_names": [
+        "number"
+      ],
+      "primary_short": "number",
+      "category": "data",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.number.random": {
+      "short_names": [
+        "number_random"
+      ],
+      "primary_short": "number_random",
+      "category": "data",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.openapp": {
+      "short_names": [
+        "open_app",
+        "openapp"
+      ],
+      "primary_short": "open_app",
+      "category": "apps",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.openin": {
+      "short_names": [
+        "openin"
+      ],
+      "primary_short": "openin",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.openinmaps": {
+      "short_names": [
+        "open_in_maps",
+        "openinmaps"
+      ],
+      "primary_short": "open_in_maps",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.openpasswords": {
+      "short_names": [
+        "openpasswords"
+      ],
+      "primary_short": "openpasswords",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.openurl": {
+      "short_names": [
+        "open_url",
+        "openurl"
+      ],
+      "primary_short": "open_url",
+      "category": "apps",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.openworkflow": {
+      "short_names": [
+        "openworkflow"
+      ],
+      "primary_short": "openworkflow",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.openxcallbackurl": {
+      "short_names": [
+        "openxcallbackurl"
+      ],
+      "primary_short": "openxcallbackurl",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.orientationlock.set": {
+      "short_names": [
+        "orientationlock_set"
+      ],
+      "primary_short": "orientationlock_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.output": {
+      "short_names": [
+        "stop_and_output",
+        "output"
+      ],
+      "primary_short": "stop_and_output",
+      "category": "control",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.overlayimageonimage": {
+      "short_names": [
+        "overlayimageonimage"
+      ],
+      "primary_short": "overlayimageonimage",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.overlaytext": {
+      "short_names": [
+        "overlaytext"
+      ],
+      "primary_short": "overlaytext",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.pausemusic": {
+      "short_names": [
+        "pause_music",
+        "pausemusic"
+      ],
+      "primary_short": "pause_music",
+      "category": "music",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.personalhotspot.password.get": {
+      "short_names": [
+        "personalhotspot_password_get"
+      ],
+      "primary_short": "personalhotspot_password_get",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.personalhotspot.password.set": {
+      "short_names": [
+        "personalhotspot_password_set"
+      ],
+      "primary_short": "personalhotspot_password_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.personalhotspot.set": {
+      "short_names": [
+        "personalhotspot_set"
+      ],
+      "primary_short": "personalhotspot_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.phonenumber": {
+      "short_names": [
+        "phonenumber"
+      ],
+      "primary_short": "phonenumber",
+      "category": "communication",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.photos.createalbum": {
+      "short_names": [
+        "photos_createalbum"
+      ],
+      "primary_short": "photos_createalbum",
+      "category": "media",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.pinboard.add": {
+      "short_names": [
+        "pinboard_add"
+      ],
+      "primary_short": "pinboard_add",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.pinboard.get": {
+      "short_names": [
+        "pinboard_get"
+      ],
+      "primary_short": "pinboard_get",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.playmusic": {
+      "short_names": [
+        "play_music",
+        "playmusic"
+      ],
+      "primary_short": "play_music",
+      "category": "music",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.playpodcast": {
+      "short_names": [
+        "playpodcast"
+      ],
+      "primary_short": "playpodcast",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.playsound": {
+      "short_names": [
+        "play_sound",
+        "playsound"
+      ],
+      "primary_short": "play_sound",
+      "category": "interaction",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.pocket.add": {
+      "short_names": [
+        "pocket_add"
+      ],
+      "primary_short": "pocket_add",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.pocket.get": {
+      "short_names": [
+        "pocket_get"
+      ],
+      "primary_short": "pocket_get",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.podcasts.subscribe": {
+      "short_names": [
+        "podcasts_subscribe"
+      ],
+      "primary_short": "podcasts_subscribe",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.posters.get": {
+      "short_names": [
+        "posters_get"
+      ],
+      "primary_short": "posters_get",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.posters.switch": {
+      "short_names": [
+        "posters_switch"
+      ],
+      "primary_short": "posters_switch",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.postonfacebook": {
+      "short_names": [
+        "postonfacebook"
+      ],
+      "primary_short": "postonfacebook",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.previewdocument": {
+      "short_names": [
+        "previewdocument"
+      ],
+      "primary_short": "previewdocument",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.print": {
+      "short_names": [
+        "print"
+      ],
+      "primary_short": "print",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.appearance": {
+      "short_names": [
+        "properties_appearance"
+      ],
+      "primary_short": "properties_appearance",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.appstore": {
+      "short_names": [
+        "properties_appstore"
+      ],
+      "primary_short": "properties_appstore",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.articles": {
+      "short_names": [
+        "properties_articles"
+      ],
+      "primary_short": "properties_articles",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.calendarevents": {
+      "short_names": [
+        "properties_calendarevents"
+      ],
+      "primary_short": "properties_calendarevents",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.contacts": {
+      "short_names": [
+        "properties_contacts"
+      ],
+      "primary_short": "properties_contacts",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.eventattendees": {
+      "short_names": [
+        "properties_eventattendees"
+      ],
+      "primary_short": "properties_eventattendees",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.files": {
+      "short_names": [
+        "properties_files"
+      ],
+      "primary_short": "properties_files",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.health.quantity": {
+      "short_names": [
+        "properties_health_quantity"
+      ],
+      "primary_short": "properties_health_quantity",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.images": {
+      "short_names": [
+        "properties_images"
+      ],
+      "primary_short": "properties_images",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.itunesartist": {
+      "short_names": [
+        "properties_itunesartist"
+      ],
+      "primary_short": "properties_itunesartist",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.itunesstore": {
+      "short_names": [
+        "properties_itunesstore"
+      ],
+      "primary_short": "properties_itunesstore",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.locations": {
+      "short_names": [
+        "properties_locations"
+      ],
+      "primary_short": "properties_locations",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.media": {
+      "short_names": [
+        "properties_media"
+      ],
+      "primary_short": "properties_media",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.music": {
+      "short_names": [
+        "properties_music"
+      ],
+      "primary_short": "properties_music",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.parkedcar": {
+      "short_names": [
+        "properties_parkedcar"
+      ],
+      "primary_short": "properties_parkedcar",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.podcast": {
+      "short_names": [
+        "properties_podcast"
+      ],
+      "primary_short": "properties_podcast",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.podcastshow": {
+      "short_names": [
+        "properties_podcastshow"
+      ],
+      "primary_short": "properties_podcastshow",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.reminders": {
+      "short_names": [
+        "properties_reminders"
+      ],
+      "primary_short": "properties_reminders",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.ridestatus": {
+      "short_names": [
+        "properties_ridestatus"
+      ],
+      "primary_short": "properties_ridestatus",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.safariwebpage": {
+      "short_names": [
+        "properties_safariwebpage"
+      ],
+      "primary_short": "properties_safariwebpage",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.shazam": {
+      "short_names": [
+        "properties_shazam"
+      ],
+      "primary_short": "properties_shazam",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.trello": {
+      "short_names": [
+        "properties_trello"
+      ],
+      "primary_short": "properties_trello",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.ulysses.sheet": {
+      "short_names": [
+        "properties_ulysses_sheet"
+      ],
+      "primary_short": "properties_ulysses_sheet",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.weather.conditions": {
+      "short_names": [
+        "properties_weather_conditions"
+      ],
+      "primary_short": "properties_weather_conditions",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.properties.workflow": {
+      "short_names": [
+        "properties_workflow"
+      ],
+      "primary_short": "properties_workflow",
+      "category": "items",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.quit.app": {
+      "short_names": [
+        "quit_app"
+      ],
+      "primary_short": "quit_app",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.readinglist": {
+      "short_names": [
+        "readinglist"
+      ],
+      "primary_short": "readinglist",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.reboot": {
+      "short_names": [
+        "reboot"
+      ],
+      "primary_short": "reboot",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.recordaudio": {
+      "short_names": [
+        "recordaudio"
+      ],
+      "primary_short": "recordaudio",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.reminders.showlist": {
+      "short_names": [
+        "reminders_showlist"
+      ],
+      "primary_short": "reminders_showlist",
+      "category": "calendar",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.removeevents": {
+      "short_names": [
+        "removeevents"
+      ],
+      "primary_short": "removeevents",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.removefromalbum": {
+      "short_names": [
+        "removefromalbum"
+      ],
+      "primary_short": "removefromalbum",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.removereminders": {
+      "short_names": [
+        "removereminders"
+      ],
+      "primary_short": "removereminders",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.repeat.count": {
+      "short_names": [
+        "repeat",
+        "repeat_count"
+      ],
+      "primary_short": "repeat",
+      "category": "control",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.repeat.each": {
+      "short_names": [
+        "repeat_each"
+      ],
+      "primary_short": "repeat_each",
+      "category": "control",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.resizewindow": {
+      "short_names": [
+        "resizewindow"
+      ],
+      "primary_short": "resizewindow",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.returntohomescreen": {
+      "short_names": [
+        "returntohomescreen"
+      ],
+      "primary_short": "returntohomescreen",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.ride.requestride": {
+      "short_names": [
+        "ride_requestride"
+      ],
+      "primary_short": "ride_requestride",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.round": {
+      "short_names": [
+        "round_number",
+        "round"
+      ],
+      "primary_short": "round_number",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.rss": {
+      "short_names": [
+        "rss"
+      ],
+      "primary_short": "rss",
+      "category": "web",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.rss.extract": {
+      "short_names": [
+        "rss_extract"
+      ],
+      "primary_short": "rss_extract",
+      "category": "web",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.runapplescript": {
+      "short_names": [
+        "runapplescript"
+      ],
+      "primary_short": "runapplescript",
+      "category": "other",
+      "platforms": [
+        "macos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.runextension": {
+      "short_names": [
+        "runextension"
+      ],
+      "primary_short": "runextension",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.runjavascriptforautomation": {
+      "short_names": [
+        "runjavascriptforautomation"
+      ],
+      "primary_short": "runjavascriptforautomation",
+      "category": "other",
+      "platforms": [
+        "macos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.runjavascriptonwebpage": {
+      "short_names": [
+        "runjavascriptonwebpage"
+      ],
+      "primary_short": "runjavascriptonwebpage",
+      "category": "other",
+      "platforms": [
+        "macos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.runjsshortcut": {
+      "short_names": [
+        "run_javascript_for_automation",
+        "runjsshortcut"
+      ],
+      "primary_short": "run_javascript_for_automation",
+      "category": "scripting",
+      "platforms": [
+        "macos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.runscene": {
+      "short_names": [
+        "runscene"
+      ],
+      "primary_short": "runscene",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.runshellscript": {
+      "short_names": [
+        "run_shell_script",
+        "runshellscript"
+      ],
+      "primary_short": "run_shell_script",
+      "category": "other",
+      "platforms": [
+        "macos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.runsshscript": {
+      "short_names": [
+        "runsshscript"
+      ],
+      "primary_short": "runsshscript",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.runworkflow": {
+      "short_names": [
+        "run_shortcut",
+        "runworkflow"
+      ],
+      "primary_short": "run_shortcut",
+      "category": "apps",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.runworkflow.WFInput": {
+      "short_names": [
+        "runworkflow_wfinput"
+      ],
+      "primary_short": "runworkflow_wfinput",
+      "category": "apps",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.safari.geturl": {
+      "short_names": [
+        "safari_geturl"
+      ],
+      "primary_short": "safari_geturl",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.savetocameraroll": {
+      "short_names": [
+        "savetocameraroll"
+      ],
+      "primary_short": "savetocameraroll",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.scanbarcode": {
+      "short_names": [
+        "scanbarcode"
+      ],
+      "primary_short": "scanbarcode",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.searchappstore": {
+      "short_names": [
+        "searchappstore"
+      ],
+      "primary_short": "searchappstore",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.searchitunes": {
+      "short_names": [
+        "searchitunes"
+      ],
+      "primary_short": "searchitunes",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.searchlocalbusinesses": {
+      "short_names": [
+        "searchlocalbusinesses"
+      ],
+      "primary_short": "searchlocalbusinesses",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.searchmaps": {
+      "short_names": [
+        "searchmaps"
+      ],
+      "primary_short": "searchmaps",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.searchpodcasts": {
+      "short_names": [
+        "searchpodcasts"
+      ],
+      "primary_short": "searchpodcasts",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.searchweb": {
+      "short_names": [
+        "search_web",
+        "searchweb"
+      ],
+      "primary_short": "search_web",
+      "category": "apps",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.seek": {
+      "short_names": [
+        "seek"
+      ],
+      "primary_short": "seek",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.selectcontacts": {
+      "short_names": [
+        "selectcontacts"
+      ],
+      "primary_short": "selectcontacts",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.selectemail": {
+      "short_names": [
+        "selectemail"
+      ],
+      "primary_short": "selectemail",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.selectphone": {
+      "short_names": [
+        "selectphone"
+      ],
+      "primary_short": "selectphone",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.selectphoto": {
+      "short_names": [
+        "select_photos",
+        "selectphoto"
+      ],
+      "primary_short": "select_photos",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.sendemail": {
+      "short_names": [
+        "send_email",
+        "sendemail"
+      ],
+      "primary_short": "send_email",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.sendmessage": {
+      "short_names": [
+        "send_message",
+        "sendmessage"
+      ],
+      "primary_short": "send_message",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setairdropreceiving": {
+      "short_names": [
+        "setairdropreceiving"
+      ],
+      "primary_short": "setairdropreceiving",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setbrightness": {
+      "short_names": [
+        "set_brightness",
+        "setbrightness"
+      ],
+      "primary_short": "set_brightness",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setclipboard": {
+      "short_names": [
+        "set_clipboard",
+        "setclipboard"
+      ],
+      "primary_short": "set_clipboard",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setitemname": {
+      "short_names": [
+        "setitemname"
+      ],
+      "primary_short": "setitemname",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setparkedcar": {
+      "short_names": [
+        "setparkedcar"
+      ],
+      "primary_short": "setparkedcar",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setplaybackdestination": {
+      "short_names": [
+        "setplaybackdestination"
+      ],
+      "primary_short": "setplaybackdestination",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setters.calendarevents": {
+      "short_names": [
+        "setters_calendarevents"
+      ],
+      "primary_short": "setters_calendarevents",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setters.contacts": {
+      "short_names": [
+        "setters_contacts"
+      ],
+      "primary_short": "setters_contacts",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setters.reminders": {
+      "short_names": [
+        "setters_reminders"
+      ],
+      "primary_short": "setters_reminders",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setvalueforkey": {
+      "short_names": [
+        "set_dictionary_value",
+        "setvalueforkey"
+      ],
+      "primary_short": "set_dictionary_value",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setvariable": {
+      "short_names": [
+        "set_variable",
+        "setvariable"
+      ],
+      "primary_short": "set_variable",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.setvolume": {
+      "short_names": [
+        "set_volume",
+        "setvolume"
+      ],
+      "primary_short": "set_volume",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.share": {
+      "short_names": [
+        "share"
+      ],
+      "primary_short": "share",
+      "category": "communication",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.shazamMedia": {
+      "short_names": [
+        "shazammedia"
+      ],
+      "primary_short": "shazammedia",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.showdefinition": {
+      "short_names": [
+        "showdefinition"
+      ],
+      "primary_short": "showdefinition",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.showinblindsquare": {
+      "short_names": [
+        "showinblindsquare"
+      ],
+      "primary_short": "showinblindsquare",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.showincalendar": {
+      "short_names": [
+        "showincalendar"
+      ],
+      "primary_short": "showincalendar",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.showinstore": {
+      "short_names": [
+        "showinstore"
+      ],
+      "primary_short": "showinstore",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.shownote": {
+      "short_names": [
+        "shownote"
+      ],
+      "primary_short": "shownote",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.showresult": {
+      "short_names": [
+        "show_result",
+        "showresult"
+      ],
+      "primary_short": "show_result",
+      "category": "interaction",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.showwebpage": {
+      "short_names": [
+        "showwebpage"
+      ],
+      "primary_short": "showwebpage",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.silenceunknowncallers.set": {
+      "short_names": [
+        "silenceunknowncallers_set"
+      ],
+      "primary_short": "silenceunknowncallers_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.sirikit.donation.handle": {
+      "short_names": [
+        "sirikit_donation_handle"
+      ],
+      "primary_short": "sirikit_donation_handle",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.skipback": {
+      "short_names": [
+        "skipback"
+      ],
+      "primary_short": "skipback",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.skipforward": {
+      "short_names": [
+        "skipforward"
+      ],
+      "primary_short": "skipforward",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.slack.send": {
+      "short_names": [
+        "slack_send"
+      ],
+      "primary_short": "slack_send",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.sleep": {
+      "short_names": [
+        "sleep"
+      ],
+      "primary_short": "sleep",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.speaktext": {
+      "short_names": [
+        "speak_text",
+        "speaktext"
+      ],
+      "primary_short": "speak_text",
+      "category": "interaction",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.splitpdf": {
+      "short_names": [
+        "splitpdf"
+      ],
+      "primary_short": "splitpdf",
+      "category": "text",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.splitscreen": {
+      "short_names": [
+        "splitscreen"
+      ],
+      "primary_short": "splitscreen",
+      "category": "text",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.spotlightsearch": {
+      "short_names": [
+        "spotlightsearch"
+      ],
+      "primary_short": "spotlightsearch",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.stagemanager.set": {
+      "short_names": [
+        "stagemanager_set"
+      ],
+      "primary_short": "stagemanager_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.startscreensaver": {
+      "short_names": [
+        "startscreensaver"
+      ],
+      "primary_short": "startscreensaver",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.statistics": {
+      "short_names": [
+        "statistics"
+      ],
+      "primary_short": "statistics",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.takephoto": {
+      "short_names": [
+        "take_photo",
+        "takephoto"
+      ],
+      "primary_short": "take_photo",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.takescreenshot": {
+      "short_names": [
+        "take_screenshot",
+        "takescreenshot"
+      ],
+      "primary_short": "take_screenshot",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.takevideo": {
+      "short_names": [
+        "takevideo"
+      ],
+      "primary_short": "takevideo",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.text.changecase": {
+      "short_names": [
+        "change_case",
+        "text_changecase"
+      ],
+      "primary_short": "change_case",
+      "category": "text",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.text.combine": {
+      "short_names": [
+        "combine_text",
+        "text_combine"
+      ],
+      "primary_short": "combine_text",
+      "category": "text",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.text.match": {
+      "short_names": [
+        "match_text",
+        "text_match"
+      ],
+      "primary_short": "match_text",
+      "category": "text",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.text.match.getgroup": {
+      "short_names": [
+        "text_match_getgroup"
+      ],
+      "primary_short": "text_match_getgroup",
+      "category": "text",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.text.replace": {
+      "short_names": [
+        "replace_text",
+        "text_replace"
+      ],
+      "primary_short": "replace_text",
+      "category": "text",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.text.split": {
+      "short_names": [
+        "split_text",
+        "text_split"
+      ],
+      "primary_short": "split_text",
+      "category": "text",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.text.translate": {
+      "short_names": [
+        "text_translate"
+      ],
+      "primary_short": "text_translate",
+      "category": "text",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.text.trimwhitespace": {
+      "short_names": [
+        "text_trimwhitespace"
+      ],
+      "primary_short": "text_trimwhitespace",
+      "category": "text",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.timer.start": {
+      "short_names": [
+        "timer_start"
+      ],
+      "primary_short": "timer_start",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.todoist.add": {
+      "short_names": [
+        "todoist_add"
+      ],
+      "primary_short": "todoist_add",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.trello.add.board": {
+      "short_names": [
+        "trello_add_board"
+      ],
+      "primary_short": "trello_add_board",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.trello.add.card": {
+      "short_names": [
+        "trello_add_card"
+      ],
+      "primary_short": "trello_add_card",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.trello.add.list": {
+      "short_names": [
+        "trello_add_list"
+      ],
+      "primary_short": "trello_add_list",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.trello.get": {
+      "short_names": [
+        "trello_get"
+      ],
+      "primary_short": "trello_get",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.trigger-input": {
+      "short_names": [
+        "trigger_input"
+      ],
+      "primary_short": "trigger_input",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.trimvideo": {
+      "short_names": [
+        "trimvideo"
+      ],
+      "primary_short": "trimvideo",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.truetone.set": {
+      "short_names": [
+        "truetone_set"
+      ],
+      "primary_short": "truetone_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.tumblr.post": {
+      "short_names": [
+        "tumblr_post"
+      ],
+      "primary_short": "tumblr_post",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.tweet": {
+      "short_names": [
+        "tweet"
+      ],
+      "primary_short": "tweet",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.unzip": {
+      "short_names": [
+        "unzip"
+      ],
+      "primary_short": "unzip",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.url": {
+      "short_names": [
+        "url"
+      ],
+      "primary_short": "url",
+      "category": "web",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.url.expand": {
+      "short_names": [
+        "expand_url",
+        "url_expand"
+      ],
+      "primary_short": "expand_url",
+      "category": "web",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.url.getheaders": {
+      "short_names": [
+        "get_headers_of_url",
+        "url_getheaders"
+      ],
+      "primary_short": "get_headers_of_url",
+      "category": "web",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.urlencode": {
+      "short_names": [
+        "url_encode",
+        "urlencode"
+      ],
+      "primary_short": "url_encode",
+      "category": "web",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.useractivity.open": {
+      "short_names": [
+        "useractivity_open"
+      ],
+      "primary_short": "useractivity_open",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.venmo.pay": {
+      "short_names": [
+        "venmo_pay"
+      ],
+      "primary_short": "venmo_pay",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.venmo.request": {
+      "short_names": [
+        "venmo_request"
+      ],
+      "primary_short": "venmo_request",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.vibrate": {
+      "short_names": [
+        "vibrate"
+      ],
+      "primary_short": "vibrate",
+      "category": "interaction",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.viewresult": {
+      "short_names": [
+        "viewresult"
+      ],
+      "primary_short": "viewresult",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.vpn.set": {
+      "short_names": [
+        "vpn_set"
+      ],
+      "primary_short": "vpn_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.waittoreturn": {
+      "short_names": [
+        "wait_to_return",
+        "waittoreturn"
+      ],
+      "primary_short": "wait_to_return",
+      "category": "control",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.wallpaper.set": {
+      "short_names": [
+        "wallpaper_set"
+      ],
+      "primary_short": "wallpaper_set",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.watchmedo": {
+      "short_names": [
+        "watchmedo"
+      ],
+      "primary_short": "watchmedo",
+      "category": "other",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.weather.currentconditions": {
+      "short_names": [
+        "weather_currentconditions"
+      ],
+      "primary_short": "weather_currentconditions",
+      "category": "location",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.weather.forecast": {
+      "short_names": [
+        "weather_forecast"
+      ],
+      "primary_short": "weather_forecast",
+      "category": "location",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.wifi.set": {
+      "short_names": [
+        "set_wifi",
+        "wifi_set"
+      ],
+      "primary_short": "set_wifi",
+      "category": "device",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": true,
+      "serialization": "curated",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.wordpress.post": {
+      "short_names": [
+        "wordpress_post"
+      ],
+      "primary_short": "wordpress_post",
+      "category": "services",
+      "platforms": [
+        "ios",
+        "macos",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.workout.end": {
+      "short_names": [
+        "workout_end"
+      ],
+      "primary_short": "workout_end",
+      "category": "health",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    },
+    "is.workflow.actions.workout.start": {
+      "short_names": [
+        "workout_start"
+      ],
+      "primary_short": "workout_start",
+      "category": "health",
+      "platforms": [
+        "ios",
+        "watchos"
+      ],
+      "min_os": null,
+      "curated": false,
+      "serialization": "generic",
+      "verified_runtime": false
+    }
+  },
+  "notes": [
+    "platforms/min_os are heuristic preflight hints, not Apple-official matrices",
+    "serialization=generic requires WF keys and/or auto-coercion",
+    "Refresh ids via harvest_action_ids.py then re-run this script"
+  ]
+}

@@ -12,6 +12,7 @@ import tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
+from decompiler import decompile_shortcut  # noqa: E402
 from shortcut_builder import (  # noqa: E402
     build_shortcut_plist,
     compile_recipe,
@@ -21,6 +22,7 @@ from shortcut_builder import (  # noqa: E402
     list_templates,
     validate_actions,
 )
+from wf_serialization import coerce_params  # noqa: E402
 import server as mcp_server  # noqa: E402
 
 
@@ -47,6 +49,156 @@ def test_catalog() -> None:
     assert_true(len(templates) >= 5, "expected several templates")
     tpl = get_template("hello_world")
     assert_true(len(tpl["actions"]) >= 1, "hello_world empty")
+
+
+def test_wf_auto_coercion() -> None:
+    coerced = coerce_params(
+        {
+            "WFSpeakTextText": "hello",
+            "WFDelayTime": 2,
+            "UUID": "keep-plain",
+        },
+        mode="smart",
+    )
+    assert_true(
+        coerced["WFSpeakTextText"]["WFSerializationType"] == "WFTextTokenString",
+        coerced,
+    )
+    assert_true(
+        coerced["WFDelayTime"]["WFSerializationType"]
+        == "WFNumberSubstitutableState",
+        coerced,
+    )
+    assert_true(coerced["UUID"] == "keep-plain", coerced)
+    # generic compile applies coercion
+    compiled = compile_recipe(
+        [
+            {
+                "type": "is.workflow.actions.speaktext",
+                "params": {"WFSpeakTextText": "x", "WFSpeakTextWait": True},
+            }
+        ]
+    )
+    text = compiled["wf_actions"][0]["WFWorkflowActionParameters"]["WFSpeakTextText"]
+    assert_true(
+        isinstance(text, dict) and text.get("WFSerializationType") == "WFTextTokenString",
+        text,
+    )
+
+
+def test_decompile_roundtrip() -> None:
+    recipe = [
+        {"type": "comment", "params": {"text": "e2e"}},
+        {"type": "nothing", "params": {}},
+        {
+            "type": "show_notification",
+            "params": {"title": "Title", "body": "Body"},
+        },
+    ]
+    with tempfile.TemporaryDirectory() as td:
+        built = build_shortcut_plist(recipe, "DecompRT", td, sign=False)
+        dec = decompile_shortcut(built["raw_path"])
+        assert_true(dec["ok"], dec)
+        types = [a["type"] for a in dec["actions"]]
+        assert_true(types == ["comment", "nothing", "show_notification"], types)
+        # re-validate & rebuild
+        v = validate_actions(dec["actions"])
+        assert_true(v["ok"], v)
+        built2 = build_shortcut_plist(dec["actions"], "DecompRT2", td, sign=False)
+        assert_true(os.path.isfile(built2["raw_path"]), built2)
+
+        tool = mcp_server.handle_tool_call(
+            "decompile_shortcut", {"path": built["raw_path"]}
+        )
+        assert_true(not tool.get("isError"), tool)
+        assert_true(tool["structuredContent"]["action_count"] == 3, tool)
+
+
+def test_platform_preflight() -> None:
+    bad = validate_actions(
+        [{"type": "run_shell_script", "params": {"script": "echo hi"}}],
+        target_platform="ios",
+    )
+    assert_true(not bad["ok"], bad)
+    ok = validate_actions(
+        [{"type": "run_shell_script", "params": {"script": "echo hi"}}],
+        target_platform="macos",
+    )
+    assert_true(ok["ok"], ok)
+
+
+def test_app_intent_compile() -> None:
+    recipe = [
+        {
+            "type": "app_intent",
+            "params": {
+                "identifier": "com.example.demo.MyIntent",
+                "bundle_identifier": "com.example.demo",
+                "parameters": {"query": "hello"},
+            },
+        }
+    ]
+    v = validate_actions(recipe, target_platform="ios")
+    assert_true(v["ok"], v)
+    compiled = compile_recipe(recipe, target_platform="ios")
+    act = compiled["wf_actions"][0]
+    assert_true(
+        act["WFWorkflowActionIdentifier"] == "com.example.demo.MyIntent",
+        act,
+    )
+
+
+def test_e2e_runtime_run_if_possible() -> None:
+    """
+    True runtime assertion when macOS allows headless install+run.
+
+    Always asserts: build → decompile → re-validate.
+    Optionally asserts: shortcuts run if the shortcut appears in `shortcuts list`
+    after open import (may require prior GUI approval on some systems).
+    """
+    name = "MCP_E2E_RuntimeProbe"
+    recipe = [
+        {"type": "comment", "params": {"text": "runtime probe"}},
+        {"type": "nothing", "params": {}},
+    ]
+    # Build into default dist (sandbox)
+    built = mcp_server.handle_tool_call(
+        "build_shortcut",
+        {"name": name, "actions": recipe, "sign": True},
+    )
+    assert_true(not built.get("isError"), built)
+    sc = built["structuredContent"]
+    raw = sc.get("raw_path")
+    assert_true(raw and os.path.isfile(raw), sc)
+
+    dec = mcp_server.handle_tool_call("decompile_shortcut", {"path": raw})
+    assert_true(not dec.get("isError"), dec)
+    assert_true(dec["structuredContent"]["action_count"] >= 1, dec)
+
+    # Attempt install + run (best-effort hard check when list contains name)
+    path = sc.get("path") or raw
+    subprocess.run(["open", path], capture_output=True, text=True, timeout=30)
+    # give Shortcuts a moment if it auto-imports in some configs
+    listed = subprocess.run(
+        ["shortcuts", "list"], capture_output=True, text=True, timeout=30
+    )
+    if listed.returncode == 0 and name in (listed.stdout or ""):
+        run = subprocess.run(
+            ["shortcuts", "run", name],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        assert_true(
+            run.returncode == 0,
+            "shortcuts run failed: rc={0} stderr={1} stdout={2}".format(
+                run.returncode, run.stderr, run.stdout
+            ),
+        )
+        print("  (e2e run executed successfully)")
+    else:
+        # Structural E2E still counts; document skip reason for agents
+        print("  (e2e run skipped: shortcut not in library after open — GUI import required)")
 
 
 def test_full_apple_identifier_coverage() -> None:
@@ -426,7 +578,7 @@ def test_ndjson_initialize() -> None:
     assert_true(len(lines) >= 4, "unexpected stdout: {0!r}\nstderr={1!r}".format(out, err))
     init = json.loads(lines[0])
     assert_true(init["result"]["serverInfo"]["name"] == "ios-shortcuts-mcp", init)
-    assert_true(init["result"]["serverInfo"]["version"] == "2.4.0", init)
+    assert_true(init["result"]["serverInfo"]["version"] == "2.5.0", init)
     tools = json.loads(lines[1])
     assert_true(len(tools["result"]["tools"]) >= 10, tools)
     # annotations present on first tool
@@ -548,6 +700,11 @@ def main() -> int:
     tests = [
         test_catalog,
         test_full_apple_identifier_coverage,
+        test_wf_auto_coercion,
+        test_decompile_roundtrip,
+        test_platform_preflight,
+        test_app_intent_compile,
+        test_e2e_runtime_run_if_possible,
         test_validate_and_build,
         test_semantic_validation,
         test_control_flow_validation,

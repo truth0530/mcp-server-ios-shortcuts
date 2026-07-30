@@ -1,18 +1,29 @@
-# Apple action coverage (v2.4+)
+# Apple action coverage (v2.5+)
 
 ## Goal
 
-Cover **all Apple `is.workflow.actions.*` identifiers** available on a modern macOS install, not only a hand-picked dozen.
+Cover **all Apple `is.workflow.actions.*` identifiers** available on a modern macOS install, not only a hand-picked dozen — **and** reduce Silent Corruption via auto-coercion, reverse decompilation, and platform preflight.
+
+## Honest limits (read this)
+
+1. **Identifier coverage ≠ executable parameter parity.**  
+   Generic actions get auto-coerced wrappers (`WFTextTokenString`, `WFNumberSubstitutableState`). That fixes many empty-UI cases but is **not** a full reverse-engineered schema for every key.
+2. **macOS harvest is one-eyed.** iOS-only and many App Intent domains need reverse-DNS / `app_intent` or iOS device harvest later.
+3. **Smoke tests** now include decompile round-trip + optional `shortcuts run` when the library contains the probe shortcut. Pure “plist bytes exist” is no longer the only bar.
+4. **Signed-only files** without `*_raw.shortcut` cannot be decompiled (Apple opaque package).
 
 ## Architecture
 
 | Layer | What |
 |-------|------|
-| **Harvested catalog** | `data/apple_action_ids.txt` — 400+ identifiers extracted from the system |
-| **Auto short names** | `is.workflow.actions.text.split` → `text_split` |
-| **Curated aliases** | Ergonomic names (`speak_text`, `open_app`) with specialized param shaping |
-| **Generic compiler** | Any listed *or unlisted* `is.workflow.actions.*` builds with pass-through params |
-| **Synthetic helpers** | `conditional_start` / `repeat_*` / `menu_*` (multi-part WF control flow) |
+| **Harvested catalog** | `data/apple_action_ids.txt` — 400+ identifiers |
+| **Structured DB** | `data/apple_action_catalog.json` — platforms, serialization, short_names |
+| **Auto short names** | collision-safe (`text_split`, disambiguated on clash) |
+| **Curated aliases** | specialized param shaping (~100) |
+| **Auto-coercion** | `wf_serialization.py` on generic path |
+| **Decompiler** | `decompiler.py` / tool `decompile_shortcut` |
+| **App Intent** | `type: app_intent` + reverse-DNS identifiers |
+| **Synthetic helpers** | `conditional_*` / `repeat_*` / `menu_*` |
 
 ## How agents should call actions
 

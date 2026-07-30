@@ -1,4 +1,4 @@
-# Agent notes — ios-shortcuts MCP (v2.4)
+# Agent notes — ios-shortcuts MCP (v2.5)
 
 ## Purpose
 
@@ -7,15 +7,13 @@ Build, sign, import, list, run, and inspect macOS/iOS Shortcuts (`.shortcut`) vi
 ## Preferred workflow
 
 1. `doctor` — confirm CLI + **sign probe** + allow roots  
-2. `list_actions` / `lookup_action` — full Apple catalog (400+ ids) + curated aliases  
-3. Prefer curated short names; else full `is.workflow.actions.*` + `WF…` / `wf_params`  
-4. `explain_magic_vars` when chaining outputs between steps  
-5. `validate_recipe` — control-flow + semantic + **magic refs** + safe_mode  
-6. Optional `compile_recipe_preview` to inspect golden-normalized WF actions  
-7. `build_shortcut` or `build_and_install`  
-8. Prefer `inspect_shortcut` on returned `path` (auto-uses `raw_path` sibling)  
-9. `run_shortcut` smoke test (disabled when `SAFE_MODE=1`)  
-10. `send_imessage` only when shipping a file to iPhone (manual send; blocked in safe mode)
+2. Prefer **curated** short names for production quality  
+3. For existing files: `decompile_shortcut` → edit recipe → `validate_recipe` → rebuild  
+4. Generic / full ids: use `WF…` keys; server applies **auto-coercion** (still not perfect)  
+5. App Intents: `type: app_intent` with reverse-DNS `identifier`  
+6. `validate_recipe` with `target_platform` (`ios`/`macos`)  
+7. `build_shortcut` — keep `raw_path` for inspect/decompile  
+8. `run_shortcut` when installed (safe_mode blocks)
 
 ## Build result shape
 

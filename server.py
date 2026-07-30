@@ -22,6 +22,7 @@ import traceback
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from action_catalog import catalog_stats, resolve_action_type, suggest_actions
+from decompiler import decompile_shortcut
 from magic_vars import explain_magic_syntax
 from shortcut_builder import (
     ACTION_MAPPINGS,
@@ -39,7 +40,7 @@ from shortcut_builder import (
 )
 
 SERVER_NAME = "ios-shortcuts-mcp"
-SERVER_VERSION = "2.4.0"
+SERVER_VERSION = "2.5.0"
 PROTOCOL_VERSION = "2024-11-05"
 SUPPORTED_PROTOCOL_VERSIONS = (
     "2024-11-05",
@@ -295,11 +296,36 @@ TOOLS: List[Dict[str, Any]] = [
         "validate_recipe",
         "Dry-run compile an action recipe without writing files. "
         "Returns ok/errors/warnings/risks and compiled action count. "
-        "Validates magic-variable refs ($ref / $var / $action / ${…}). "
+        "Validates magic-variable refs, platform preflight, and flags "
+        "generic (non-curated) serialization. "
         "Respects server safe_mode for dangerous actions.",
-        {"actions": ACTIONS_ARRAY_SCHEMA},
+        {
+            "actions": ACTIONS_ARRAY_SCHEMA,
+            "target_platform": {
+                "type": "string",
+                "description": "ios | macos | watchos (default macos)",
+            },
+            "coerce_mode": {
+                "type": "string",
+                "description": "off | smart | aggressive WF auto-coercion (default smart)",
+            },
+        },
         ["actions"],
         annotations=_ann(title="Validate Recipe", read_only=True, idempotent=True),
+    ),
+    _tool(
+        "decompile_shortcut",
+        "Reverse-engineer a .shortcut file into an editable recipe JSON "
+        "(uses raw plist or sibling *_raw.shortcut). Enables modify/clone workflows.",
+        {
+            "path": {"type": "string", "description": "Path to .shortcut file"},
+            "prefer_curated": {
+                "type": "boolean",
+                "description": "Map known ids back to curated short types (default true)",
+            },
+        },
+        ["path"],
+        annotations=_ann(title="Decompile Shortcut", read_only=True, idempotent=True),
     ),
     _tool(
         "explain_magic_vars",
@@ -660,8 +686,15 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
             result = validate_actions(
                 args.get("actions", []),
                 safe_mode=SAFE_MODE,
+                target_platform=args.get("target_platform") or "macos",
+                coerce_mode=args.get("coerce_mode") or "smart",
             )
             return _ok_json(result)
+
+        if tool_name == "decompile_shortcut":
+            path = resolve_read_path(args["path"], label="path")
+            prefer = _as_bool(args.get("prefer_curated", True), True)
+            return _ok_json(decompile_shortcut(path, prefer_curated=prefer))
 
         if tool_name == "explain_magic_vars":
             return _ok_json(explain_magic_syntax())
@@ -670,6 +703,8 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
             compiled = compile_recipe(
                 args.get("actions", []),
                 safe_mode=SAFE_MODE,
+                target_platform=args.get("target_platform") or "macos",
+                coerce_mode=args.get("coerce_mode") or "smart",
             )
             return _ok_json(
                 {
@@ -700,6 +735,8 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
                 icon_glyph=args.get("icon_glyph"),
                 workflow_types=args.get("workflow_types"),
                 safe_mode=SAFE_MODE,
+                target_platform=args.get("target_platform") or "macos",
+                coerce_mode=args.get("coerce_mode") or "smart",
             )
             built["hint"] = (
                 "Import via import_shortcut / build_and_install. "
@@ -723,6 +760,8 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
                 sign=True,
                 icon_color=args.get("icon_color"),
                 safe_mode=SAFE_MODE,
+                target_platform=args.get("target_platform") or "macos",
+                coerce_mode=args.get("coerce_mode") or "smart",
             )
             imported = False
             import_status = "not_requested"
@@ -754,6 +793,8 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
                 sign=True,
                 icon_color=args.get("icon_color"),
                 safe_mode=SAFE_MODE,
+                target_platform=args.get("target_platform") or "macos",
+                coerce_mode=args.get("coerce_mode") or "smart",
             )
             res = _run(["open", built["path"]])
             built.update(

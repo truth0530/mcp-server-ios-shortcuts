@@ -20,6 +20,7 @@ from action_catalog import (
     CURATED_ALIASES,
     catalog_stats,
     list_catalog_actions,
+    preflight_platform,
     resolve_action_type,
     suggest_actions,
 )
@@ -32,6 +33,7 @@ from magic_vars import (
     validate_magic_refs,
     workflow_actions_golden,
 )
+from wf_serialization import coerce_params
 
 # ---------------------------------------------------------------------------
 # Action catalog (compat + curated surface)
@@ -665,7 +667,7 @@ def get_template(name: str) -> Dict[str, Any]:
 # Action compilation
 # ---------------------------------------------------------------------------
 
-def _compile_action(item: dict) -> List[dict]:
+def _compile_action(item: dict, *, coerce_mode: str = "smart") -> List[dict]:
     """Compile one recipe step into one or more WF actions."""
     if not isinstance(item, dict):
         raise ValueError(f"Action must be an object, got {type(item).__name__}")
@@ -678,7 +680,12 @@ def _compile_action(item: dict) -> List[dict]:
     args = dict(item.get("params") or item.get("arguments") or {})
     if "wf_params" in item:
         # Full escape hatch: raw Workflow parameters, still use identifier map.
-        return [create_action(atype, dict(item["wf_params"]))]
+        raw = dict(item["wf_params"])
+        return [create_action(atype, coerce_params(raw, mode=coerce_mode))]
+
+    # Modern App Intent / reverse-DNS action surface
+    if atype in {"app_intent", "appintent", "run_app_intent"}:
+        return _compile_app_intent(args, coerce_mode=coerce_mode)
 
     # ---- control flow (synthetic multi-part types) ----
     if atype == "conditional_start":
@@ -1353,8 +1360,8 @@ def _compile_action(item: dict) -> List[dict]:
         ]
 
     # Generic path: full Apple catalog + any is.workflow.actions.* identifier.
-    # Params are passed through as WFWorkflowActionParameters (use real WF keys
-    # or wf_params for full control). Curated types above keep richer shaping.
+    # Auto-coercion wraps plain strings/numbers into WF token/number states to
+    # reduce Silent Corruption in Shortcuts UI for non-curated actions.
     try:
         ident, meta = resolve_action_type(atype)
     except KeyError as exc:
@@ -1367,7 +1374,7 @@ def _compile_action(item: dict) -> List[dict]:
         raise ValueError(
             "Unknown action type '{0}'. "
             "Use list_actions (full Apple catalog), pass a full "
-            "is.workflow.actions.* identifier, or provide wf_params.{1}".format(
+            "is.workflow.actions.* identifier, app_intent, or wf_params.{1}".format(
                 atype, hint
             )
         ) from exc
@@ -1376,7 +1383,70 @@ def _compile_action(item: dict) -> List[dict]:
     generic_params = dict(args)
     for drop in ("type", "action", "as"):
         generic_params.pop(drop, None)
+    # Curated identifiers still benefit from coercion when used via raw id
+    mode = coerce_mode
+    if meta.get("serialization") == "curated" and coerce_mode == "smart":
+        # Bare values often OK for curated ids when using specialized compilers;
+        # when falling through generic path, still apply smart coercion.
+        mode = "smart"
+    generic_params = coerce_params(generic_params, mode=mode)
     return [create_action(ident, generic_params)]
+
+
+def _compile_app_intent(args: dict, *, coerce_mode: str = "smart") -> List[dict]:
+    """
+    Compile a modern App Intent style action.
+
+    Accepted params:
+      identifier / intent_identifier  — reverse-DNS action id (required)
+      bundle_identifier               — optional app bundle
+      parameters / params             — intent parameter payload
+      wf_params                       — merged raw WF keys
+    """
+    ident = (
+        args.get("identifier")
+        or args.get("intent_identifier")
+        or args.get("intent")
+        or args.get("app_intent_identifier")
+    )
+    if not ident:
+        raise ValueError(
+            "app_intent requires params.identifier (reverse-DNS App Intent id)"
+        )
+    payload: Dict[str, Any] = {}
+    nested = args.get("parameters") or args.get("params") or {}
+    if isinstance(nested, dict):
+        payload.update(nested)
+    if isinstance(args.get("wf_params"), dict):
+        payload.update(args["wf_params"])
+    # Pass through other WF-looking keys from top-level params
+    for k, v in args.items():
+        if k in {
+            "identifier",
+            "intent_identifier",
+            "intent",
+            "app_intent_identifier",
+            "parameters",
+            "params",
+            "wf_params",
+            "bundle_identifier",
+            "bundle_id",
+        }:
+            continue
+        payload[k] = v
+    bundle = args.get("bundle_identifier") or args.get("bundle_id")
+    if bundle:
+        payload.setdefault("AppIntentBundleIdentifier", bundle)
+        payload.setdefault("WFAppIntentBundleIdentifier", bundle)
+    # Common metadata keys used by various OS versions
+    payload.setdefault("AppIntentIdentifier", ident)
+    payload = coerce_params(payload, mode=coerce_mode)
+    return [
+        {
+            "WFWorkflowActionIdentifier": str(ident),
+            "WFWorkflowActionParameters": payload,
+        }
+    ]
 
 
 def _semantic_check_action(
@@ -1511,6 +1581,8 @@ def validate_actions(
     *,
     safe_mode: bool = False,
     allow_empty: bool = False,
+    target_platform: str = "macos",
+    coerce_mode: str = "smart",
 ) -> Dict[str, Any]:
     """Dry-run compile; returns {ok, actions_compiled, errors, warnings, risks}."""
     errors: List[str] = []
@@ -1551,6 +1623,10 @@ def validate_actions(
     errors.extend(magic_errors)
     warnings.extend(magic_warnings)
 
+    plat = preflight_platform(actions_config, target_platform=target_platform)
+    errors.extend(plat.get("errors") or [])
+    warnings.extend(plat.get("warnings") or [])
+
     for i, item in enumerate(actions_config):
         try:
             if not isinstance(item, dict):
@@ -1576,6 +1652,37 @@ def validate_actions(
                 if str(atype) in DANGEROUS_ACTIONS or str(atype).lower() in DANGEROUS_ACTIONS:
                     risks.append(str(atype))
 
+            # Serialization quality hint for generic (non-curated) actions
+            try:
+                if atype and atype not in {
+                    "app_intent",
+                    "appintent",
+                    "run_app_intent",
+                    "conditional_start",
+                    "conditional_else",
+                    "conditional_end",
+                    "repeat_start",
+                    "repeat_end",
+                    "repeat_each_start",
+                    "repeat_each_end",
+                    "menu_start",
+                    "menu_item",
+                    "menu_end",
+                }:
+                    _ident, _meta = resolve_action_type(str(atype))
+                    if _meta.get("serialization") == "generic" and not item.get(
+                        "wf_params"
+                    ):
+                        warnings.append(
+                            "actions[{0}] ({1}): generic serialization — "
+                            "auto-coercion applied; prefer curated type or "
+                            "wf_params with real WF keys for production quality".format(
+                                i, atype
+                            )
+                        )
+            except KeyError:
+                pass
+
             # Resolve magic refs for compile dry-run (same as real build)
             ctx = RecipeContext(
                 step_count=len(actions_config),
@@ -1585,10 +1692,10 @@ def validate_actions(
             try:
                 resolved_item = dict(item)
                 resolved_item["params"] = resolve_params(params, ctx)
-                parts = _compile_action(resolved_item)
+                parts = _compile_action(resolved_item, coerce_mode=coerce_mode)
             except Exception:
                 # Fall back to unresolved compile for non-ref recipes
-                parts = _compile_action(item)
+                parts = _compile_action(item, coerce_mode=coerce_mode)
             compiled += len(parts)
             gid = params.get("group_id") if isinstance(params, dict) else None
             if atype in start_types:
@@ -1706,6 +1813,8 @@ def compile_recipe(
     actions_config: list,
     *,
     safe_mode: bool = False,
+    target_platform: str = "macos",
+    coerce_mode: str = "smart",
 ) -> Dict[str, Any]:
     """
     Compile a high-level recipe into WF actions with magic-var resolution
@@ -1719,7 +1828,12 @@ def compile_recipe(
         "golden_actions": [...],  # normalized for fixture compare
       }
     """
-    validation = validate_actions(actions_config, safe_mode=safe_mode)
+    validation = validate_actions(
+        actions_config,
+        safe_mode=safe_mode,
+        target_platform=target_platform,
+        coerce_mode=coerce_mode,
+    )
     if not validation["ok"]:
         raise ValueError(
             "Invalid action recipe:\n- " + "\n- ".join(validation["errors"])
@@ -1743,7 +1857,7 @@ def compile_recipe(
         resolved["params"] = resolve_params(params, ctx)
         # Drop top-level 'as' before compile (not a WF field)
         resolved.pop("as", None)
-        parts = _compile_action(resolved)
+        parts = _compile_action(resolved, coerce_mode=coerce_mode)
         parts = stamp_action_uuids(parts, step_index=i)
         wf_actions.extend(parts)
 
@@ -1765,9 +1879,16 @@ def build_shortcut_dict(
     client_version: str = "2600.0.1",
     min_client_version: int = 900,
     safe_mode: bool = False,
+    target_platform: str = "macos",
+    coerce_mode: str = "smart",
 ) -> dict:
     """Compile recipe → in-memory shortcut plist dictionary (unsigned)."""
-    compiled = compile_recipe(actions_config, safe_mode=safe_mode)
+    compiled = compile_recipe(
+        actions_config,
+        safe_mode=safe_mode,
+        target_platform=target_platform,
+        coerce_mode=coerce_mode,
+    )
     wf_actions = compiled["wf_actions"]
 
     if isinstance(icon_color, str):
@@ -1972,6 +2093,8 @@ def build_shortcut_plist(
     icon_glyph: Optional[int] = None,
     workflow_types: Optional[List[str]] = None,
     safe_mode: bool = False,
+    target_platform: str = "macos",
+    coerce_mode: str = "smart",
 ) -> Dict[str, Any]:
     """
     Build a .shortcut file from a recipe.
@@ -1987,7 +2110,12 @@ def build_shortcut_plist(
     raw_path = os.path.join(output_dir, "{0}_raw.shortcut".format(stem))
     signed_path = os.path.join(output_dir, "{0}.shortcut".format(stem))
 
-    validation = validate_actions(actions_config, safe_mode=safe_mode)
+    validation = validate_actions(
+        actions_config,
+        safe_mode=safe_mode,
+        target_platform=target_platform,
+        coerce_mode=coerce_mode,
+    )
     if not validation["ok"]:
         raise ValueError(
             "Invalid action recipe:\n- " + "\n- ".join(validation["errors"])
@@ -2000,6 +2128,8 @@ def build_shortcut_plist(
         icon_glyph=icon_glyph,
         workflow_types=workflow_types,
         safe_mode=safe_mode,
+        target_platform=target_platform,
+        coerce_mode=coerce_mode,
     )
 
     with open(raw_path, "wb") as f:

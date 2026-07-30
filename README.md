@@ -6,7 +6,7 @@ Zero-dependency **Model Context Protocol (MCP)** server for macOS that lets AI c
 
 | | |
 |---|---|
-| **Version** | 2.4.0 |
+| **Version** | 2.5.0 |
 | **Runtime** | Python 3.8+ (stdlib only — no `pip install`) |
 | **OS** | macOS Monterey+ (`shortcuts` CLI) |
 | **License** | MIT |
@@ -31,6 +31,7 @@ build_and_install
 |------|---------|
 | `list_actions` | Full Apple catalog (400+ ids) + curated aliases |
 | `lookup_action` | Resolve short name / full identifier + suggestions |
+| `decompile_shortcut` | `.shortcut` → editable recipe JSON (reverse path) |
 | `list_templates` | Built-in recipe templates |
 | `get_template` | Fetch a template’s full action list |
 | `validate_recipe` | Dry-run compile (semantic + control-flow + **magic refs**) |
@@ -387,18 +388,39 @@ PY
 
 ---
 
-## Apple action coverage (v2.4)
+## Apple action coverage (v2.5)
 
-- **400+** harvested `is.workflow.actions.*` identifiers (`data/apple_action_ids.txt`)
-- Auto short names (`text_split`, `dnd_set`, …) + **curated** ergonomic aliases
-- **Any** full `is.workflow.actions.*` id builds via generic compiler (even if newly added on a newer OS)
-- Use `wf_params` / raw `WF…` keys when a specialized shaper does not exist yet
-- Refresh harvest: `python3 scripts/harvest_action_ids.py`
-- Details: [docs/ACTION_COVERAGE.md](./docs/ACTION_COVERAGE.md)
+| Layer | Reality check |
+|-------|----------------|
+| **Identifiers** | 400+ harvested + any unlisted `is.workflow.actions.*` / App Intent reverse-DNS |
+| **Executable quality** | Curated ~100 with rich params; generic path uses **auto-coercion** (not full Apple schema parity) |
+| **Reverse** | `decompile_shortcut` — modify/clone existing `.shortcut` via `*_raw` |
+| **Platform** | `target_platform` preflight (ios/macos/watchos heuristics) |
+| **Catalog DB** | `data/apple_action_catalog.json` (platforms, serialization, short_names) |
+
+Refresh:
+
+```bash
+python3 scripts/harvest_action_ids.py
+python3 scripts/build_action_catalog_db.py
+python3 scripts/smoke_test.py
+```
+
+Details: [docs/ACTION_COVERAGE.md](./docs/ACTION_COVERAGE.md)
 
 ---
 
 ## Changelog
+
+### 2.5.0
+
+- **Decompiler**: `decompile_shortcut` (recipe reverse path for modify/clone)
+- **Smart WF auto-coercion**: plain strings/numbers → WFTextTokenString / WFNumberSubstitutableState on generic path
+- **Structured catalog DB** with platform tags + short-name collision disambiguation
+- **App Intent** surface: `type: app_intent` + reverse-DNS identifiers
+- **Platform preflight** on validate/build (`target_platform`)
+- **E2E**: decompile round-trip always; `shortcuts run` when library import succeeds
+- Honest docs: identifier cover ≠ silent-corruption-free generic params
 
 ### 2.4.0
 

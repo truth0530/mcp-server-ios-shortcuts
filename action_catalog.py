@@ -25,6 +25,7 @@ from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
 _DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 _IDS_PATH = os.path.join(_DATA_DIR, "apple_action_ids.txt")
+_CATALOG_DB_PATH = os.path.join(_DATA_DIR, "apple_action_catalog.json")
 _META_PATH = os.path.join(_DATA_DIR, "apple_action_meta.json")
 
 # Explicit short-name → full identifier (high-quality curated surface).
@@ -236,6 +237,18 @@ def load_optional_meta() -> Dict[str, Any]:
     return {}
 
 
+@lru_cache(maxsize=1)
+def load_catalog_db() -> Dict[str, Any]:
+    """Structured catalog DB (platforms, serialization, short_names)."""
+    if os.path.isfile(_CATALOG_DB_PATH):
+        try:
+            with open(_CATALOG_DB_PATH, encoding="utf-8") as f:
+                return json.load(f)
+        except (OSError, json.JSONDecodeError):
+            return {}
+    return {}
+
+
 def is_full_identifier(name: str) -> bool:
     if not isinstance(name, str):
         return False
@@ -252,6 +265,29 @@ def is_full_identifier(name: str) -> bool:
     return False
 
 
+def _disambiguated_short(ident: str, base: str, taken: Dict[str, str]) -> str:
+    """
+    Avoid short-name collisions: if base is taken by another identifier,
+    fall back to full underscored suffix, then numeric suffix.
+    """
+    if base not in taken or taken[base] == ident:
+        return base
+    alt = identifier_to_auto_short(ident)
+    # denser form keeping dots as underscores already
+    if alt not in taken or taken[alt] == ident:
+        return alt
+    # include more of the reverse-dns tail
+    dense = ident.replace("is.workflow.actions.", "").replace(".", "_")
+    if dense not in taken or taken[dense] == ident:
+        return dense
+    n = 2
+    while True:
+        candidate = "{0}_{1}".format(dense, n)
+        if candidate not in taken or taken[candidate] == ident:
+            return candidate
+        n += 1
+
+
 @lru_cache(maxsize=1)
 def build_catalog_index() -> Dict[str, Any]:
     """
@@ -260,52 +296,93 @@ def build_catalog_index() -> Dict[str, Any]:
         "by_id": { identifier: entry },
         "by_short": { short: identifier },
         "shorts_for_id": { identifier: [short, ...] },
+        "collisions_resolved": [...],
       }
     """
     harvested = list(load_harvested_ids())
     meta = load_optional_meta()
+    db = load_catalog_db()
+    db_actions = db.get("actions") or {}
     by_id: Dict[str, Dict[str, Any]] = {}
     by_short: Dict[str, str] = {}
     shorts_for_id: Dict[str, List[str]] = {}
+    collisions_resolved: List[Dict[str, str]] = []
 
-    def register_short(short: str, ident: str, *, curated: bool = False) -> None:
+    def register_short(short: str, ident: str, *, curated: bool = False) -> str:
         if not short:
-            return
+            return short
         existing = by_short.get(short)
         if existing and existing != ident:
-            # Prefer curated mapping on conflict
-            if not curated:
-                return
+            if curated:
+                # curated wins: reassign previous owner to disambiguated name
+                old = existing
+                new_short = _disambiguated_short(old, short + "_alt", by_short)
+                by_short[new_short] = old
+                lst = shorts_for_id.setdefault(old, [])
+                if short in lst:
+                    lst[lst.index(short)] = new_short
+                else:
+                    lst.append(new_short)
+                collisions_resolved.append(
+                    {
+                        "short": short,
+                        "winner": ident,
+                        "displaced": old,
+                        "displaced_short": new_short,
+                    }
+                )
+            else:
+                short = _disambiguated_short(ident, short, by_short)
+                if short in by_short and by_short[short] != ident:
+                    return short
+                collisions_resolved.append(
+                    {
+                        "short": short,
+                        "identifier": ident,
+                        "note": "auto-disambiguated",
+                    }
+                )
         by_short[short] = ident
         shorts_for_id.setdefault(ident, [])
         if short not in shorts_for_id[ident]:
             shorts_for_id[ident].append(short)
+        return short
 
-    # 1) harvested IDs with auto short names
+    # 1) harvested IDs — prefer structured DB entries when present
     for ident in harvested:
-        auto = identifier_to_auto_short(ident)
+        db_entry = db_actions.get(ident) or {}
         entry_meta = (meta.get("actions") or {}).get(ident) or {}
         by_id[ident] = {
             "identifier": ident,
             "short_names": [],
-            "category": entry_meta.get("category") or categorize_identifier(ident),
+            "category": db_entry.get("category")
+            or entry_meta.get("category")
+            or categorize_identifier(ident),
             "summary": entry_meta.get("summary") or "",
             "params": entry_meta.get("params") or {},
             "example": entry_meta.get("example"),
-            "curated": False,
+            "curated": bool(db_entry.get("curated")),
             "harvested": True,
             "risk": entry_meta.get("risk") or "normal",
-            "verified": bool(entry_meta.get("verified", False)),
+            "verified": bool(
+                db_entry.get("verified_runtime") or entry_meta.get("verified", False)
+            ),
+            "platforms": db_entry.get("platforms")
+            or ["ios", "macos", "watchos"],
+            "min_os": db_entry.get("min_os"),
+            "serialization": db_entry.get("serialization") or "generic",
         }
-        register_short(auto, ident)
+        for sn in db_entry.get("short_names") or [identifier_to_auto_short(ident)]:
+            register_short(sn, ident, curated=False)
 
     # 2) curated aliases override / enrich
     for short, ident in CURATED_ALIASES.items():
         if ident not in by_id:
+            db_entry = db_actions.get(ident) or {}
             by_id[ident] = {
                 "identifier": ident,
                 "short_names": [],
-                "category": categorize_identifier(ident),
+                "category": db_entry.get("category") or categorize_identifier(ident),
                 "summary": "",
                 "params": {},
                 "example": None,
@@ -313,16 +390,19 @@ def build_catalog_index() -> Dict[str, Any]:
                 "harvested": False,
                 "risk": "normal",
                 "verified": True,
+                "platforms": db_entry.get("platforms") or ["ios", "macos", "watchos"],
+                "min_os": db_entry.get("min_os"),
+                "serialization": "curated",
             }
         else:
             by_id[ident]["curated"] = True
             by_id[ident]["verified"] = True
+            by_id[ident]["serialization"] = "curated"
         register_short(short, ident, curated=True)
 
-    # Fill short_names lists
+    # Fill short_names lists (curated first)
     for ident, shorts in shorts_for_id.items():
         if ident in by_id:
-            # curated first
             curated_first = [s for s in shorts if s in CURATED_ALIASES]
             rest = [s for s in shorts if s not in CURATED_ALIASES]
             by_id[ident]["short_names"] = curated_first + rest
@@ -331,6 +411,62 @@ def build_catalog_index() -> Dict[str, Any]:
         "by_id": by_id,
         "by_short": by_short,
         "shorts_for_id": shorts_for_id,
+        "collisions_resolved": collisions_resolved,
+    }
+
+
+def preflight_platform(
+    actions_config: list,
+    *,
+    target_platform: str = "macos",
+) -> Dict[str, Any]:
+    """
+    Warn/error when recipe uses actions tagged incompatible with target platform.
+    target_platform: ios | macos | watchos
+    """
+    target = (target_platform or "macos").strip().lower()
+    if target in {"mac", "osx"}:
+        target = "macos"
+    if target in {"iphone", "ipad"}:
+        target = "ios"
+    index = build_catalog_index()
+    errors: List[str] = []
+    warnings: List[str] = []
+    for i, item in enumerate(actions_config or []):
+        if not isinstance(item, dict):
+            continue
+        atype = item.get("type") or item.get("action")
+        if not atype:
+            continue
+        try:
+            ident, meta = resolve_action_type(str(atype))
+        except KeyError:
+            continue
+        if meta.get("synthetic"):
+            continue
+        platforms = meta.get("platforms") or (
+            (index["by_id"].get(ident) or {}).get("platforms")
+        )
+        if not platforms:
+            continue
+        platforms_l = [str(p).lower() for p in platforms]
+        if target not in platforms_l:
+            msg = (
+                "actions[{0}] ({1} → {2}): not tagged for platform '{3}' "
+                "(supports: {4})"
+            ).format(i, atype, ident, target, ", ".join(platforms_l))
+            # macOS scripting on iOS is an error; mild mismatches warn
+            if target == "ios" and any(
+                x in ident for x in ("shell", "applescript", "runjsshortcut")
+            ):
+                errors.append(msg)
+            else:
+                warnings.append(msg)
+    return {
+        "ok": len(errors) == 0,
+        "target_platform": target,
+        "errors": errors,
+        "warnings": warnings,
     }
 
 
@@ -511,22 +647,34 @@ def list_catalog_actions(
 def catalog_stats() -> Dict[str, Any]:
     index = build_catalog_index()
     curated = sum(1 for e in index["by_id"].values() if e.get("curated"))
+    generic = sum(
+        1
+        for e in index["by_id"].values()
+        if (e.get("serialization") or "generic") == "generic"
+    )
     by_cat: Dict[str, int] = {}
     for e in index["by_id"].values():
         c = e.get("category") or "other"
         by_cat[c] = by_cat.get(c, 0) + 1
+    db = load_catalog_db()
     return {
         "identifiers": len(index["by_id"]),
         "short_names": len(index["by_short"]),
         "curated_aliases": len(CURATED_ALIASES),
         "curated_identifiers": curated,
+        "generic_serialization": generic,
         "synthetic_types": len(SYNTHETIC_TYPES),
+        "collisions_resolved": len(index.get("collisions_resolved") or []),
         "categories": dict(sorted(by_cat.items(), key=lambda kv: (-kv[1], kv[0]))),
         "coverage_policy": (
-            "All harvested Apple identifiers + any unlisted is.workflow.actions.* "
-            "via generic compiler; curated aliases get specialized param shaping."
+            "Identifiers: harvested + unlisted is.workflow.actions.* accepted. "
+            "Executable quality: curated serialization path is reliable; "
+            "generic path uses auto-coercion (not full Apple schema parity). "
+            "App Intents: use type=app_intent or full reverse-DNS identifier."
         ),
         "data_file": _IDS_PATH,
+        "catalog_db": _CATALOG_DB_PATH if os.path.isfile(_CATALOG_DB_PATH) else None,
+        "catalog_db_version": db.get("version"),
     }
 
 
