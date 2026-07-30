@@ -1,0 +1,1449 @@
+{
+  "version": 1,
+  "generated_at": "2026-07-30T13:26:38Z",
+  "sources": [
+    "seed:seed_basics",
+    "seed:seed_control",
+    "template:hello_world",
+    "template:clipboard_to_notification",
+    "template:magic_chain",
+    "template:volume_max_and_notify",
+    "template:screenshot_ocr",
+    "template:open_url_and_wait",
+    "template:shell_echo",
+    "template:morning_focus",
+    "template:http_get_sample",
+    "fixture:conditional_basic.json",
+    "fixture:magic_chain.json",
+    "fixture:text_notify.json",
+    "fixture:var_and_input.json",
+    "fixture:volume_delay.json"
+  ],
+  "action_count_observed": 94,
+  "file_count": 0,
+  "recipe_count": 16,
+  "actions": {
+    "is.workflow.actions.comment": {
+      "identifier": "is.workflow.actions.comment",
+      "short_names": [
+        "comment"
+      ],
+      "key_freq": {
+        "WFCommentActionText": 1
+      },
+      "value_kinds": {
+        "WFCommentActionText": {
+          "string": 1
+        }
+      },
+      "short_to_wf": {
+        "comment_action_text": "WFCommentActionText",
+        "text": "WFCommentActionText",
+        "action_text": "WFCommentActionText"
+      },
+      "wf_to_short": {
+        "WFCommentActionText": "text"
+      },
+      "samples": 1,
+      "curated_alias": "comment",
+      "key_confidence": {
+        "WFCommentActionText": 1.0
+      },
+      "primary_keys": [
+        "WFCommentActionText"
+      ]
+    },
+    "is.workflow.actions.gettext": {
+      "identifier": "is.workflow.actions.gettext",
+      "short_names": [
+        "text",
+        "gettext"
+      ],
+      "key_freq": {
+        "WFTextActionText": 10
+      },
+      "value_kinds": {
+        "WFTextActionText": {
+          "string": 8,
+          "WFTextTokenString": 2
+        }
+      },
+      "short_to_wf": {
+        "text_action_text": "WFTextActionText",
+        "text": "WFTextActionText",
+        "action_text": "WFTextActionText"
+      },
+      "wf_to_short": {
+        "WFTextActionText": "text"
+      },
+      "samples": 10,
+      "curated_alias": "text",
+      "key_confidence": {
+        "WFTextActionText": 1.0
+      },
+      "primary_keys": [
+        "WFTextActionText"
+      ]
+    },
+    "is.workflow.actions.setvariable": {
+      "identifier": "is.workflow.actions.setvariable",
+      "short_names": [
+        "set_variable",
+        "setvariable"
+      ],
+      "key_freq": {
+        "WFVariableName": 4
+      },
+      "value_kinds": {
+        "WFVariableName": {
+          "string": 4
+        }
+      },
+      "short_to_wf": {
+        "variable_name": "WFVariableName",
+        "name": "WFVariableName",
+        "var_name": "WFVariableName"
+      },
+      "wf_to_short": {
+        "WFVariableName": "name"
+      },
+      "samples": 4,
+      "curated_alias": "set_variable",
+      "key_confidence": {
+        "WFVariableName": 1.0
+      },
+      "primary_keys": [
+        "WFVariableName"
+      ]
+    },
+    "is.workflow.actions.getvariable": {
+      "identifier": "is.workflow.actions.getvariable",
+      "short_names": [
+        "get_variable",
+        "getvariable"
+      ],
+      "key_freq": {
+        "WFVariable": 2
+      },
+      "value_kinds": {
+        "WFVariable": {
+          "WFTextTokenAttachment": 2
+        }
+      },
+      "short_to_wf": {
+        "variable": "WFVariable"
+      },
+      "wf_to_short": {
+        "WFVariable": "variable"
+      },
+      "samples": 2,
+      "curated_alias": "get_variable",
+      "key_confidence": {
+        "WFVariable": 1.0
+      },
+      "primary_keys": [
+        "WFVariable"
+      ]
+    },
+    "is.workflow.actions.delay": {
+      "identifier": "is.workflow.actions.delay",
+      "short_names": [
+        "delay"
+      ],
+      "key_freq": {
+        "WFDelayTime": 4
+      },
+      "value_kinds": {
+        "WFDelayTime": {
+          "float": 4
+        }
+      },
+      "short_to_wf": {
+        "delay_time": "WFDelayTime",
+        "time": "WFDelayTime",
+        "seconds": "WFDelayTime",
+        "delay": "WFDelayTime"
+      },
+      "wf_to_short": {
+        "WFDelayTime": "time"
+      },
+      "samples": 4,
+      "curated_alias": "delay",
+      "key_confidence": {
+        "WFDelayTime": 1.0
+      },
+      "primary_keys": [
+        "WFDelayTime"
+      ]
+    },
+    "is.workflow.actions.setvolume": {
+      "identifier": "is.workflow.actions.setvolume",
+      "short_names": [
+        "set_volume",
+        "setvolume"
+      ],
+      "key_freq": {
+        "WFVolume": 3
+      },
+      "value_kinds": {
+        "WFVolume": {
+          "float": 3
+        }
+      },
+      "short_to_wf": {
+        "volume": "WFVolume"
+      },
+      "wf_to_short": {
+        "WFVolume": "volume"
+      },
+      "samples": 3,
+      "curated_alias": "set_volume",
+      "key_confidence": {
+        "WFVolume": 1.0
+      },
+      "primary_keys": [
+        "WFVolume"
+      ]
+    },
+    "is.workflow.actions.speaktext": {
+      "identifier": "is.workflow.actions.speaktext",
+      "short_names": [
+        "speak_text",
+        "speaktext"
+      ],
+      "key_freq": {
+        "WFSpeakTextText": 4,
+        "WFSpeakTextWait": 4,
+        "WFSpeakTextRate": 4,
+        "WFSpeakTextLanguage": 4
+      },
+      "value_kinds": {
+        "WFSpeakTextText": {
+          "string": 2,
+          "WFTextTokenAttachment": 2
+        },
+        "WFSpeakTextWait": {
+          "bool": 4
+        },
+        "WFSpeakTextRate": {
+          "float": 4
+        },
+        "WFSpeakTextLanguage": {
+          "string": 4
+        }
+      },
+      "short_to_wf": {
+        "speak_text_text": "WFSpeakTextText",
+        "text": "WFSpeakTextText",
+        "text_text": "WFSpeakTextText",
+        "speak_text_wait": "WFSpeakTextWait",
+        "wait": "WFSpeakTextWait",
+        "text_wait": "WFSpeakTextWait",
+        "speak_text_rate": "WFSpeakTextRate",
+        "rate": "WFSpeakTextRate",
+        "text_rate": "WFSpeakTextRate",
+        "speak_text_language": "WFSpeakTextLanguage",
+        "language": "WFSpeakTextLanguage",
+        "text_language": "WFSpeakTextLanguage"
+      },
+      "wf_to_short": {
+        "WFSpeakTextText": "text",
+        "WFSpeakTextWait": "wait",
+        "WFSpeakTextRate": "rate",
+        "WFSpeakTextLanguage": "language"
+      },
+      "samples": 4,
+      "curated_alias": "speak_text",
+      "key_confidence": {
+        "WFSpeakTextText": 1.0,
+        "WFSpeakTextWait": 1.0,
+        "WFSpeakTextRate": 1.0,
+        "WFSpeakTextLanguage": 1.0
+      },
+      "primary_keys": [
+        "WFSpeakTextText",
+        "WFSpeakTextWait",
+        "WFSpeakTextRate",
+        "WFSpeakTextLanguage"
+      ]
+    },
+    "is.workflow.actions.notification": {
+      "identifier": "is.workflow.actions.notification",
+      "short_names": [
+        "show_notification",
+        "notification"
+      ],
+      "key_freq": {
+        "WFNotificationActionTitle": 14,
+        "WFNotificationActionBody": 14,
+        "WFNotificationActionSound": 14
+      },
+      "value_kinds": {
+        "WFNotificationActionTitle": {
+          "string": 12,
+          "WFTextTokenAttachment": 2
+        },
+        "WFNotificationActionBody": {
+          "string": 10,
+          "WFTextTokenAttachment": 4
+        },
+        "WFNotificationActionSound": {
+          "bool": 14
+        }
+      },
+      "short_to_wf": {
+        "notification_action_title": "WFNotificationActionTitle",
+        "title": "WFNotificationActionTitle",
+        "action_title": "WFNotificationActionTitle",
+        "notification_action_body": "WFNotificationActionBody",
+        "body": "WFNotificationActionBody",
+        "action_body": "WFNotificationActionBody",
+        "notification_action_sound": "WFNotificationActionSound",
+        "sound": "WFNotificationActionSound",
+        "action_sound": "WFNotificationActionSound"
+      },
+      "wf_to_short": {
+        "WFNotificationActionTitle": "title",
+        "WFNotificationActionBody": "body",
+        "WFNotificationActionSound": "sound"
+      },
+      "samples": 14,
+      "curated_alias": "show_notification",
+      "key_confidence": {
+        "WFNotificationActionTitle": 1.0,
+        "WFNotificationActionBody": 1.0,
+        "WFNotificationActionSound": 1.0
+      },
+      "primary_keys": [
+        "WFNotificationActionTitle",
+        "WFNotificationActionBody",
+        "WFNotificationActionSound"
+      ]
+    },
+    "is.workflow.actions.alert": {
+      "identifier": "is.workflow.actions.alert",
+      "short_names": [
+        "show_alert",
+        "alert"
+      ],
+      "key_freq": {
+        "WFAlertActionTitle": 1,
+        "WFAlertActionMessage": 1,
+        "WFAlertActionCancelButtonShown": 1
+      },
+      "value_kinds": {
+        "WFAlertActionTitle": {
+          "string": 1
+        },
+        "WFAlertActionMessage": {
+          "string": 1
+        },
+        "WFAlertActionCancelButtonShown": {
+          "bool": 1
+        }
+      },
+      "short_to_wf": {
+        "alert_action_title": "WFAlertActionTitle",
+        "title": "WFAlertActionTitle",
+        "action_title": "WFAlertActionTitle",
+        "alert_action_message": "WFAlertActionMessage",
+        "message": "WFAlertActionMessage",
+        "action_message": "WFAlertActionMessage",
+        "body": "WFAlertActionMessage",
+        "alert_action_cancel_button_shown": "WFAlertActionCancelButtonShown",
+        "shown": "WFAlertActionCancelButtonShown",
+        "button_shown": "WFAlertActionCancelButtonShown"
+      },
+      "wf_to_short": {
+        "WFAlertActionTitle": "title",
+        "WFAlertActionMessage": "body",
+        "WFAlertActionCancelButtonShown": "shown"
+      },
+      "samples": 1,
+      "curated_alias": "show_alert",
+      "key_confidence": {
+        "WFAlertActionTitle": 1.0,
+        "WFAlertActionMessage": 1.0,
+        "WFAlertActionCancelButtonShown": 1.0
+      },
+      "primary_keys": [
+        "WFAlertActionTitle",
+        "WFAlertActionMessage",
+        "WFAlertActionCancelButtonShown"
+      ]
+    },
+    "is.workflow.actions.showresult": {
+      "identifier": "is.workflow.actions.showresult",
+      "short_names": [
+        "show_result",
+        "showresult"
+      ],
+      "key_freq": {
+        "Text": 3
+      },
+      "value_kinds": {
+        "Text": {
+          "string": 1,
+          "WFTextTokenAttachment": 1,
+          "WFTextTokenString": 1
+        }
+      },
+      "short_to_wf": {
+        "text": "Text"
+      },
+      "wf_to_short": {
+        "Text": "text"
+      },
+      "samples": 6,
+      "curated_alias": "show_result",
+      "key_confidence": {
+        "Text": 1.0
+      },
+      "primary_keys": [
+        "Text"
+      ]
+    },
+    "is.workflow.actions.openurl": {
+      "identifier": "is.workflow.actions.openurl",
+      "short_names": [
+        "open_url",
+        "openurl"
+      ],
+      "key_freq": {
+        "WFInput": 2
+      },
+      "value_kinds": {
+        "WFInput": {
+          "string": 2
+        }
+      },
+      "short_to_wf": {
+        "input": "WFInput",
+        "url": "WFInput",
+        "text": "WFInput"
+      },
+      "wf_to_short": {
+        "WFInput": "url"
+      },
+      "samples": 2,
+      "curated_alias": "open_url",
+      "key_confidence": {
+        "WFInput": 1.0
+      },
+      "primary_keys": [
+        "WFInput"
+      ]
+    },
+    "is.workflow.actions.openapp": {
+      "identifier": "is.workflow.actions.openapp",
+      "short_names": [
+        "open_app",
+        "openapp"
+      ],
+      "key_freq": {
+        "WFAppIdentifier": 1,
+        "WFSelectedApp": 1
+      },
+      "value_kinds": {
+        "WFAppIdentifier": {
+          "string": 1
+        },
+        "WFSelectedApp": {
+          "app_ref": 1
+        }
+      },
+      "short_to_wf": {
+        "app_identifier": "WFAppIdentifier",
+        "identifier": "WFAppIdentifier",
+        "bundle_id": "WFAppIdentifier",
+        "selected_app": "WFSelectedApp",
+        "app": "WFSelectedApp"
+      },
+      "wf_to_short": {
+        "WFAppIdentifier": "bundle_id",
+        "WFSelectedApp": "app"
+      },
+      "samples": 1,
+      "curated_alias": "open_app",
+      "key_confidence": {
+        "WFAppIdentifier": 1.0,
+        "WFSelectedApp": 1.0
+      },
+      "primary_keys": [
+        "WFAppIdentifier",
+        "WFSelectedApp"
+      ]
+    },
+    "is.workflow.actions.getclipboard": {
+      "identifier": "is.workflow.actions.getclipboard",
+      "short_names": [
+        "get_clipboard",
+        "getclipboard"
+      ],
+      "key_freq": {},
+      "value_kinds": {},
+      "short_to_wf": {},
+      "wf_to_short": {},
+      "samples": 2,
+      "curated_alias": "get_clipboard"
+    },
+    "is.workflow.actions.setclipboard": {
+      "identifier": "is.workflow.actions.setclipboard",
+      "short_names": [
+        "set_clipboard",
+        "setclipboard"
+      ],
+      "key_freq": {
+        "WFLocalOnly": 1,
+        "WFExpirationDate": 1
+      },
+      "value_kinds": {
+        "WFLocalOnly": {
+          "bool": 1
+        },
+        "WFExpirationDate": {
+          "string": 1
+        }
+      },
+      "short_to_wf": {
+        "local_only": "WFLocalOnly",
+        "only": "WFLocalOnly",
+        "expiration_date": "WFExpirationDate",
+        "date": "WFExpirationDate"
+      },
+      "wf_to_short": {
+        "WFLocalOnly": "only",
+        "WFExpirationDate": "date"
+      },
+      "samples": 1,
+      "curated_alias": "set_clipboard",
+      "key_confidence": {
+        "WFLocalOnly": 1.0,
+        "WFExpirationDate": 1.0
+      },
+      "primary_keys": [
+        "WFLocalOnly",
+        "WFExpirationDate"
+      ]
+    },
+    "is.workflow.actions.nothing": {
+      "identifier": "is.workflow.actions.nothing",
+      "short_names": [
+        "nothing"
+      ],
+      "key_freq": {},
+      "value_kinds": {},
+      "short_to_wf": {},
+      "wf_to_short": {},
+      "samples": 1,
+      "curated_alias": "nothing"
+    },
+    "is.workflow.actions.exit": {
+      "identifier": "is.workflow.actions.exit",
+      "short_names": [
+        "exit_shortcut",
+        "exit"
+      ],
+      "key_freq": {},
+      "value_kinds": {},
+      "short_to_wf": {},
+      "wf_to_short": {},
+      "samples": 1,
+      "curated_alias": "exit_shortcut"
+    },
+    "is.workflow.actions.downloadurl": {
+      "identifier": "is.workflow.actions.downloadurl",
+      "short_names": [
+        "get_contents_of_url",
+        "downloadurl"
+      ],
+      "key_freq": {
+        "WFURL": 2,
+        "WFHTTPMethod": 2
+      },
+      "value_kinds": {
+        "WFURL": {
+          "string": 2
+        },
+        "WFHTTPMethod": {
+          "string": 2
+        }
+      },
+      "short_to_wf": {
+        "url": "WFURL",
+        "http_method": "WFHTTPMethod",
+        "method": "WFHTTPMethod"
+      },
+      "wf_to_short": {
+        "WFURL": "url",
+        "WFHTTPMethod": "method"
+      },
+      "samples": 2,
+      "curated_alias": "get_contents_of_url",
+      "key_confidence": {
+        "WFURL": 1.0,
+        "WFHTTPMethod": 1.0
+      },
+      "primary_keys": [
+        "WFURL",
+        "WFHTTPMethod"
+      ]
+    },
+    "is.workflow.actions.runshellscript": {
+      "identifier": "is.workflow.actions.runshellscript",
+      "short_names": [
+        "run_shell_script",
+        "runshellscript"
+      ],
+      "key_freq": {
+        "WFShellScript": 2,
+        "WFShellScriptShell": 2,
+        "WFInput": 2
+      },
+      "value_kinds": {
+        "WFShellScript": {
+          "string": 2
+        },
+        "WFShellScriptShell": {
+          "string": 2
+        },
+        "WFInput": {
+          "string": 2
+        }
+      },
+      "short_to_wf": {
+        "shell_script": "WFShellScript",
+        "script": "WFShellScript",
+        "shell_script_shell": "WFShellScriptShell",
+        "shell": "WFShellScriptShell",
+        "script_shell": "WFShellScriptShell",
+        "input": "WFInput",
+        "url": "WFInput",
+        "text": "WFInput"
+      },
+      "wf_to_short": {
+        "WFShellScript": "script",
+        "WFShellScriptShell": "shell",
+        "WFInput": "url"
+      },
+      "samples": 2,
+      "curated_alias": "run_shell_script",
+      "key_confidence": {
+        "WFShellScript": 1.0,
+        "WFShellScriptShell": 1.0,
+        "WFInput": 1.0
+      },
+      "primary_keys": [
+        "WFShellScript",
+        "WFShellScriptShell",
+        "WFInput"
+      ]
+    },
+    "is.workflow.actions.applescript": {
+      "identifier": "is.workflow.actions.applescript",
+      "short_names": [
+        "run_applescript",
+        "applescript"
+      ],
+      "key_freq": {
+        "WFInput": 1
+      },
+      "value_kinds": {
+        "WFInput": {
+          "string": 1
+        }
+      },
+      "short_to_wf": {
+        "input": "WFInput",
+        "url": "WFInput",
+        "text": "WFInput"
+      },
+      "wf_to_short": {
+        "WFInput": "url"
+      },
+      "samples": 1,
+      "curated_alias": "run_applescript",
+      "key_confidence": {
+        "WFInput": 1.0
+      },
+      "primary_keys": [
+        "WFInput"
+      ]
+    },
+    "is.workflow.actions.list": {
+      "identifier": "is.workflow.actions.list",
+      "short_names": [
+        "list"
+      ],
+      "key_freq": {
+        "WFItems": 1
+      },
+      "value_kinds": {
+        "WFItems": {
+          "list": 1
+        }
+      },
+      "short_to_wf": {
+        "items": "WFItems"
+      },
+      "wf_to_short": {
+        "WFItems": "items"
+      },
+      "samples": 1,
+      "curated_alias": "list",
+      "key_confidence": {
+        "WFItems": 1.0
+      },
+      "primary_keys": [
+        "WFItems"
+      ]
+    },
+    "is.workflow.actions.dictionary": {
+      "identifier": "is.workflow.actions.dictionary",
+      "short_names": [
+        "dictionary"
+      ],
+      "key_freq": {
+        "WFItems": 1
+      },
+      "value_kinds": {
+        "WFItems": {
+          "dict": 1
+        }
+      },
+      "short_to_wf": {
+        "items": "WFItems"
+      },
+      "wf_to_short": {
+        "WFItems": "items"
+      },
+      "samples": 1,
+      "curated_alias": "dictionary",
+      "key_confidence": {
+        "WFItems": 1.0
+      },
+      "primary_keys": [
+        "WFItems"
+      ]
+    },
+    "is.workflow.actions.count": {
+      "identifier": "is.workflow.actions.count",
+      "short_names": [
+        "count"
+      ],
+      "key_freq": {
+        "WFCountType": 1
+      },
+      "value_kinds": {
+        "WFCountType": {
+          "string": 1
+        }
+      },
+      "short_to_wf": {
+        "count_type": "WFCountType",
+        "type": "WFCountType"
+      },
+      "wf_to_short": {
+        "WFCountType": "type"
+      },
+      "samples": 1,
+      "curated_alias": "count",
+      "key_confidence": {
+        "WFCountType": 1.0
+      },
+      "primary_keys": [
+        "WFCountType"
+      ]
+    },
+    "is.workflow.actions.calculate": {
+      "identifier": "is.workflow.actions.calculate",
+      "short_names": [
+        "calculate"
+      ],
+      "key_freq": {
+        "WFMathOperation": 1,
+        "WFNumberOperand": 1
+      },
+      "value_kinds": {
+        "WFMathOperation": {
+          "string": 1
+        },
+        "WFNumberOperand": {
+          "float": 1
+        }
+      },
+      "short_to_wf": {
+        "math_operation": "WFMathOperation",
+        "operation": "WFMathOperation",
+        "number_operand": "WFNumberOperand",
+        "operand": "WFNumberOperand"
+      },
+      "wf_to_short": {
+        "WFMathOperation": "operation",
+        "WFNumberOperand": "operand"
+      },
+      "samples": 1,
+      "curated_alias": "calculate",
+      "key_confidence": {
+        "WFMathOperation": 1.0,
+        "WFNumberOperand": 1.0
+      },
+      "primary_keys": [
+        "WFMathOperation",
+        "WFNumberOperand"
+      ]
+    },
+    "is.workflow.actions.text.changecase": {
+      "identifier": "is.workflow.actions.text.changecase",
+      "short_names": [
+        "change_case",
+        "text_changecase"
+      ],
+      "key_freq": {
+        "Show-text_case": 1,
+        "WFCaseType": 1
+      },
+      "value_kinds": {
+        "Show-text_case": {
+          "bool": 1
+        },
+        "WFCaseType": {
+          "string": 1
+        }
+      },
+      "short_to_wf": {
+        "show-text_case": "Show-text_case",
+        "case": "Show-text_case",
+        "case_type": "WFCaseType",
+        "type": "WFCaseType"
+      },
+      "wf_to_short": {
+        "Show-text_case": "case",
+        "WFCaseType": "type"
+      },
+      "samples": 1,
+      "curated_alias": "change_case",
+      "key_confidence": {
+        "Show-text_case": 1.0,
+        "WFCaseType": 1.0
+      },
+      "primary_keys": [
+        "Show-text_case",
+        "WFCaseType"
+      ]
+    },
+    "is.workflow.actions.text.replace": {
+      "identifier": "is.workflow.actions.text.replace",
+      "short_names": [
+        "replace_text",
+        "text_replace"
+      ],
+      "key_freq": {
+        "WFReplaceTextFind": 1,
+        "WFReplaceTextReplace": 1,
+        "WFReplaceTextCaseSensitive": 1,
+        "WFReplaceTextRegularExpression": 1
+      },
+      "value_kinds": {
+        "WFReplaceTextFind": {
+          "string": 1
+        },
+        "WFReplaceTextReplace": {
+          "string": 1
+        },
+        "WFReplaceTextCaseSensitive": {
+          "bool": 1
+        },
+        "WFReplaceTextRegularExpression": {
+          "bool": 1
+        }
+      },
+      "short_to_wf": {
+        "replace_text_find": "WFReplaceTextFind",
+        "find": "WFReplaceTextFind",
+        "text_find": "WFReplaceTextFind",
+        "replace_text_replace": "WFReplaceTextReplace",
+        "replace": "WFReplaceTextReplace",
+        "text_replace": "WFReplaceTextReplace",
+        "replace_text_case_sensitive": "WFReplaceTextCaseSensitive",
+        "sensitive": "WFReplaceTextCaseSensitive",
+        "case_sensitive": "WFReplaceTextCaseSensitive",
+        "replace_text_regular_expression": "WFReplaceTextRegularExpression",
+        "expression": "WFReplaceTextRegularExpression",
+        "regular_expression": "WFReplaceTextRegularExpression"
+      },
+      "wf_to_short": {
+        "WFReplaceTextFind": "find",
+        "WFReplaceTextReplace": "replace",
+        "WFReplaceTextCaseSensitive": "sensitive",
+        "WFReplaceTextRegularExpression": "expression"
+      },
+      "samples": 1,
+      "curated_alias": "replace_text",
+      "key_confidence": {
+        "WFReplaceTextFind": 1.0,
+        "WFReplaceTextReplace": 1.0,
+        "WFReplaceTextCaseSensitive": 1.0,
+        "WFReplaceTextRegularExpression": 1.0
+      },
+      "primary_keys": [
+        "WFReplaceTextFind",
+        "WFReplaceTextReplace",
+        "WFReplaceTextCaseSensitive",
+        "WFReplaceTextRegularExpression"
+      ]
+    },
+    "is.workflow.actions.text.split": {
+      "identifier": "is.workflow.actions.text.split",
+      "short_names": [
+        "split_text",
+        "text_split"
+      ],
+      "key_freq": {
+        "WFTextSeparator": 1
+      },
+      "value_kinds": {
+        "WFTextSeparator": {
+          "string": 1
+        }
+      },
+      "short_to_wf": {
+        "text_separator": "WFTextSeparator",
+        "separator": "WFTextSeparator"
+      },
+      "wf_to_short": {
+        "WFTextSeparator": "separator"
+      },
+      "samples": 1,
+      "curated_alias": "split_text",
+      "key_confidence": {
+        "WFTextSeparator": 1.0
+      },
+      "primary_keys": [
+        "WFTextSeparator"
+      ]
+    },
+    "is.workflow.actions.text.combine": {
+      "identifier": "is.workflow.actions.text.combine",
+      "short_names": [
+        "combine_text",
+        "text_combine"
+      ],
+      "key_freq": {
+        "WFTextSeparator": 1
+      },
+      "value_kinds": {
+        "WFTextSeparator": {
+          "string": 1
+        }
+      },
+      "short_to_wf": {
+        "text_separator": "WFTextSeparator",
+        "separator": "WFTextSeparator"
+      },
+      "wf_to_short": {
+        "WFTextSeparator": "separator"
+      },
+      "samples": 1,
+      "curated_alias": "combine_text",
+      "key_confidence": {
+        "WFTextSeparator": 1.0
+      },
+      "primary_keys": [
+        "WFTextSeparator"
+      ]
+    },
+    "is.workflow.actions.takescreenshot": {
+      "identifier": "is.workflow.actions.takescreenshot",
+      "short_names": [
+        "take_screenshot",
+        "takescreenshot"
+      ],
+      "key_freq": {},
+      "value_kinds": {},
+      "short_to_wf": {},
+      "wf_to_short": {},
+      "samples": 2,
+      "curated_alias": "take_screenshot"
+    },
+    "is.workflow.actions.extracttextfromimage": {
+      "identifier": "is.workflow.actions.extracttextfromimage",
+      "short_names": [
+        "ocr_extract_text",
+        "extracttextfromimage"
+      ],
+      "key_freq": {},
+      "value_kinds": {},
+      "short_to_wf": {},
+      "wf_to_short": {},
+      "samples": 2,
+      "curated_alias": "ocr_extract_text"
+    },
+    "is.workflow.actions.getbatterylevel": {
+      "identifier": "is.workflow.actions.getbatterylevel",
+      "short_names": [
+        "get_battery",
+        "getbatterylevel"
+      ],
+      "key_freq": {},
+      "value_kinds": {},
+      "short_to_wf": {},
+      "wf_to_short": {},
+      "samples": 1,
+      "curated_alias": "get_battery"
+    },
+    "is.workflow.actions.getdevicedetails": {
+      "identifier": "is.workflow.actions.getdevicedetails",
+      "short_names": [
+        "get_device_details",
+        "getdevicedetails"
+      ],
+      "key_freq": {
+        "WFDeviceDetail": 1
+      },
+      "value_kinds": {
+        "WFDeviceDetail": {
+          "string": 1
+        }
+      },
+      "short_to_wf": {
+        "device_detail": "WFDeviceDetail",
+        "detail": "WFDeviceDetail"
+      },
+      "wf_to_short": {
+        "WFDeviceDetail": "detail"
+      },
+      "samples": 1,
+      "curated_alias": "get_device_details",
+      "key_confidence": {
+        "WFDeviceDetail": 1.0
+      },
+      "primary_keys": [
+        "WFDeviceDetail"
+      ]
+    },
+    "is.workflow.actions.wifi.set": {
+      "identifier": "is.workflow.actions.wifi.set",
+      "short_names": [
+        "set_wifi",
+        "wifi_set"
+      ],
+      "key_freq": {
+        "OnValue": 1
+      },
+      "value_kinds": {
+        "OnValue": {
+          "bool": 1
+        }
+      },
+      "short_to_wf": {
+        "on_value": "OnValue",
+        "value": "OnValue"
+      },
+      "wf_to_short": {
+        "OnValue": "value"
+      },
+      "samples": 1,
+      "curated_alias": "set_wifi",
+      "key_confidence": {
+        "OnValue": 1.0
+      },
+      "primary_keys": [
+        "OnValue"
+      ]
+    },
+    "is.workflow.actions.bluetooth.set": {
+      "identifier": "is.workflow.actions.bluetooth.set",
+      "short_names": [
+        "set_bluetooth",
+        "bluetooth_set"
+      ],
+      "key_freq": {
+        "OnValue": 1
+      },
+      "value_kinds": {
+        "OnValue": {
+          "bool": 1
+        }
+      },
+      "short_to_wf": {
+        "on_value": "OnValue",
+        "value": "OnValue"
+      },
+      "wf_to_short": {
+        "OnValue": "value"
+      },
+      "samples": 1,
+      "curated_alias": "set_bluetooth",
+      "key_confidence": {
+        "OnValue": 1.0
+      },
+      "primary_keys": [
+        "OnValue"
+      ]
+    },
+    "is.workflow.actions.dnd.set": {
+      "identifier": "is.workflow.actions.dnd.set",
+      "short_names": [
+        "set_focus",
+        "dnd_set"
+      ],
+      "key_freq": {
+        "FocusMode": 2,
+        "UntilTurnedOff": 2
+      },
+      "value_kinds": {
+        "FocusMode": {
+          "string": 2
+        },
+        "UntilTurnedOff": {
+          "bool": 2
+        }
+      },
+      "short_to_wf": {
+        "focus_mode": "FocusMode",
+        "mode": "FocusMode",
+        "until_turned_off": "UntilTurnedOff",
+        "off": "UntilTurnedOff",
+        "turned_off": "UntilTurnedOff"
+      },
+      "wf_to_short": {
+        "FocusMode": "mode",
+        "UntilTurnedOff": "off"
+      },
+      "samples": 2,
+      "curated_alias": "set_focus",
+      "key_confidence": {
+        "FocusMode": 1.0,
+        "UntilTurnedOff": 1.0
+      },
+      "primary_keys": [
+        "FocusMode",
+        "UntilTurnedOff"
+      ]
+    },
+    "is.workflow.actions.ask": {
+      "identifier": "is.workflow.actions.ask",
+      "short_names": [
+        "ask"
+      ],
+      "key_freq": {
+        "WFAskActionPrompt": 1,
+        "WFAskActionDefaultAnswer": 1,
+        "WFInputType": 1
+      },
+      "value_kinds": {
+        "WFAskActionPrompt": {
+          "string": 1
+        },
+        "WFAskActionDefaultAnswer": {
+          "string": 1
+        },
+        "WFInputType": {
+          "string": 1
+        }
+      },
+      "short_to_wf": {
+        "ask_action_prompt": "WFAskActionPrompt",
+        "prompt": "WFAskActionPrompt",
+        "action_prompt": "WFAskActionPrompt",
+        "ask_action_default_answer": "WFAskActionDefaultAnswer",
+        "answer": "WFAskActionDefaultAnswer",
+        "default_answer": "WFAskActionDefaultAnswer",
+        "input_type": "WFInputType",
+        "type": "WFInputType"
+      },
+      "wf_to_short": {
+        "WFAskActionPrompt": "prompt",
+        "WFAskActionDefaultAnswer": "answer",
+        "WFInputType": "type"
+      },
+      "samples": 1,
+      "curated_alias": "ask",
+      "key_confidence": {
+        "WFAskActionPrompt": 1.0,
+        "WFAskActionDefaultAnswer": 1.0,
+        "WFInputType": 1.0
+      },
+      "primary_keys": [
+        "WFAskActionPrompt",
+        "WFAskActionDefaultAnswer",
+        "WFInputType"
+      ]
+    },
+    "is.workflow.actions.vibrate": {
+      "identifier": "is.workflow.actions.vibrate",
+      "short_names": [
+        "vibrate"
+      ],
+      "key_freq": {},
+      "value_kinds": {},
+      "short_to_wf": {},
+      "wf_to_short": {},
+      "samples": 1,
+      "curated_alias": "vibrate"
+    },
+    "is.workflow.actions.playsound": {
+      "identifier": "is.workflow.actions.playsound",
+      "short_names": [
+        "play_sound",
+        "playsound"
+      ],
+      "key_freq": {},
+      "value_kinds": {},
+      "short_to_wf": {},
+      "wf_to_short": {},
+      "samples": 1,
+      "curated_alias": "play_sound"
+    },
+    "is.workflow.actions.sendmessage": {
+      "identifier": "is.workflow.actions.sendmessage",
+      "short_names": [
+        "send_message",
+        "sendmessage"
+      ],
+      "key_freq": {
+        "WFSendMessageActionRecipients": 1,
+        "WFSendMessageContent": 1,
+        "ShowWhenRun": 1
+      },
+      "value_kinds": {
+        "WFSendMessageActionRecipients": {
+          "list": 1
+        },
+        "WFSendMessageContent": {
+          "string": 1
+        },
+        "ShowWhenRun": {
+          "bool": 1
+        }
+      },
+      "short_to_wf": {
+        "send_message_action_recipients": "WFSendMessageActionRecipients",
+        "recipients": "WFSendMessageActionRecipients",
+        "action_recipients": "WFSendMessageActionRecipients",
+        "send_message_content": "WFSendMessageContent",
+        "content": "WFSendMessageContent",
+        "message_content": "WFSendMessageContent",
+        "show_when_run": "ShowWhenRun",
+        "run": "ShowWhenRun",
+        "when_run": "ShowWhenRun"
+      },
+      "wf_to_short": {
+        "WFSendMessageActionRecipients": "recipients",
+        "WFSendMessageContent": "content",
+        "ShowWhenRun": "run"
+      },
+      "samples": 1,
+      "curated_alias": "send_message",
+      "key_confidence": {
+        "WFSendMessageActionRecipients": 1.0,
+        "WFSendMessageContent": 1.0,
+        "ShowWhenRun": 1.0
+      },
+      "primary_keys": [
+        "WFSendMessageActionRecipients",
+        "WFSendMessageContent",
+        "ShowWhenRun"
+      ]
+    },
+    "is.workflow.actions.sendemail": {
+      "identifier": "is.workflow.actions.sendemail",
+      "short_names": [
+        "send_email",
+        "sendemail"
+      ],
+      "key_freq": {
+        "WFSendEmailActionToRecipients": 1,
+        "WFSendEmailActionSubject": 1,
+        "WFSendEmailActionBody": 1,
+        "ShowWhenRun": 1
+      },
+      "value_kinds": {
+        "WFSendEmailActionToRecipients": {
+          "list": 1
+        },
+        "WFSendEmailActionSubject": {
+          "string": 1
+        },
+        "WFSendEmailActionBody": {
+          "string": 1
+        },
+        "ShowWhenRun": {
+          "bool": 1
+        }
+      },
+      "short_to_wf": {
+        "send_email_action_to_recipients": "WFSendEmailActionToRecipients",
+        "recipients": "WFSendEmailActionToRecipients",
+        "to_recipients": "WFSendEmailActionToRecipients",
+        "send_email_action_subject": "WFSendEmailActionSubject",
+        "subject": "WFSendEmailActionSubject",
+        "action_subject": "WFSendEmailActionSubject",
+        "send_email_action_body": "WFSendEmailActionBody",
+        "body": "WFSendEmailActionBody",
+        "action_body": "WFSendEmailActionBody",
+        "show_when_run": "ShowWhenRun",
+        "run": "ShowWhenRun",
+        "when_run": "ShowWhenRun"
+      },
+      "wf_to_short": {
+        "WFSendEmailActionToRecipients": "recipients",
+        "WFSendEmailActionSubject": "subject",
+        "WFSendEmailActionBody": "body",
+        "ShowWhenRun": "run"
+      },
+      "samples": 1,
+      "curated_alias": "send_email",
+      "key_confidence": {
+        "WFSendEmailActionToRecipients": 1.0,
+        "WFSendEmailActionSubject": 1.0,
+        "WFSendEmailActionBody": 1.0,
+        "ShowWhenRun": 1.0
+      },
+      "primary_keys": [
+        "WFSendEmailActionToRecipients",
+        "WFSendEmailActionSubject",
+        "WFSendEmailActionBody",
+        "ShowWhenRun"
+      ]
+    },
+    "is.workflow.actions.runworkflow": {
+      "identifier": "is.workflow.actions.runworkflow",
+      "short_names": [
+        "run_shortcut",
+        "runworkflow"
+      ],
+      "key_freq": {
+        "WFWorkflowName": 1,
+        "WFShowWorkflow": 1
+      },
+      "value_kinds": {
+        "WFWorkflowName": {
+          "string": 1
+        },
+        "WFShowWorkflow": {
+          "bool": 1
+        }
+      },
+      "short_to_wf": {
+        "workflow_name": "WFWorkflowName",
+        "name": "WFWorkflowName",
+        "show_workflow": "WFShowWorkflow",
+        "workflow": "WFShowWorkflow"
+      },
+      "wf_to_short": {
+        "WFWorkflowName": "name",
+        "WFShowWorkflow": "workflow"
+      },
+      "samples": 1,
+      "curated_alias": "run_shortcut",
+      "key_confidence": {
+        "WFWorkflowName": 1.0,
+        "WFShowWorkflow": 1.0
+      },
+      "primary_keys": [
+        "WFWorkflowName",
+        "WFShowWorkflow"
+      ]
+    },
+    "is.workflow.actions.conditional": {
+      "identifier": "is.workflow.actions.conditional",
+      "short_names": [
+        "conditional"
+      ],
+      "key_freq": {
+        "GroupingIdentifier": 6,
+        "WFControlFlowMode": 6,
+        "WFCondition": 2,
+        "WFConditionalActionString": 2
+      },
+      "value_kinds": {
+        "GroupingIdentifier": {
+          "string": 6
+        },
+        "WFControlFlowMode": {
+          "int": 6
+        },
+        "WFCondition": {
+          "int": 2
+        },
+        "WFConditionalActionString": {
+          "string": 2
+        }
+      },
+      "short_to_wf": {
+        "condition": "WFCondition",
+        "conditional_action_string": "WFConditionalActionString",
+        "string": "WFConditionalActionString",
+        "action_string": "WFConditionalActionString"
+      },
+      "wf_to_short": {
+        "WFCondition": "condition",
+        "WFConditionalActionString": "string"
+      },
+      "samples": 6,
+      "curated_alias": "conditional",
+      "key_confidence": {
+        "GroupingIdentifier": 1.0,
+        "WFControlFlowMode": 1.0,
+        "WFCondition": 0.333,
+        "WFConditionalActionString": 0.333
+      },
+      "primary_keys": [
+        "GroupingIdentifier",
+        "WFControlFlowMode",
+        "WFCondition",
+        "WFConditionalActionString"
+      ]
+    },
+    "is.workflow.actions.repeat.count": {
+      "identifier": "is.workflow.actions.repeat.count",
+      "short_names": [
+        "repeat",
+        "repeat_count"
+      ],
+      "key_freq": {
+        "GroupingIdentifier": 2,
+        "WFControlFlowMode": 2,
+        "WFRepeatCount": 1
+      },
+      "value_kinds": {
+        "GroupingIdentifier": {
+          "string": 2
+        },
+        "WFControlFlowMode": {
+          "int": 2
+        },
+        "WFRepeatCount": {
+          "int": 1
+        }
+      },
+      "short_to_wf": {
+        "repeat_count": "WFRepeatCount",
+        "count": "WFRepeatCount"
+      },
+      "wf_to_short": {
+        "WFRepeatCount": "count"
+      },
+      "samples": 2,
+      "curated_alias": "repeat",
+      "key_confidence": {
+        "GroupingIdentifier": 1.0,
+        "WFControlFlowMode": 1.0,
+        "WFRepeatCount": 0.5
+      },
+      "primary_keys": [
+        "GroupingIdentifier",
+        "WFControlFlowMode",
+        "WFRepeatCount"
+      ]
+    }
+  },
+  "notes": [
+    "short_to_wf maps are frequency-ranked suggestions for the generic compiler",
+    "confidence = key_freq / max_key_freq for that action",
+    "Regenerate: python3 scripts/learn_from_shortcuts.py"
+  ],
+  "identifier_count": 42
+}

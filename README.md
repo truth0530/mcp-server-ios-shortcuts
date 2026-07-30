@@ -6,7 +6,7 @@ Zero-dependency **Model Context Protocol (MCP)** server for macOS that lets AI c
 
 | | |
 |---|---|
-| **Version** | 2.5.0 |
+| **Version** | 2.6.0 |
 | **Runtime** | Python 3.8+ (stdlib only — no `pip install`) |
 | **OS** | macOS Monterey+ (`shortcuts` CLI) |
 | **License** | MIT |
@@ -32,6 +32,9 @@ build_and_install
 | `list_actions` | Full Apple catalog (400+ ids) + curated aliases |
 | `lookup_action` | Resolve short name / full identifier + suggestions |
 | `decompile_shortcut` | `.shortcut` → editable recipe JSON (reverse path) |
+| `learn_from_corpus` | Mine WF param keys from seeds/fixtures/files → learned maps |
+| `get_learned_params` | short→WF map for one action |
+| `list_learned_actions` | Top learned actions by sample count |
 | `list_templates` | Built-in recipe templates |
 | `get_template` | Fetch a template’s full action list |
 | `validate_recipe` | Dry-run compile (semantic + control-flow + **magic refs**) |
@@ -410,7 +413,37 @@ Details: [docs/ACTION_COVERAGE.md](./docs/ACTION_COVERAGE.md)
 
 ---
 
+## Decompile learning loop (v2.6)
+
+```bash
+python3 scripts/learn_from_shortcuts.py
+# optional: extra exports
+python3 scripts/learn_from_shortcuts.py --roots "$HOME/Desktop/shortcut-exports"
+```
+
+Produces `data/learned_param_maps.json`. The generic compiler then accepts:
+
+```json
+{ "type": "is.workflow.actions.speaktext", "params": { "text": "hi", "wait": true } }
+```
+
+and remaps to `WFSpeakTextText` / `WFSpeakTextWait` before auto-coercion.
+
+MCP: `learn_from_corpus` · `get_learned_params` · `list_learned_actions`
+
+Env: `IOS_SHORTCUTS_MCP_LEARN_ROOTS` (extra scan paths)
+
+---
+
 ## Changelog
+
+### 2.6.0
+
+- **Learning loop**: compile/decompile mining → `learned_param_maps.json`
+- Generic path applies learned **short→WF** remaps (text/wait/seconds/…)
+- Tools: `learn_from_corpus`, `get_learned_params`, `list_learned_actions`
+- Script: `scripts/learn_from_shortcuts.py`
+- Expand corpus via user `.shortcut` exports under learn roots
 
 ### 2.5.0
 

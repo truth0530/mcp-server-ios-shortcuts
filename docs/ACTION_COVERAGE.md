@@ -22,8 +22,23 @@ Cover **all Apple `is.workflow.actions.*` identifiers** available on a modern ma
 | **Curated aliases** | specialized param shaping (~100) |
 | **Auto-coercion** | `wf_serialization.py` on generic path |
 | **Decompiler** | `decompiler.py` / tool `decompile_shortcut` |
+| **Learning loop** | `param_learning.py` → `data/learned_param_maps.json` (short→WF) |
 | **App Intent** | `type: app_intent` + reverse-DNS identifiers |
 | **Synthetic helpers** | `conditional_*` / `repeat_*` / `menu_*` |
+
+## Learning loop (v2.6)
+
+1. Compile seed recipes + templates + fixtures (known-good WF shapes)  
+2. Optionally scan `dist/` and `IOS_SHORTCUTS_MCP_LEARN_ROOTS` for `*.shortcut` / `*_raw.shortcut`  
+3. Aggregate per-identifier `key_freq`, `value_kinds`, `short_to_wf`  
+4. Generic compiler remaps ergonomic keys before auto-coercion  
+
+```bash
+python3 scripts/learn_from_shortcuts.py
+# or MCP: learn_from_corpus
+```
+
+Re-run after adding user-exported shortcuts to grow coverage beyond the seed set.
 
 ## How agents should call actions
 

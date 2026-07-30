@@ -148,6 +148,60 @@ def test_app_intent_compile() -> None:
     )
 
 
+def test_param_learning_loop() -> None:
+    from param_learning import (
+        apply_learned_param_map,
+        get_learned,
+        get_param_map,
+        learned_stats,
+        run_learning,
+        save_learned,
+    )
+
+    doc = run_learning(roots=[], include_seeds=True, include_templates=True, include_fixtures=True)
+    path = save_learned(doc)
+    assert_true(os.path.isfile(path), path)
+    get_learned(force_reload=True)
+    stats = learned_stats()
+    assert_true(stats["identifier_count"] >= 20, stats)
+    assert_true(stats["with_short_maps"] >= 10, stats)
+
+    m = get_param_map("is.workflow.actions.speaktext")
+    assert_true((m.get("short_to_wf") or {}).get("text") == "WFSpeakTextText", m)
+
+    mapped, notes = apply_learned_param_map(
+        "is.workflow.actions.speaktext",
+        {"text": "hi", "wait": True},
+    )
+    assert_true(mapped.get("WFSpeakTextText") == "hi", mapped)
+    assert_true(mapped.get("WFSpeakTextWait") is True, mapped)
+    assert_true(any("text" in n for n in notes), notes)
+
+    # generic full-id compile with short keys
+    compiled = compile_recipe(
+        [
+            {
+                "type": "is.workflow.actions.speaktext",
+                "params": {"text": "hello", "wait": True},
+            }
+        ]
+    )
+    params = compiled["wf_actions"][0]["WFWorkflowActionParameters"]
+    assert_true("WFSpeakTextText" in params, params)
+
+    tool = mcp_server.handle_tool_call(
+        "get_learned_params", {"type": "speak_text"}
+    )
+    assert_true(not tool.get("isError"), tool)
+    assert_true(
+        tool["structuredContent"]["map"]["short_to_wf"].get("text")
+        == "WFSpeakTextText"
+        or "WFSpeakTextText"
+        in (tool["structuredContent"]["map"].get("short_to_wf") or {}).values(),
+        tool,
+    )
+
+
 def test_e2e_runtime_run_if_possible() -> None:
     """
     True runtime assertion when macOS allows headless install+run.
@@ -578,7 +632,7 @@ def test_ndjson_initialize() -> None:
     assert_true(len(lines) >= 4, "unexpected stdout: {0!r}\nstderr={1!r}".format(out, err))
     init = json.loads(lines[0])
     assert_true(init["result"]["serverInfo"]["name"] == "ios-shortcuts-mcp", init)
-    assert_true(init["result"]["serverInfo"]["version"] == "2.5.0", init)
+    assert_true(init["result"]["serverInfo"]["version"] == "2.6.0", init)
     tools = json.loads(lines[1])
     assert_true(len(tools["result"]["tools"]) >= 10, tools)
     # annotations present on first tool
@@ -704,6 +758,7 @@ def main() -> int:
         test_decompile_roundtrip,
         test_platform_preflight,
         test_app_intent_compile,
+        test_param_learning_loop,
         test_e2e_runtime_run_if_possible,
         test_validate_and_build,
         test_semantic_validation,

@@ -1383,6 +1383,13 @@ def _compile_action(item: dict, *, coerce_mode: str = "smart") -> List[dict]:
     generic_params = dict(args)
     for drop in ("type", "action", "as"):
         generic_params.pop(drop, None)
+    # Learned short→WF key maps (from decompile/compile mining)
+    try:
+        from param_learning import apply_learned_param_map  # lazy: avoid import cycle
+
+        generic_params, _map_notes = apply_learned_param_map(ident, generic_params)
+    except Exception:
+        pass
     # Curated identifiers still benefit from coercion when used via raw id
     mode = coerce_mode
     if meta.get("serialization") == "curated" and coerce_mode == "smart":

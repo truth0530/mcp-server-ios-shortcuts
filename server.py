@@ -40,7 +40,7 @@ from shortcut_builder import (
 )
 
 SERVER_NAME = "ios-shortcuts-mcp"
-SERVER_VERSION = "2.5.0"
+SERVER_VERSION = "2.6.0"
 PROTOCOL_VERSION = "2024-11-05"
 SUPPORTED_PROTOCOL_VERSIONS = (
     "2024-11-05",
@@ -326,6 +326,46 @@ TOOLS: List[Dict[str, Any]] = [
         },
         ["path"],
         annotations=_ann(title="Decompile Shortcut", read_only=True, idempotent=True),
+    ),
+    _tool(
+        "learn_from_corpus",
+        "Mine WF parameter key shapes from seeds, templates, fixtures, and "
+        ".shortcut files under learn roots. Writes data/learned_param_maps.json "
+        "so the generic compiler can map short keys (text, wait) → WF… keys.",
+        {
+            "roots": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "Extra directories/files to scan for .shortcut (optional)",
+            },
+            "include_seeds": {"type": "boolean", "description": "default true"},
+            "include_templates": {"type": "boolean", "description": "default true"},
+            "include_fixtures": {"type": "boolean", "description": "default true"},
+        },
+        annotations=_ann(title="Learn From Corpus", destructive=False),
+    ),
+    _tool(
+        "get_learned_params",
+        "Show learned short→WF parameter map for one action identifier or short name.",
+        {
+            "type": {
+                "type": "string",
+                "description": "speak_text or is.workflow.actions.speaktext",
+            }
+        },
+        ["type"],
+        annotations=_ann(title="Get Learned Params", read_only=True, idempotent=True),
+    ),
+    _tool(
+        "list_learned_actions",
+        "List top actions by observed sample count with learned key maps.",
+        {
+            "limit": {
+                "type": "integer",
+                "description": "Max rows (default 30)",
+            }
+        },
+        annotations=_ann(title="List Learned Actions", read_only=True, idempotent=True),
     ),
     _tool(
         "explain_magic_vars",
@@ -695,6 +735,64 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
             path = resolve_read_path(args["path"], label="path")
             prefer = _as_bool(args.get("prefer_curated", True), True)
             return _ok_json(decompile_shortcut(path, prefer_curated=prefer))
+
+        if tool_name == "learn_from_corpus":
+            from param_learning import (
+                default_learn_roots,
+                get_learned,
+                learned_stats,
+                run_learning,
+                save_learned,
+                top_learned_actions,
+            )
+
+            roots = list(default_learn_roots())
+            for r in args.get("roots") or []:
+                if r:
+                    roots.append(str(r))
+            doc = run_learning(
+                roots=roots,
+                include_seeds=_as_bool(args.get("include_seeds", True), True),
+                include_templates=_as_bool(args.get("include_templates", True), True),
+                include_fixtures=_as_bool(args.get("include_fixtures", True), True),
+            )
+            path = save_learned(doc)
+            get_learned(force_reload=True)
+            return _ok_json(
+                {
+                    "wrote": path,
+                    "stats": learned_stats(),
+                    "top": top_learned_actions(20),
+                }
+            )
+
+        if tool_name == "get_learned_params":
+            from param_learning import get_param_map
+
+            type_name = str(args.get("type") or "")
+            try:
+                ident, _meta = resolve_action_type(type_name)
+            except KeyError:
+                ident = type_name
+            entry = get_param_map(ident)
+            if not entry:
+                return _err(
+                    "No learned map for {0}".format(type_name),
+                    code="NOT_FOUND",
+                    details={"identifier": ident},
+                )
+            return _ok_json({"type": type_name, "identifier": ident, "map": entry})
+
+        if tool_name == "list_learned_actions":
+            from param_learning import learned_stats, top_learned_actions
+
+            limit = max(1, min(int(args.get("limit") or 30), 200))
+            return _ok_json(
+                {
+                    "stats": learned_stats(),
+                    "actions": top_learned_actions(limit),
+                }
+            )
 
         if tool_name == "explain_magic_vars":
             return _ok_json(explain_magic_syntax())
@@ -1099,6 +1197,9 @@ def _run_doctor() -> Dict[str, Any]:
         "allow_roots": ALLOW_ROOTS,
         "action_types": len(ACTION_MAPPINGS),
         "action_catalog": catalog_stats(),
+        "learned_params": __import__(
+            "param_learning", fromlist=["learned_stats"]
+        ).learned_stats(),
         "templates": len(TEMPLATES),
         "dangerous_actions": sorted(DANGEROUS_ACTIONS),
         "tools": [t["name"] for t in TOOLS],
