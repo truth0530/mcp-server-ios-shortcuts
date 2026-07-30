@@ -16,6 +16,13 @@ import plistlib
 import subprocess
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+from action_catalog import (
+    CURATED_ALIASES,
+    catalog_stats,
+    list_catalog_actions,
+    resolve_action_type,
+    suggest_actions,
+)
 from magic_vars import (
     RecipeContext,
     collect_aliases,
@@ -27,123 +34,12 @@ from magic_vars import (
 )
 
 # ---------------------------------------------------------------------------
-# Action catalog
+# Action catalog (compat + curated surface)
 # ---------------------------------------------------------------------------
 
-# Canonical short names → Workflow action identifiers.
-# Agents should prefer short names; full identifiers are also accepted.
-ACTION_MAPPINGS: Dict[str, str] = {
-    # Time / location
-    "date": "is.workflow.actions.date",
-    "adjust_date": "is.workflow.actions.adjustdate",
-    "format_date": "is.workflow.actions.formatdate",
-    "get_location": "is.workflow.actions.getcurrentlocation",
-    "get_addresses": "is.workflow.actions.getaddressesfrominput",
-    "get_maps_url": "is.workflow.actions.getmapslink",
-    "get_halfway_point": "is.workflow.actions.gethalfwaypoint",
-    "get_travel_time": "is.workflow.actions.gettraveltime",
-    "open_in_maps": "is.workflow.actions.openinmaps",
-    # Control flow
-    "conditional": "is.workflow.actions.conditional",
-    "repeat": "is.workflow.actions.repeat.count",
-    "repeat_each": "is.workflow.actions.repeat.each",
-    "choose_from_menu": "is.workflow.actions.choosefrommenu",
-    "exit_shortcut": "is.workflow.actions.exit",
-    "stop_and_output": "is.workflow.actions.output",
-    "wait_to_return": "is.workflow.actions.waittoreturn",
-    "nothing": "is.workflow.actions.nothing",
-    "comment": "is.workflow.actions.comment",
-    # Interaction
-    "delay": "is.workflow.actions.delay",
-    "ask": "is.workflow.actions.ask",
-    "show_result": "is.workflow.actions.showresult",
-    "show_alert": "is.workflow.actions.alert",
-    "show_notification": "is.workflow.actions.notification",
-    "choose_from_list": "is.workflow.actions.choosefromlist",
-    "vibrate": "is.workflow.actions.vibrate",
-    "play_sound": "is.workflow.actions.playsound",
-    "speak_text": "is.workflow.actions.speaktext",
-    "dictate_text": "is.workflow.actions.dictatetext",
-    # Apps / system
-    "open_app": "is.workflow.actions.openapp",
-    "open_url": "is.workflow.actions.openurl",
-    "search_web": "is.workflow.actions.searchweb",
-    "run_shortcut": "is.workflow.actions.runworkflow",
-    "get_my_shortcuts": "is.workflow.actions.getmyworkflows",
-    "set_volume": "is.workflow.actions.setvolume",
-    "get_volume": "is.workflow.actions.getvolume",
-    "set_brightness": "is.workflow.actions.setbrightness",
-    "get_brightness": "is.workflow.actions.getbrightness",
-    "set_flashlight": "is.workflow.actions.flashlight",
-    "set_low_power_mode": "is.workflow.actions.lowpowermode",
-    "set_focus": "is.workflow.actions.dnd.set",
-    "get_battery": "is.workflow.actions.getbatterylevel",
-    "get_device_details": "is.workflow.actions.getdevicedetails",
-    "get_network_details": "is.workflow.actions.getwifi",
-    "set_wifi": "is.workflow.actions.wifi.set",
-    "set_bluetooth": "is.workflow.actions.bluetooth.set",
-    "set_airplane_mode": "is.workflow.actions.airplanemode.set",
-    "set_cellular": "is.workflow.actions.cellulardata.set",
-    "lock_screen": "is.workflow.actions.lockscreen",
-    # Clipboard / text
-    "get_clipboard": "is.workflow.actions.getclipboard",
-    "set_clipboard": "is.workflow.actions.setclipboard",
-    "text": "is.workflow.actions.gettext",
-    "change_case": "is.workflow.actions.text.changecase",
-    "split_text": "is.workflow.actions.text.split",
-    "combine_text": "is.workflow.actions.text.combine",
-    "replace_text": "is.workflow.actions.text.replace",
-    "match_text": "is.workflow.actions.text.match",
-    "get_text_from_input": "is.workflow.actions.detect.text",
-    "count": "is.workflow.actions.count",
-    "calculate": "is.workflow.actions.calculate",
-    "format_number": "is.workflow.actions.format.number",
-    "round_number": "is.workflow.actions.round",
-    "base64_encode": "is.workflow.actions.base64encode",
-    "url_encode": "is.workflow.actions.urlencode",
-    "hash": "is.workflow.actions.hash",
-    # Variables / data
-    "set_variable": "is.workflow.actions.setvariable",
-    "get_variable": "is.workflow.actions.getvariable",
-    "add_to_variable": "is.workflow.actions.appendvariable",
-    "dictionary": "is.workflow.actions.dictionary",
-    "get_dictionary_value": "is.workflow.actions.getvalueforkey",
-    "set_dictionary_value": "is.workflow.actions.setvalueforkey",
-    "list": "is.workflow.actions.list",
-    "get_item_from_list": "is.workflow.actions.getitemfromlist",
-    "filter_files": "is.workflow.actions.filter.files",
-    # Media / capture
-    "take_screenshot": "is.workflow.actions.takescreenshot",
-    "take_photo": "is.workflow.actions.takephoto",
-    "select_photos": "is.workflow.actions.selectphoto",
-    "crop_image": "is.workflow.actions.cropimage",
-    "resize_image": "is.workflow.actions.image.resize",
-    "rotate_image": "is.workflow.actions.imagerotate",
-    "ocr_extract_text": "is.workflow.actions.extracttextfromimage",
-    "make_pdf": "is.workflow.actions.makepdf",
-    "encode_media": "is.workflow.actions.encodemedia",
-    "play_music": "is.workflow.actions.playmusic",
-    "pause_music": "is.workflow.actions.pausemusic",
-    # Files / network
-    "save_file": "is.workflow.actions.documentpicker.save",
-    "get_file": "is.workflow.actions.documentpicker.open",
-    "get_file_from_folder": "is.workflow.actions.file.get",
-    "create_folder": "is.workflow.actions.file.createfolder",
-    "rename_file": "is.workflow.actions.file.rename",
-    "delete_files": "is.workflow.actions.file.delete",
-    "get_contents_of_url": "is.workflow.actions.downloadurl",
-    "get_headers_of_url": "is.workflow.actions.url.getheaders",
-    "expand_url": "is.workflow.actions.url.expand",
-    # Communication
-    "send_message": "is.workflow.actions.sendmessage",
-    "send_email": "is.workflow.actions.sendemail",
-    "share": "is.workflow.actions.share",
-    "airdrop": "is.workflow.actions.airdrop",
-    # macOS scripting
-    "run_shell_script": "is.workflow.actions.runshellscript",
-    "run_applescript": "is.workflow.actions.applescript",
-    "run_javascript_for_automation": "is.workflow.actions.runjsshortcut",
-}
+# Backward-compatible alias map used by older call sites / tests.
+# Full Apple coverage lives in action_catalog + data/apple_action_ids.txt.
+ACTION_MAPPINGS: Dict[str, str] = dict(CURATED_ALIASES)
 
 # Condition enums used by is.workflow.actions.conditional
 CONDITION_ENUMS: Dict[str, int] = {
@@ -665,7 +561,17 @@ def sanitize_filename(name: str) -> str:
 
 
 def create_action(action_type: str, params: Optional[dict] = None) -> dict:
-    identifier = ACTION_MAPPINGS.get(action_type, action_type)
+    """Create a WF action dict. Resolves short names via full Apple catalog."""
+    try:
+        identifier, _meta = resolve_action_type(action_type)
+    except KeyError:
+        # Already a full identifier, or synthetic handled elsewhere
+        if str(action_type).startswith("is.workflow.actions.") or str(
+            action_type
+        ).startswith("com."):
+            identifier = action_type
+        else:
+            identifier = ACTION_MAPPINGS.get(action_type, action_type)
     return {
         "WFWorkflowActionIdentifier": identifier,
         "WFWorkflowActionParameters": params or {},
@@ -691,46 +597,45 @@ def _text_token_attachment(variable_name: str) -> dict:
     }
 
 
-def list_supported_actions() -> List[Dict[str, Any]]:
-    """Return a structured catalog for agent discovery."""
-    items: List[Dict[str, Any]] = []
-    # Synthetic control-flow helpers first
-    synthetic = [
-        "conditional_start",
-        "conditional_else",
-        "conditional_end",
-        "repeat_start",
-        "repeat_end",
-        "repeat_each_start",
-        "repeat_each_end",
-        "menu_start",
-        "menu_item",
-        "menu_end",
-    ]
-    seen = set()
-    for name in synthetic + sorted(ACTION_MAPPINGS.keys()):
-        if name in seen:
-            continue
-        seen.add(name)
-        doc = ACTION_DOCS.get(name, {})
-        ident = ACTION_MAPPINGS.get(name, name)
-        risk = (
-            "dangerous"
-            if name in DANGEROUS_ACTIONS or str(ident).lower() in DANGEROUS_ACTIONS
-            else "normal"
-        )
-        items.append(
-            {
-                "type": name,
-                "identifier": ident,
-                "summary": doc.get("summary", "")
-                or ("Workflow action {0}".format(ident) if ident else ""),
-                "params": doc.get("params", {}),
-                "example": doc.get("example"),
-                "risk": risk,
-            }
-        )
-    return items
+def list_supported_actions(
+    *,
+    query: Optional[str] = None,
+    category: Optional[str] = None,
+    curated_only: bool = False,
+    limit: int = 500,
+) -> List[Dict[str, Any]]:
+    """
+    Return the full Apple action catalog for agent discovery.
+
+    Includes harvested system identifiers (~400+) plus curated aliases.
+    """
+    payload = list_catalog_actions(
+        query=query,
+        category=category,
+        curated_only=curated_only,
+        limit=limit,
+    )
+    items = payload.get("actions") or []
+    # Merge hand-written docs + risk tags for curated types
+    enriched: List[Dict[str, Any]] = []
+    for it in items:
+        name = it.get("type")
+        doc = ACTION_DOCS.get(name, {}) if name else {}
+        ident = it.get("identifier") or ""
+        risk = it.get("risk") or "normal"
+        if name in DANGEROUS_ACTIONS or str(ident).lower() in DANGEROUS_ACTIONS:
+            risk = "dangerous"
+        if doc:
+            it = dict(it)
+            if doc.get("summary"):
+                it["summary"] = doc["summary"]
+            if doc.get("params"):
+                it["params"] = doc["params"]
+            if doc.get("example") is not None:
+                it["example"] = doc["example"]
+        it["risk"] = risk
+        enriched.append(it)
+    return enriched
 
 
 def list_templates() -> List[Dict[str, Any]]:
@@ -1447,16 +1352,31 @@ def _compile_action(item: dict) -> List[dict]:
             )
         ]
 
-    # Generic fallback: treat `type` as short name or full identifier and
-    # pass params through as WF parameters. Useful for advanced / newer actions.
-    if atype in ACTION_MAPPINGS or atype.startswith("is.workflow.actions."):
-        return [create_action(atype, args)]
+    # Generic path: full Apple catalog + any is.workflow.actions.* identifier.
+    # Params are passed through as WFWorkflowActionParameters (use real WF keys
+    # or wf_params for full control). Curated types above keep richer shaping.
+    try:
+        ident, meta = resolve_action_type(atype)
+    except KeyError as exc:
+        suggestions = suggest_actions(str(atype), limit=5)
+        hint = ""
+        if suggestions:
+            hint = " Suggestions: " + ", ".join(
+                "{0} ({1})".format(s["type"], s["identifier"]) for s in suggestions
+            )
+        raise ValueError(
+            "Unknown action type '{0}'. "
+            "Use list_actions (full Apple catalog), pass a full "
+            "is.workflow.actions.* identifier, or provide wf_params.{1}".format(
+                atype, hint
+            )
+        ) from exc
 
-    raise ValueError(
-        f"Unknown action type '{atype}'. "
-        f"Use list_actions, pass a full is.workflow.actions.* identifier, "
-        f"or provide wf_params for a raw action."
-    )
+    # Prefer explicit wf-style keys; drop helper-only keys
+    generic_params = dict(args)
+    for drop in ("type", "action", "as"):
+        generic_params.pop(drop, None)
+    return [create_action(ident, generic_params)]
 
 
 def _semantic_check_action(

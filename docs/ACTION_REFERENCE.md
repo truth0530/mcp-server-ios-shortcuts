@@ -1,8 +1,10 @@
-# Action reference
+# Action reference (curated surface)
 
-High-level recipe types accepted by `build_shortcut` / `validate_recipe`.
+High-level **curated** recipe types with rich parameter shaping.
 
-Agents should prefer calling the live `list_actions` tool (always up to date with the running server). This document mirrors the v2 catalog for offline reading.
+For **full Apple coverage** (400+ `is.workflow.actions.*` identifiers, auto short names, generic compile), see [ACTION_COVERAGE.md](./ACTION_COVERAGE.md) and call live `list_actions` / `lookup_action`.
+
+Agents should prefer the live `list_actions` tool. This document mirrors curated helpers for offline reading.
 
 ## Recipe shape
 

@@ -6,7 +6,7 @@ Zero-dependency **Model Context Protocol (MCP)** server for macOS that lets AI c
 
 | | |
 |---|---|
-| **Version** | 2.3.0 |
+| **Version** | 2.4.0 |
 | **Runtime** | Python 3.8+ (stdlib only — no `pip install`) |
 | **OS** | macOS Monterey+ (`shortcuts` CLI) |
 | **License** | MIT |
@@ -29,7 +29,8 @@ build_and_install
 
 | Tool | Purpose |
 |------|---------|
-| `list_actions` | Discover supported action types + param docs |
+| `list_actions` | Full Apple catalog (400+ ids) + curated aliases |
+| `lookup_action` | Resolve short name / full identifier + suggestions |
 | `list_templates` | Built-in recipe templates |
 | `get_template` | Fetch a template’s full action list |
 | `validate_recipe` | Dry-run compile (semantic + control-flow + **magic refs**) |
@@ -386,7 +387,25 @@ PY
 
 ---
 
+## Apple action coverage (v2.4)
+
+- **400+** harvested `is.workflow.actions.*` identifiers (`data/apple_action_ids.txt`)
+- Auto short names (`text_split`, `dnd_set`, …) + **curated** ergonomic aliases
+- **Any** full `is.workflow.actions.*` id builds via generic compiler (even if newly added on a newer OS)
+- Use `wf_params` / raw `WF…` keys when a specialized shaper does not exist yet
+- Refresh harvest: `python3 scripts/harvest_action_ids.py`
+- Details: [docs/ACTION_COVERAGE.md](./docs/ACTION_COVERAGE.md)
+
+---
+
 ## Changelog
+
+### 2.4.0
+
+- Full Apple action identifier catalog (harvested from macOS) + generic compile path
+- `lookup_action`, expanded `list_actions` (`category`, `curated_only`)
+- `action_catalog.py`, harvest script, ACTION_COVERAGE docs
+- Honest split: identifier coverage vs curated param schemas
 
 ### 2.3.0
 

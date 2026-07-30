@@ -21,6 +21,7 @@ import sys
 import traceback
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+from action_catalog import catalog_stats, resolve_action_type, suggest_actions
 from magic_vars import explain_magic_syntax
 from shortcut_builder import (
     ACTION_MAPPINGS,
@@ -38,7 +39,7 @@ from shortcut_builder import (
 )
 
 SERVER_NAME = "ios-shortcuts-mcp"
-SERVER_VERSION = "2.3.0"
+SERVER_VERSION = "2.4.0"
 PROTOCOL_VERSION = "2024-11-05"
 SUPPORTED_PROTOCOL_VERSIONS = (
     "2024-11-05",
@@ -230,21 +231,46 @@ GENERIC_OK_SCHEMA = {
 TOOLS: List[Dict[str, Any]] = [
     _tool(
         "list_actions",
-        "List supported high-level shortcut action types with parameter docs "
-        "and examples. Call this before build_shortcut when unsure which "
-        "action types exist.",
+        "List Apple Shortcuts action types from the full harvested catalog "
+        "(400+ is.workflow.actions.* identifiers) plus curated short aliases. "
+        "Any is.workflow.actions.* id is also buildable even if unlisted. "
+        "Call before build_shortcut when discovering actions.",
         {
             "query": {
                 "type": "string",
                 "description": "Optional substring filter on type/summary/identifier",
             },
+            "category": {
+                "type": "string",
+                "description": (
+                    "Optional category filter: text, files, media, device, web, "
+                    "control, interaction, apps, data, scripting, …"
+                ),
+            },
+            "curated_only": {
+                "type": "boolean",
+                "description": "If true, only high-quality curated short names",
+            },
             "limit": {
                 "type": "integer",
-                "description": "Max results (default 200, max 500)",
+                "description": "Max results (default 200, max 2000)",
             },
         },
         annotations=_ann(title="List Actions", read_only=True, idempotent=True),
         output_schema=GENERIC_OK_SCHEMA,
+    ),
+    _tool(
+        "lookup_action",
+        "Resolve one action short name or full is.workflow.actions.* identifier "
+        "to catalog metadata, aliases, category, and suggestions.",
+        {
+            "type": {
+                "type": "string",
+                "description": "Short name (speak_text) or full identifier",
+            }
+        },
+        ["type"],
+        annotations=_ann(title="Lookup Action", read_only=True, idempotent=True),
     ),
     _tool(
         "list_templates",
@@ -570,26 +596,54 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
     args = arguments or {}
     try:
         if tool_name == "list_actions":
-            items = list_supported_actions()
-            query = (args.get("query") or "").strip().lower()
-            if query:
-                items = [
-                    it
-                    for it in items
-                    if query in it["type"].lower()
-                    or query in (it.get("summary") or "").lower()
-                    or query in (it.get("identifier") or "").lower()
-                ]
-            limit = max(1, min(int(args.get("limit") or 200), 500))
+            limit = max(1, min(int(args.get("limit") or 200), 2000))
+            query = (args.get("query") or "").strip() or None
+            category = (args.get("category") or "").strip() or None
+            curated_only = _as_bool(args.get("curated_only", False), False)
+            items = list_supported_actions(
+                query=query,
+                category=category,
+                curated_only=curated_only,
+                limit=limit,
+            )
+            stats = catalog_stats()
             return _ok_json(
                 {
-                    "count": len(items[:limit]),
-                    "total_available": len(ACTION_MAPPINGS),
+                    "count": len(items),
+                    "total_available": stats["identifiers"] + stats["synthetic_types"],
+                    "catalog": stats,
                     "safe_mode": SAFE_MODE,
                     "dangerous_actions": sorted(DANGEROUS_ACTIONS),
-                    "actions": items[:limit],
+                    "actions": items,
+                    "hint": (
+                        "Pass full is.workflow.actions.* as type for any Apple action; "
+                        "use wf_params for raw Workflow parameter keys."
+                    ),
                 }
             )
+
+        if tool_name == "lookup_action":
+            type_name = args.get("type") or args.get("name")
+            if not type_name:
+                return _err("type is required", code="INVALID_PARAMS")
+            try:
+                ident, meta = resolve_action_type(str(type_name))
+                return _ok_json(
+                    {
+                        "type": type_name,
+                        "identifier": ident,
+                        "meta": meta,
+                        "suggestions": suggest_actions(str(type_name), limit=8),
+                    }
+                )
+            except KeyError as exc:
+                return _err(
+                    str(exc),
+                    code="UNKNOWN_ACTION",
+                    details={
+                        "suggestions": suggest_actions(str(type_name), limit=8),
+                    },
+                )
 
         if tool_name == "list_templates":
             return _ok_json(
@@ -1003,6 +1057,7 @@ def _run_doctor() -> Dict[str, Any]:
         "dist_write_error": dist_write_error,
         "allow_roots": ALLOW_ROOTS,
         "action_types": len(ACTION_MAPPINGS),
+        "action_catalog": catalog_stats(),
         "templates": len(TEMPLATES),
         "dangerous_actions": sorted(DANGEROUS_ACTIONS),
         "tools": [t["name"] for t in TOOLS],

@@ -30,13 +30,66 @@ def assert_true(cond: bool, msg: str) -> None:
 
 
 def test_catalog() -> None:
-    actions = list_supported_actions()
-    assert_true(len(actions) >= 40, "expected rich action catalog, got {0}".format(len(actions)))
+    actions = list_supported_actions(limit=2000)
+    assert_true(
+        len(actions) >= 300,
+        "expected full Apple catalog (>=300), got {0}".format(len(actions)),
+    )
     assert_true(any(a.get("risk") == "dangerous" for a in actions), "missing risk tags")
+    assert_true(
+        any(
+            (a.get("identifier") or "").startswith("is.workflow.actions.")
+            for a in actions
+        ),
+        "missing full identifiers",
+    )
     templates = list_templates()
     assert_true(len(templates) >= 5, "expected several templates")
     tpl = get_template("hello_world")
     assert_true(len(tpl["actions"]) >= 1, "hello_world empty")
+
+
+def test_full_apple_identifier_coverage() -> None:
+    """Any harvested / full is.workflow.actions.* id must validate + compile."""
+    from action_catalog import catalog_stats, resolve_action_type
+
+    stats = catalog_stats()
+    assert_true(stats["identifiers"] >= 300, stats)
+
+    # Full identifier generic compile
+    recipe = [
+        {
+            "type": "is.workflow.actions.notification",
+            "params": {
+                "WFNotificationActionTitle": "T",
+                "WFNotificationActionBody": "B",
+            },
+        }
+    ]
+    v = validate_actions(recipe)
+    assert_true(v["ok"], v)
+    compiled = compile_recipe(recipe)
+    assert_true(
+        compiled["wf_actions"][0]["WFWorkflowActionIdentifier"]
+        == "is.workflow.actions.notification",
+        compiled,
+    )
+
+    # Auto short from catalog
+    ident, _ = resolve_action_type("speaktext")
+    assert_true(ident == "is.workflow.actions.speaktext", ident)
+
+    # Unknown short still fails
+    bad = validate_actions([{"type": "no_such_action_zzz", "params": {}}])
+    assert_true(not bad["ok"], bad)
+
+    # lookup tool
+    hit = mcp_server.handle_tool_call("lookup_action", {"type": "open_app"})
+    assert_true(not hit.get("isError"), hit)
+    assert_true(
+        hit["structuredContent"]["identifier"] == "is.workflow.actions.openapp",
+        hit,
+    )
 
 
 def test_validate_and_build() -> None:
@@ -226,6 +279,10 @@ def test_tool_annotations_and_doctor() -> None:
     payload = doc["structuredContent"]
     assert_true(payload["version"] == mcp_server.SERVER_VERSION, payload)
     assert_true(payload["action_types"] >= 40, payload)
+    assert_true(
+        (payload.get("action_catalog") or {}).get("identifiers", 0) >= 300,
+        payload.get("action_catalog"),
+    )
     assert_true("sign_probe" in payload, payload)
     assert_true("allow_roots" in payload, payload)
     assert_true("safe_mode" in payload, payload)
@@ -369,7 +426,7 @@ def test_ndjson_initialize() -> None:
     assert_true(len(lines) >= 4, "unexpected stdout: {0!r}\nstderr={1!r}".format(out, err))
     init = json.loads(lines[0])
     assert_true(init["result"]["serverInfo"]["name"] == "ios-shortcuts-mcp", init)
-    assert_true(init["result"]["serverInfo"]["version"] == "2.3.0", init)
+    assert_true(init["result"]["serverInfo"]["version"] == "2.4.0", init)
     tools = json.loads(lines[1])
     assert_true(len(tools["result"]["tools"]) >= 10, tools)
     # annotations present on first tool
@@ -490,6 +547,7 @@ def test_safe_mode_tool_block() -> None:
 def main() -> int:
     tests = [
         test_catalog,
+        test_full_apple_identifier_coverage,
         test_validate_and_build,
         test_semantic_validation,
         test_control_flow_validation,
