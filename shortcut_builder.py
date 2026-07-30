@@ -545,6 +545,51 @@ DEFAULT_INPUT_CLASSES = [
     "WFURLContentItem",
 ]
 
+# Actions that execute code or leave the Shortcuts sandbox aggressively.
+# Safe mode (server env IOS_SHORTCUTS_MCP_SAFE_MODE) rejects these.
+DANGEROUS_ACTIONS = frozenset(
+    {
+        "run_shell_script",
+        "run_applescript",
+        "run_javascript_for_automation",
+        "is.workflow.actions.runshellscript",
+        "is.workflow.actions.applescript",
+        "is.workflow.actions.runjsshortcut",
+    }
+)
+
+# JSON Schema fragment for recipe action items (shared with MCP tool schemas).
+ACTION_RECIPE_ITEM_SCHEMA: Dict[str, Any] = {
+    "type": "object",
+    "properties": {
+        "type": {
+            "type": "string",
+            "description": "Short action name or is.workflow.actions.* identifier",
+        },
+        "action": {
+            "type": "string",
+            "description": "Alias for type",
+        },
+        "params": {
+            "type": "object",
+            "description": "High-level parameters for the action",
+            "additionalProperties": True,
+        },
+        "arguments": {
+            "type": "object",
+            "description": "Alias for params",
+            "additionalProperties": True,
+        },
+        "wf_params": {
+            "type": "object",
+            "description": "Raw Workflow parameter dict escape hatch",
+            "additionalProperties": True,
+        },
+    },
+    "anyOf": [{"required": ["type"]}, {"required": ["action"]}],
+    "additionalProperties": True,
+}
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -613,13 +658,21 @@ def list_supported_actions() -> List[Dict[str, Any]]:
             continue
         seen.add(name)
         doc = ACTION_DOCS.get(name, {})
+        ident = ACTION_MAPPINGS.get(name, name)
+        risk = (
+            "dangerous"
+            if name in DANGEROUS_ACTIONS or str(ident).lower() in DANGEROUS_ACTIONS
+            else "normal"
+        )
         items.append(
             {
                 "type": name,
-                "identifier": ACTION_MAPPINGS.get(name, name),
-                "summary": doc.get("summary", ""),
+                "identifier": ident,
+                "summary": doc.get("summary", "")
+                or ("Workflow action {0}".format(ident) if ident else ""),
                 "params": doc.get("params", {}),
                 "example": doc.get("example"),
+                "risk": risk,
             }
         )
     return items
@@ -1343,10 +1396,134 @@ def _compile_action(item: dict) -> List[dict]:
     )
 
 
-def validate_actions(actions_config: list) -> Dict[str, Any]:
-    """Dry-run compile; returns {ok, actions_compiled, errors, warnings}."""
+def _semantic_check_action(
+    index: int,
+    atype: str,
+    params: dict,
+    *,
+    safe_mode: bool,
+) -> Tuple[List[str], List[str]]:
+    """Return (errors, warnings) for semantic constraints on one action."""
     errors: List[str] = []
     warnings: List[str] = []
+    prefix = "actions[{0}] ({1})".format(index, atype)
+    atype_l = str(atype).lower()
+
+    if atype in DANGEROUS_ACTIONS or atype_l in DANGEROUS_ACTIONS:
+        if safe_mode:
+            errors.append(
+                "{0}: blocked in safe mode (shell/AppleScript/JXA)".format(prefix)
+            )
+        else:
+            warnings.append(
+                "{0}: dangerous action — executes local code when the shortcut runs".format(
+                    prefix
+                )
+            )
+
+    if atype in {"delay"}:
+        seconds = params.get("seconds", 1)
+        try:
+            sec_f = float(seconds)
+            if sec_f < 0:
+                errors.append("{0}: seconds must be >= 0".format(prefix))
+            elif sec_f > 3600:
+                warnings.append("{0}: delay > 3600s is unusually long".format(prefix))
+        except (TypeError, ValueError):
+            errors.append("{0}: seconds must be a number".format(prefix))
+
+    if atype in {"set_volume"}:
+        vol = params.get("volume", 1.0)
+        if not isinstance(vol, str):
+            try:
+                v = float(vol)
+                if v < 0.0 or v > 1.0:
+                    errors.append("{0}: volume must be between 0.0 and 1.0".format(prefix))
+            except (TypeError, ValueError):
+                errors.append("{0}: volume must be a number or variable name".format(prefix))
+
+    if atype in {"set_brightness"}:
+        try:
+            b = float(params.get("brightness", 0.5))
+            if b < 0.0 or b > 1.0:
+                errors.append("{0}: brightness must be between 0.0 and 1.0".format(prefix))
+        except (TypeError, ValueError):
+            errors.append("{0}: brightness must be a number".format(prefix))
+
+    if atype in {"open_url"}:
+        url = params.get("url")
+        if not url or not str(url).strip():
+            errors.append("{0}: params.url is required".format(prefix))
+        elif not re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", str(url)):
+            warnings.append(
+                "{0}: url has no scheme (expected https://, shortcuts://, …)".format(
+                    prefix
+                )
+            )
+
+    if atype in {"open_app"}:
+        if not (params.get("bundle_id") or params.get("bundleId") or params.get("app_name") or params.get("name")):
+            warnings.append(
+                "{0}: prefer params.bundle_id + params.app_name for reliable open_app".format(
+                    prefix
+                )
+            )
+
+    if atype in {"speak_text"}:
+        if not str(params.get("text", "")).strip():
+            warnings.append("{0}: empty speak text".format(prefix))
+
+    if atype in {"show_notification"}:
+        if not str(params.get("title", "")).strip() and not str(
+            params.get("body", params.get("text", ""))
+        ).strip():
+            warnings.append("{0}: notification title/body both empty".format(prefix))
+
+    if atype in {"set_variable", "get_variable", "add_to_variable"}:
+        if not (params.get("var_name") or params.get("name")):
+            errors.append("{0}: params.var_name is required".format(prefix))
+
+    if atype in {"get_contents_of_url", "get_headers_of_url"}:
+        if not str(params.get("url", "")).strip():
+            errors.append("{0}: params.url is required".format(prefix))
+
+    if atype in {"run_shell_script", "run_applescript"}:
+        if not str(params.get("script", params.get("source", ""))).strip():
+            errors.append("{0}: params.script is required".format(prefix))
+
+    if atype in {"run_shortcut"}:
+        if not (params.get("name") or params.get("shortcut_name")):
+            errors.append("{0}: params.name is required".format(prefix))
+
+    if atype in {"repeat_start"}:
+        try:
+            count = int(params.get("count", 1))
+            if count < 1:
+                errors.append("{0}: count must be >= 1".format(prefix))
+            elif count > 1000:
+                warnings.append("{0}: repeat count > 1000".format(prefix))
+        except (TypeError, ValueError):
+            errors.append("{0}: count must be an integer".format(prefix))
+
+    if atype in {"send_message", "send_email"}:
+        if params.get("show_compose") is False:
+            warnings.append(
+                "{0}: show_compose=false may send without UI confirmation".format(prefix)
+            )
+
+    return errors, warnings
+
+
+def validate_actions(
+    actions_config: list,
+    *,
+    safe_mode: bool = False,
+    allow_empty: bool = False,
+) -> Dict[str, Any]:
+    """Dry-run compile; returns {ok, actions_compiled, errors, warnings, risks}."""
+    errors: List[str] = []
+    warnings: List[str] = []
+    risks: List[str] = []
     compiled = 0
     stack: List[Dict[str, Any]] = []
     start_types = {
@@ -1368,18 +1545,45 @@ def validate_actions(actions_config: list) -> Dict[str, Any]:
             "actions_compiled": 0,
             "errors": ["'actions' must be a JSON array"],
             "warnings": [],
+            "risks": [],
         }
+
+    if len(actions_config) == 0 and not allow_empty:
+        errors.append("'actions' must contain at least one action")
 
     for i, item in enumerate(actions_config):
         try:
+            if not isinstance(item, dict):
+                errors.append(
+                    "actions[{0}]: must be an object with type/params".format(i)
+                )
+                continue
+            atype = item.get("type") or item.get("action")
+            params = item.get("params") or item.get("arguments") or {}
+            if params is None:
+                params = {}
+            if not isinstance(params, dict):
+                errors.append("actions[{0}]: params must be an object".format(i))
+                params = {}
+
+            # Semantic checks even if compile fails later
+            if atype:
+                sem_err, sem_warn = _semantic_check_action(
+                    i, str(atype), params, safe_mode=safe_mode
+                )
+                errors.extend(sem_err)
+                warnings.extend(sem_warn)
+                if str(atype) in DANGEROUS_ACTIONS or str(atype).lower() in DANGEROUS_ACTIONS:
+                    risks.append(str(atype))
+
             parts = _compile_action(item)
             compiled += len(parts)
-            atype = (item or {}).get("type") or (item or {}).get("action")
-            params = item.get("params") or item.get("arguments") or {}
             gid = params.get("group_id") if isinstance(params, dict) else None
             if atype in start_types:
                 if not gid:
-                    errors.append(f"actions[{i}] ({atype}): group_id is required")
+                    errors.append(
+                        "actions[{0}] ({1}): group_id is required".format(i, atype)
+                    )
                 else:
                     stack.append(
                         {
@@ -1391,28 +1595,43 @@ def validate_actions(actions_config: list) -> Dict[str, Any]:
                     )
             elif atype in {"conditional_else", "menu_item"}:
                 if not gid:
-                    errors.append(f"actions[{i}] ({atype}): group_id is required")
+                    errors.append(
+                        "actions[{0}] ({1}): group_id is required".format(i, atype)
+                    )
                 elif not stack:
-                    errors.append(f"actions[{i}] ({atype}): no open control-flow block")
+                    errors.append(
+                        "actions[{0}] ({1}): no open control-flow block".format(i, atype)
+                    )
                 else:
-                    expected_kind = "conditional" if atype == "conditional_else" else "menu"
+                    expected_kind = (
+                        "conditional" if atype == "conditional_else" else "menu"
+                    )
                     current = stack[-1]
-                    if current["kind"] != expected_kind or current["group_id"] != str(gid):
+                    if current["kind"] != expected_kind or current["group_id"] != str(
+                        gid
+                    ):
                         errors.append(
-                            f"actions[{i}] ({atype}): expected open "
-                            f"{current['kind']} group_id={current['group_id']}"
+                            "actions[{0}] ({1}): expected open {2} group_id={3}".format(
+                                i, atype, current["kind"], current["group_id"]
+                            )
                         )
                     elif atype == "conditional_else" and current["has_else"]:
                         errors.append(
-                            f"actions[{i}] ({atype}): duplicate else for group_id={gid}"
+                            "actions[{0}] ({1}): duplicate else for group_id={2}".format(
+                                i, atype, gid
+                            )
                         )
                     elif atype == "conditional_else":
                         current["has_else"] = True
             elif atype in end_types:
                 if not gid:
-                    errors.append(f"actions[{i}] ({atype}): group_id is required")
+                    errors.append(
+                        "actions[{0}] ({1}): group_id is required".format(i, atype)
+                    )
                 elif not stack:
-                    errors.append(f"actions[{i}] ({atype}): no open control-flow block")
+                    errors.append(
+                        "actions[{0}] ({1}): no open control-flow block".format(i, atype)
+                    )
                 else:
                     current = stack[-1]
                     if (
@@ -1420,18 +1639,20 @@ def validate_actions(actions_config: list) -> Dict[str, Any]:
                         or current["group_id"] != str(gid)
                     ):
                         errors.append(
-                            f"actions[{i}] ({atype}): expected end for "
-                            f"{current['kind']} group_id={current['group_id']}"
+                            "actions[{0}] ({1}): expected end for {2} group_id={3}".format(
+                                i, atype, current["kind"], current["group_id"]
+                            )
                         )
                     else:
                         stack.pop()
         except Exception as exc:
-            errors.append(f"actions[{i}]: {exc}")
+            errors.append("actions[{0}]: {1}".format(i, exc))
 
     for group in reversed(stack):
         errors.append(
-            f"actions[{group['index']}]: unclosed {group['kind']} "
-            f"group_id={group['group_id']}"
+            "actions[{0}]: unclosed {1} group_id={2}".format(
+                group["index"], group["kind"], group["group_id"]
+            )
         )
 
     return {
@@ -1439,7 +1660,34 @@ def validate_actions(actions_config: list) -> Dict[str, Any]:
         "actions_compiled": compiled,
         "errors": errors,
         "warnings": warnings,
+        "risks": sorted(set(risks)),
     }
+
+
+def actions_summary(actions_config: list) -> List[Dict[str, Any]]:
+    """Lightweight summary of recipe steps for build/inspect responses."""
+    out: List[Dict[str, Any]] = []
+    for i, item in enumerate(actions_config or []):
+        if not isinstance(item, dict):
+            out.append({"index": i, "type": None, "error": "not an object"})
+            continue
+        atype = item.get("type") or item.get("action")
+        params = item.get("params") or item.get("arguments") or {}
+        keys = sorted(params.keys()) if isinstance(params, dict) else []
+        out.append(
+            {
+                "index": i,
+                "type": atype,
+                "identifier": ACTION_MAPPINGS.get(str(atype), atype),
+                "param_keys": keys,
+                "risk": (
+                    "dangerous"
+                    if str(atype) in DANGEROUS_ACTIONS
+                    else "normal"
+                ),
+            }
+        )
+    return out
 
 
 def build_shortcut_dict(
@@ -1451,9 +1699,10 @@ def build_shortcut_dict(
     workflow_types: Optional[List[str]] = None,
     client_version: str = "2600.0.1",
     min_client_version: int = 900,
+    safe_mode: bool = False,
 ) -> dict:
     """Compile recipe → in-memory shortcut plist dictionary (unsigned)."""
-    validation = validate_actions(actions_config)
+    validation = validate_actions(actions_config, safe_mode=safe_mode)
     if not validation["ok"]:
         raise ValueError(
             "Invalid action recipe:\n- " + "\n- ".join(validation["errors"])
@@ -1489,8 +1738,58 @@ def build_shortcut_dict(
     }
 
 
+def find_sibling_raw_path(path: str) -> Optional[str]:
+    """
+    Given Foo.shortcut, look for Foo_raw.shortcut beside it.
+    Given Foo_raw.shortcut, return itself if it is a readable plist.
+    """
+    path = os.path.abspath(path)
+    base = os.path.basename(path)
+    directory = os.path.dirname(path)
+    if base.endswith("_raw.shortcut"):
+        return path if os.path.isfile(path) else None
+    if base.endswith(".shortcut"):
+        stem = base[: -len(".shortcut")]
+        candidate = os.path.join(directory, "{0}_raw.shortcut".format(stem))
+        if os.path.isfile(candidate):
+            return candidate
+    return None
+
+
+def _summarize_plist(plist: dict, *, path: str, size: int) -> Dict[str, Any]:
+    actions = plist.get("WFWorkflowActions") or []
+    icon = plist.get("WFWorkflowIcon") or {}
+    return {
+        "path": path,
+        "size_bytes": size,
+        "format": "plist",
+        "name": plist.get("WFWorkflowName"),
+        "client_version": plist.get("WFWorkflowClientVersion"),
+        "min_client_version": plist.get("WFWorkflowMinimumClientVersion"),
+        "action_count": len(actions),
+        "actions": [
+            {
+                "identifier": a.get("WFWorkflowActionIdentifier"),
+                "param_keys": sorted(
+                    (a.get("WFWorkflowActionParameters") or {}).keys()
+                ),
+            }
+            for a in actions
+        ],
+        "icon": {
+            "glyph": icon.get("WFWorkflowIconGlyphNumber"),
+            "color": icon.get("WFWorkflowIconStartColor"),
+        },
+        "workflow_types": plist.get("WFWorkflowTypes"),
+    }
+
+
 def inspect_shortcut_file(path: str) -> Dict[str, Any]:
-    """Read a .shortcut (binary or XML plist) and summarize it."""
+    """Read a .shortcut (binary or XML plist) and summarize it.
+
+    Signed packages are opaque; when a sibling ``*_raw.shortcut`` exists
+    (always produced by build_shortcut_plist), it is inspected automatically.
+    """
     path = os.path.abspath(path)
     if not os.path.isfile(path):
         raise FileNotFoundError(path)
@@ -1502,39 +1801,44 @@ def inspect_shortcut_file(path: str) -> Dict[str, Any]:
         "path": path,
         "size_bytes": len(data),
         "format": "unknown",
+        "raw_path": None,
+        "signed_path": path if not path.endswith("_raw.shortcut") else None,
     }
 
-    # Signed shortcuts may be wrapped; try plist first.
     try:
         plist = plistlib.loads(data)
-        info["format"] = "plist"
+        summary = _summarize_plist(plist, path=path, size=len(data))
+        summary["raw_path"] = path if path.endswith("_raw.shortcut") else path
+        summary["signed_path"] = info["signed_path"]
+        return summary
     except Exception:
-        # Signed package — report limited info.
-        info["format"] = "signed_or_opaque"
-        info["note"] = (
-            "File is not a raw plist (likely signed). "
-            "Import it into Shortcuts or re-build from recipe to inspect actions."
-        )
-        return info
+        pass
 
-    actions = plist.get("WFWorkflowActions") or []
-    info["name"] = plist.get("WFWorkflowName")
-    info["client_version"] = plist.get("WFWorkflowClientVersion")
-    info["min_client_version"] = plist.get("WFWorkflowMinimumClientVersion")
-    info["action_count"] = len(actions)
-    info["actions"] = [
-        {
-            "identifier": a.get("WFWorkflowActionIdentifier"),
-            "param_keys": sorted((a.get("WFWorkflowActionParameters") or {}).keys()),
-        }
-        for a in actions
-    ]
-    icon = plist.get("WFWorkflowIcon") or {}
-    info["icon"] = {
-        "glyph": icon.get("WFWorkflowIconGlyphNumber"),
-        "color": icon.get("WFWorkflowIconStartColor"),
-    }
-    info["workflow_types"] = plist.get("WFWorkflowTypes")
+    # Signed / opaque — try sibling raw produced by our builder.
+    raw = find_sibling_raw_path(path)
+    info["format"] = "signed_or_opaque"
+    info["raw_path"] = raw
+    if raw and raw != path:
+        try:
+            with open(raw, "rb") as rf:
+                raw_data = rf.read()
+            plist = plistlib.loads(raw_data)
+            summary = _summarize_plist(plist, path=raw, size=len(raw_data))
+            summary["format"] = "plist_via_raw_sibling"
+            summary["signed_path"] = path
+            summary["raw_path"] = raw
+            summary["inspected_from"] = raw
+            summary["requested_path"] = path
+            summary["signed_size_bytes"] = len(data)
+            return summary
+        except Exception as exc:
+            info["raw_inspect_error"] = str(exc)
+
+    info["note"] = (
+        "File is not a raw plist (likely signed). "
+        "Re-build with this server to keep a sibling *_raw.shortcut for inspect, "
+        "or pass the unsigned raw path explicitly."
+    )
     return info
 
 
@@ -1546,10 +1850,13 @@ def sign_shortcut_file(
     """Sign with macOS `shortcuts sign`. Returns (ok, message)."""
     input_path = os.path.abspath(input_path)
     output_path = os.path.abspath(output_path)
-    os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
+    parent = os.path.dirname(output_path) or "."
+    os.makedirs(parent, exist_ok=True)
 
     if mode not in {"anyone", "people-who-know-me"}:
-        return False, f"Invalid sign mode '{mode}' (use anyone|people-who-know-me)"
+        return False, "Invalid sign mode '{0}' (use anyone|people-who-know-me)".format(
+            mode
+        )
 
     try:
         res = subprocess.run(
@@ -1588,18 +1895,27 @@ def build_shortcut_plist(
     icon_color: Optional[Union[str, int]] = None,
     icon_glyph: Optional[int] = None,
     workflow_types: Optional[List[str]] = None,
-) -> str:
+    safe_mode: bool = False,
+) -> Dict[str, Any]:
     """
     Build a .shortcut file from a recipe.
 
-    Returns the absolute path of the best available artifact:
-    signed path if signing succeeded, otherwise the raw unsigned plist.
+    Always writes ``{stem}_raw.shortcut``. When signing succeeds, also writes
+    ``{stem}.shortcut``. Returns a result dict (not only a path):
+
+    ``path`` is the best artifact for import (signed if available, else raw).
     """
     output_dir = os.path.abspath(output_dir)
     os.makedirs(output_dir, exist_ok=True)
     stem = sanitize_filename(name)
-    raw_path = os.path.join(output_dir, f"{stem}_raw.shortcut")
-    signed_path = os.path.join(output_dir, f"{stem}.shortcut")
+    raw_path = os.path.join(output_dir, "{0}_raw.shortcut".format(stem))
+    signed_path = os.path.join(output_dir, "{0}.shortcut".format(stem))
+
+    validation = validate_actions(actions_config, safe_mode=safe_mode)
+    if not validation["ok"]:
+        raise ValueError(
+            "Invalid action recipe:\n- " + "\n- ".join(validation["errors"])
+        )
 
     shortcut_dict = build_shortcut_dict(
         actions_config,
@@ -1607,22 +1923,41 @@ def build_shortcut_plist(
         icon_color=icon_color,
         icon_glyph=icon_glyph,
         workflow_types=workflow_types,
+        safe_mode=safe_mode,
     )
 
     with open(raw_path, "wb") as f:
         plistlib.dump(shortcut_dict, f, fmt=plistlib.FMT_BINARY)
 
+    signed_ok = False
+    sign_error = None
+    final_signed: Optional[str] = None
     if sign:
         ok, msg = sign_shortcut_file(raw_path, signed_path, mode=sign_mode)
         if ok:
-            return os.path.abspath(signed_path)
-        # Fall through to raw; caller can inspect via build metadata.
-        # Leave a sidecar note for debugging.
-        note_path = os.path.join(output_dir, f"{stem}_sign_error.txt")
-        try:
-            with open(note_path, "w", encoding="utf-8") as nf:
-                nf.write(msg + "\n")
-        except OSError:
-            pass
+            signed_ok = True
+            final_signed = os.path.abspath(signed_path)
+        else:
+            sign_error = msg
+            note_path = os.path.join(output_dir, "{0}_sign_error.txt".format(stem))
+            try:
+                with open(note_path, "w", encoding="utf-8") as nf:
+                    nf.write(msg + "\n")
+            except OSError:
+                pass
 
-    return os.path.abspath(raw_path)
+    best = final_signed or os.path.abspath(raw_path)
+    return {
+        "ok": True,
+        "name": name,
+        "stem": stem,
+        "raw_path": os.path.abspath(raw_path),
+        "signed_path": final_signed,
+        "path": best,
+        "signed": signed_ok,
+        "sign_error": sign_error,
+        "action_count": len(actions_config or []),
+        "actions_summary": actions_summary(actions_config),
+        "warnings": validation.get("warnings") or [],
+        "risks": validation.get("risks") or [],
+    }

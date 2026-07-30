@@ -10,5 +10,8 @@ enabled = true
 startup_timeout_sec = 15
 tool_timeout_sec = 300
 
-# Optional: override default dist directory
-# env = { IOS_SHORTCUTS_MCP_DIST = "/tmp/shortcuts-dist" }
+# Optional env:
+# IOS_SHORTCUTS_MCP_DIST           — default build output dir
+# IOS_SHORTCUTS_MCP_ALLOW_ROOTS    — extra write roots (:/,/; separated)
+# IOS_SHORTCUTS_MCP_SAFE_MODE=1    — block shell/JXA recipes + run/send tools
+# env = { IOS_SHORTCUTS_MCP_SAFE_MODE = "0" }

@@ -6,7 +6,7 @@ Zero-dependency **Model Context Protocol (MCP)** server for macOS that lets AI c
 
 | | |
 |---|---|
-| **Version** | 2.1.0 |
+| **Version** | 2.2.0 |
 | **Runtime** | Python 3.8+ (stdlib only — no `pip install`) |
 | **OS** | macOS Monterey+ (`shortcuts` CLI) |
 | **License** | MIT |
@@ -32,18 +32,18 @@ build_and_install
 | `list_actions` | Discover supported action types + param docs |
 | `list_templates` | Built-in recipe templates |
 | `get_template` | Fetch a template’s full action list |
-| `validate_recipe` | Dry-run compile (errors/warnings, no files) |
-| `build_shortcut` | Build + auto-sign `.shortcut` from recipe |
+| `validate_recipe` | Dry-run compile (errors/warnings/risks; semantic + control-flow) |
+| `build_shortcut` | Build + auto-sign; returns `raw_path` + `signed_path` + summary |
 | `create_from_template` | Build from a named template |
-| `build_and_install` | Build + sign + import in one call |
-| `sign_shortcut` | Sign with `shortcuts sign -m anyone` |
-| `inspect_shortcut` | Summarize a `.shortcut` file |
-| `import_shortcut` | Open/install into Shortcuts library |
+| `build_and_install` | Build + sign + **import prompt** (GUI, not confirmed install) |
+| `sign_shortcut` | Sign with `shortcuts sign -m anyone` (write path sandboxed) |
+| `inspect_shortcut` | Summarize `.shortcut`; auto-follows sibling `*_raw.shortcut` |
+| `import_shortcut` | Prompt import into Shortcuts library |
 | `view_shortcut` | Open an installed shortcut in the app |
 | `list_shortcuts` | List installed shortcuts/folders/ids |
-| `run_shortcut` | Run by name (stdin / input-path / output-path) |
-| `send_imessage` | Open Messages compose + reveal file (no auto-send) |
-| `doctor` | Environment health check |
+| `run_shortcut` | Run by name (blocked in safe mode) |
+| `send_imessage` | Messages compose + reveal file (blocked in safe mode) |
+| `doctor` | Health check + **sign round-trip** probe |
 
 ---
 
@@ -306,9 +306,15 @@ scripts/smoke_test.py  # Offline smoke tests
 dist/                  # Build output (gitignored artifacts)
 ```
 
-**Signing:** unsigned binary plists are written as `Name_raw.shortcut`; successful `shortcuts sign -m anyone` produces `Name.shortcut` (iOS 15+ friendly “anyone” mode).
+**Signing:** every build keeps `Name_raw.shortcut` (inspectable plist). Successful `shortcuts sign -m anyone` also writes `Name.shortcut`. Tool results expose both `raw_path` and `signed_path`; `path` is the best artifact for import.
 
-**Safety:** `send_imessage` never auto-sends — it only opens compose and reveals the file. `send_message` / `send_email` actions default to `show_compose: true`.
+**Safety:**
+- Write paths sandboxed to allow roots (default: repo + `dist`)
+- `IOS_SHORTCUTS_MCP_SAFE_MODE=1` blocks shell/AppleScript/JXA recipes and `run_shortcut` / `send_imessage`
+- `send_imessage` never auto-sends; messaging actions default to compose UI
+- Tool annotations (`readOnlyHint`, `destructiveHint`, `openWorldHint`) for client approval UX
+
+**Resources:** `shortcut://catalog/actions`, `shortcut://catalog/templates`
 
 ---
 
@@ -317,25 +323,27 @@ dist/                  # Build output (gitignored artifacts)
 | Variable | Meaning |
 |----------|---------|
 | `IOS_SHORTCUTS_MCP_DIST` | Default `output_dir` for builds (default: `<repo>/dist`) |
-| `IOS_SHORTCUTS_MCP_MAX_MESSAGE_BYTES` | Maximum inbound MCP message size (default: 8 MiB) |
+| `IOS_SHORTCUTS_MCP_ALLOW_ROOTS` | Extra write roots (`:` / `,` / `;` separated) |
+| `IOS_SHORTCUTS_MCP_SAFE_MODE` | `1` = block dangerous actions + run/send tools |
+| `IOS_SHORTCUTS_MCP_MAX_MESSAGE_BYTES` | Max inbound MCP message size (default: 8 MiB) |
 
 ---
 
 ## Development
 
 ```bash
-# Unit / smoke
+# Unit / smoke (12 tests)
 python3 scripts/smoke_test.py
 
 # Build a sample without MCP
 python3 - <<'PY'
 from shortcut_builder import build_shortcut_plist
-path = build_shortcut_plist(
+result = build_shortcut_plist(
     [{"type": "show_notification", "params": {"title": "Hi", "body": "Test"}}],
     "SmokeNotify",
     "./dist",
 )
-print(path)
+print(result["raw_path"], result.get("signed_path"), result["signed"])
 PY
 ```
 
@@ -343,12 +351,26 @@ PY
 
 - Primary transport: **MCP stdio** with `Content-Length` framing  
 - Also accepts **newline-delimited JSON** for simple CLI debugging  
-- `initialize` → `tools/list` → `tools/call`  
+- Tool results include `content` + `structuredContent` (errors use `code` + `message`)  
 - Logs go to **stderr** only  
 
 ---
 
-## Changelog (2.1.0)
+## Changelog
+
+### 2.2.0
+
+- Dual artifacts: always keep `*_raw.shortcut`; return `raw_path` + `signed_path`
+- `inspect_shortcut` auto-follows raw sibling for signed packages
+- Semantic validation (ranges, required fields, empty recipes) + risks list
+- Write-path sandbox (`ALLOW_ROOTS`) and `SAFE_MODE`
+- MCP tool annotations + stricter `actions` JSON Schema
+- Structured error payloads (`code`, `message`, `details`)
+- `doctor` sign round-trip probe, macOS version, dist writability
+- Resources for action/template catalogs; richer prompts
+- Smoke tests expanded to 12 cases
+
+### 2.1.0
 
 - Standards-compliant JSON-RPC parse, invalid-request, invalid-params, and method errors
 - Recoverable NDJSON / `Content-Length` parsing with an 8 MiB safety limit

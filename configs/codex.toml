@@ -5,13 +5,14 @@
 command = "python3"
 args = ["/ABSOLUTE/PATH/TO/mcp-server-ios-shortcuts/server.py"]
 startup_timeout_sec = 15
+# env = { IOS_SHORTCUTS_MCP_SAFE_MODE = "0" }
 
-# Optional: require approval for side-effecting tools
-# [mcp_servers.ios-shortcuts.tools.run_shortcut]
-# approval_mode = "approve"
-#
-# [mcp_servers.ios-shortcuts.tools.build_and_install]
-# approval_mode = "approve"
-#
-# [mcp_servers.ios-shortcuts.tools.send_imessage]
-# approval_mode = "approve"
+# Recommended: require approval for side-effecting tools
+[mcp_servers.ios-shortcuts.tools.run_shortcut]
+approval_mode = "approve"
+
+[mcp_servers.ios-shortcuts.tools.build_and_install]
+approval_mode = "approve"
+
+[mcp_servers.ios-shortcuts.tools.send_imessage]
+approval_mode = "approve"
