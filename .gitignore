@@ -11,3 +11,4 @@ dist/*
 .vscode/
 *.egg-info/
 .pytest_cache/
+.codebase-memory/

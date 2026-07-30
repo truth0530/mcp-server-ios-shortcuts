@@ -6,7 +6,7 @@ Zero-dependency **Model Context Protocol (MCP)** server for macOS that lets AI c
 
 | | |
 |---|---|
-| **Version** | 2.0.0 |
+| **Version** | 2.1.0 |
 | **Runtime** | Python 3.8+ (stdlib only — no `pip install`) |
 | **OS** | macOS Monterey+ (`shortcuts` CLI) |
 | **License** | MIT |
@@ -317,6 +317,7 @@ dist/                  # Build output (gitignored artifacts)
 | Variable | Meaning |
 |----------|---------|
 | `IOS_SHORTCUTS_MCP_DIST` | Default `output_dir` for builds (default: `<repo>/dist`) |
+| `IOS_SHORTCUTS_MCP_MAX_MESSAGE_BYTES` | Maximum inbound MCP message size (default: 8 MiB) |
 
 ---
 
@@ -347,7 +348,16 @@ PY
 
 ---
 
-## Changelog (2.0.0)
+## Changelog (2.1.0)
+
+- Standards-compliant JSON-RPC parse, invalid-request, invalid-params, and method errors
+- Recoverable NDJSON / `Content-Length` parsing with an 8 MiB safety limit
+- Notifications never produce responses
+- Structured tool results alongside text content for modern MCP clients
+- Strict stack-based control-flow validation (nesting, type, order, `group_id`)
+- Safer shortcut filenames and expanded transport / validation regression tests
+
+### 2.0.0
 
 - Grok Build + Codex CLI first-class config docs and snippets  
 - 15 tools (was 6): templates, validate, inspect, view, doctor, build_and_install, …  

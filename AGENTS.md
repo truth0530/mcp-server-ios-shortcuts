@@ -16,7 +16,7 @@ Build, sign, import, list, run, and inspect macOS/iOS Shortcuts (`.shortcut`) vi
 ## Recipe rules
 
 - Each action: `{ "type": "...", "params": { ... } }`  
-- Control flow (`conditional_*`, `repeat_*`, `menu_*`) **must** share one `group_id` UUID  
+- Control flow (`conditional_*`, `repeat_*`, `menu_*`) **must** be properly nested and share one `group_id` UUID per block
 - Prefer short names (`open_app`, `speak_text`); full `is.workflow.actions.*` allowed  
 - Escape hatch: `wf_params` for raw Workflow parameters  
 - Messaging defaults to compose UI (`show_compose: true`) — do not force silent send  

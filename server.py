@@ -33,8 +33,22 @@ from shortcut_builder import (
 )
 
 SERVER_NAME = "ios-shortcuts-mcp"
-SERVER_VERSION = "2.0.0"
+SERVER_VERSION = "2.1.0"
 PROTOCOL_VERSION = "2024-11-05"
+
+
+def _positive_int_env(name: str, default: int) -> int:
+    try:
+        value = int(os.environ.get(name, default))
+    except (TypeError, ValueError):
+        return default
+    return value if value > 0 else default
+
+
+MAX_MESSAGE_BYTES = _positive_int_env(
+    "IOS_SHORTCUTS_MCP_MAX_MESSAGE_BYTES",
+    8 * 1024 * 1024,
+)
 
 # Default artifact directory (overridable via env or tool args).
 DEFAULT_OUTPUT_DIR = os.environ.get(
@@ -372,7 +386,9 @@ def _ok(text: str) -> dict:
 
 
 def _ok_json(payload: Any) -> dict:
-    return _ok(json.dumps(payload, indent=2, ensure_ascii=False, default=str))
+    result = _ok(json.dumps(payload, indent=2, ensure_ascii=False, default=str))
+    result["structuredContent"] = payload
+    return result
 
 
 def _err(text: str) -> dict:
@@ -398,6 +414,10 @@ def _run(
 
 
 def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
+    if not isinstance(tool_name, str) or not tool_name:
+        return _err("Tool name must be a non-empty string")
+    if arguments is not None and not isinstance(arguments, dict):
+        return _err("Tool arguments must be a JSON object")
     args = arguments or {}
     try:
         if tool_name == "list_actions":
@@ -411,7 +431,7 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
                     or query in (it.get("summary") or "").lower()
                     or query in (it.get("identifier") or "").lower()
                 ]
-            limit = int(args.get("limit") or 200)
+            limit = max(1, min(int(args.get("limit") or 200), 500))
             return _ok_json(
                 {
                     "count": len(items[:limit]),
@@ -676,26 +696,70 @@ def respond(response_obj: dict, *, framed: bool) -> None:
     _write_message(response_obj, framed=framed)
 
 
-def _read_framed_message(first_line: str) -> Optional[dict]:
+class RequestReadError(Exception):
+    """A transport error that should become a JSON-RPC parse-error response."""
+
+    def __init__(self, message: str, *, framed: bool, fatal: bool = False) -> None:
+        super().__init__(message)
+        self.framed = framed
+        self.fatal = fatal
+
+
+def _rpc_error(
+    code: int,
+    message: str,
+    *,
+    msg_id: Any = None,
+    data: Optional[dict] = None,
+) -> dict:
+    error: Dict[str, Any] = {"code": code, "message": message}
+    if data is not None:
+        error["data"] = data
+    return {"jsonrpc": "2.0", "id": msg_id, "error": error}
+
+
+def _read_framed_message(first_line: str) -> dict:
     """Parse Content-Length framed message starting with first header line."""
-    headers = first_line.strip()
-    # Read remaining headers
+    headers = [first_line.strip()]
     while True:
         line = sys.stdin.buffer.readline()
         if not line:
-            return None
+            raise RequestReadError(
+                "Unexpected EOF while reading headers",
+                framed=True,
+                fatal=True,
+            )
         if line in (b"\r\n", b"\n"):
             break
-        headers += "\n" + line.decode("ascii", errors="replace").strip()
+        headers.append(line.decode("ascii", errors="replace").strip())
 
-    match = re.search(r"Content-Length:\s*(\d+)", headers, re.I)
+    match = re.search(r"^Content-Length:\s*(\d+)\s*$", "\n".join(headers), re.I | re.M)
     if not match:
-        return None
+        raise RequestReadError(
+            "Missing or invalid Content-Length header",
+            framed=True,
+            fatal=True,
+        )
     length = int(match.group(1))
+    if length <= 0:
+        raise RequestReadError("Content-Length must be greater than zero", framed=True)
+    if length > MAX_MESSAGE_BYTES:
+        raise RequestReadError(
+            f"Message exceeds {MAX_MESSAGE_BYTES} byte limit",
+            framed=True,
+            fatal=True,
+        )
     body = sys.stdin.buffer.read(length)
-    if not body:
-        return None
-    return json.loads(body.decode("utf-8"))
+    if len(body) != length:
+        raise RequestReadError(
+            "Unexpected EOF while reading message body",
+            framed=True,
+            fatal=True,
+        )
+    try:
+        return json.loads(body.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise RequestReadError(f"Parse error: {exc}", framed=True) from exc
 
 
 def read_request() -> Optional[tuple]:
@@ -703,40 +767,59 @@ def read_request() -> Optional[tuple]:
     Read one JSON-RPC request.
     Returns (request_dict, framed: bool) or None on EOF.
     """
-    # Peek / read first line from binary to support both modes.
-    # For framed mode, first line is "Content-Length: N".
-    line_bytes = sys.stdin.buffer.readline()
-    if not line_bytes:
-        return None
-
-    line = line_bytes.decode("utf-8", errors="replace")
-    if not line.strip():
-        # skip blank lines
-        return read_request()
-
-    if line.lower().startswith("content-length:"):
-        req = _read_framed_message(line)
-        if req is None:
+    while True:
+        line_bytes = sys.stdin.buffer.readline(MAX_MESSAGE_BYTES + 1)
+        if not line_bytes:
             return None
-        return req, True
+        if len(line_bytes) > MAX_MESSAGE_BYTES:
+            raise RequestReadError(
+                f"Message exceeds {MAX_MESSAGE_BYTES} byte limit",
+                framed=False,
+            )
 
-    # NDJSON fallback
-    try:
-        return json.loads(line), False
-    except json.JSONDecodeError:
-        log(f"Ignoring non-JSON line: {line[:120]!r}")
-        return read_request()
+        try:
+            line = line_bytes.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise RequestReadError(f"Parse error: {exc}", framed=False) from exc
+        if not line.strip():
+            continue
+        if line.lower().startswith("content-length:"):
+            return _read_framed_message(line), True
+        try:
+            return json.loads(line), False
+        except json.JSONDecodeError as exc:
+            raise RequestReadError(f"Parse error: {exc}", framed=False) from exc
 
 
 def handle_request(req: dict, *, framed: bool) -> None:
+    if not isinstance(req, dict):
+        respond(_rpc_error(-32600, "Invalid Request"), framed=framed)
+        return
+
     msg_id = req.get("id")
     method = req.get("method")
-    params = req.get("params") or {}
+    is_notification = "id" not in req
+    if req.get("jsonrpc") != "2.0" or not isinstance(method, str):
+        if not is_notification:
+            respond(_rpc_error(-32600, "Invalid Request", msg_id=msg_id), framed=framed)
+        return
 
-    # Notifications (no id) — acknowledge silently where needed.
+    params = req.get("params", {})
+    if params is None:
+        params = {}
+    if not isinstance(params, dict):
+        if not is_notification:
+            respond(
+                _rpc_error(-32602, "Invalid params: expected an object", msg_id=msg_id),
+                framed=framed,
+            )
+        return
+
     if method == "notifications/initialized":
         return
     if method == "notifications/cancelled":
+        return
+    if is_notification and method != "tools/call":
         return
 
     if method == "initialize":
@@ -748,6 +831,8 @@ def handle_request(req: dict, *, framed: bool) -> None:
                     "protocolVersion": PROTOCOL_VERSION,
                     "capabilities": {
                         "tools": {"listChanged": False},
+                        "prompts": {"listChanged": False},
+                        "resources": {"subscribe": False, "listChanged": False},
                     },
                     "serverInfo": {
                         "name": SERVER_NAME,
@@ -778,15 +863,27 @@ def handle_request(req: dict, *, framed: bool) -> None:
     if method == "tools/call":
         tool_name = params.get("name")
         arguments = params.get("arguments") or {}
+        if not isinstance(tool_name, str) or not isinstance(arguments, dict):
+            if not is_notification:
+                respond(
+                    _rpc_error(
+                        -32602,
+                        "Invalid params: tools/call requires string name and object arguments",
+                        msg_id=msg_id,
+                    ),
+                    framed=framed,
+                )
+            return
         result = handle_tool_call(tool_name, arguments)
-        respond(
-            {
-                "jsonrpc": "2.0",
-                "id": msg_id,
-                "result": result,
-            },
-            framed=framed,
-        )
+        if not is_notification:
+            respond(
+                {
+                    "jsonrpc": "2.0",
+                    "id": msg_id,
+                    "result": result,
+                },
+                framed=framed,
+            )
         return
 
     if method == "ping":
@@ -861,16 +958,9 @@ def handle_request(req: dict, *, framed: bool) -> None:
         return
 
     # Unknown method
-    if msg_id is not None:
+    if not is_notification:
         respond(
-            {
-                "jsonrpc": "2.0",
-                "id": msg_id,
-                "error": {
-                    "code": -32601,
-                    "message": f"Method not found: {method}",
-                },
-            },
+            _rpc_error(-32601, f"Method not found: {method}", msg_id=msg_id),
             framed=framed,
         )
 
@@ -880,6 +970,12 @@ def main() -> None:
     while True:
         try:
             got = read_request()
+        except RequestReadError as exc:
+            log(str(exc))
+            respond(_rpc_error(-32700, str(exc)), framed=exc.framed)
+            if exc.fatal:
+                break
+            continue
         except Exception:
             log(traceback.format_exc())
             continue
@@ -891,16 +987,9 @@ def main() -> None:
         except Exception:
             log(traceback.format_exc())
             msg_id = req.get("id") if isinstance(req, dict) else None
-            if msg_id is not None:
+            if isinstance(req, dict) and "id" in req:
                 respond(
-                    {
-                        "jsonrpc": "2.0",
-                        "id": msg_id,
-                        "error": {
-                            "code": -32603,
-                            "message": "Internal server error",
-                        },
-                    },
+                    _rpc_error(-32603, "Internal server error", msg_id=msg_id),
                     framed=framed,
                 )
 

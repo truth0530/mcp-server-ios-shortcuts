@@ -14,7 +14,7 @@ import re
 import uuid
 import plistlib
 import subprocess
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 # ---------------------------------------------------------------------------
 # Action catalog
@@ -556,9 +556,12 @@ def new_group_id() -> str:
 
 def sanitize_filename(name: str) -> str:
     """Make a filesystem-safe file stem from a shortcut name."""
+    if not isinstance(name, str):
+        raise ValueError("Shortcut name must be a string")
+    name = re.sub(r"[\x00-\x1f\x7f]+", "_", name)
     cleaned = re.sub(r"[\\/:*?\"<>|]+", "_", name.strip())
     cleaned = re.sub(r"\s+", " ", cleaned).strip(" .")
-    return cleaned or "Untitled"
+    return (cleaned or "Untitled")[:120].rstrip(" .")
 
 
 def create_action(action_type: str, params: Optional[dict] = None) -> dict:
@@ -1345,7 +1348,19 @@ def validate_actions(actions_config: list) -> Dict[str, Any]:
     errors: List[str] = []
     warnings: List[str] = []
     compiled = 0
-    open_groups: Dict[str, int] = {}
+    stack: List[Dict[str, Any]] = []
+    start_types = {
+        "conditional_start": "conditional",
+        "repeat_start": "repeat",
+        "repeat_each_start": "repeat_each",
+        "menu_start": "menu",
+    }
+    end_types = {
+        "conditional_end": "conditional",
+        "repeat_end": "repeat",
+        "repeat_each_end": "repeat_each",
+        "menu_end": "menu",
+    }
 
     if not isinstance(actions_config, list):
         return {
@@ -1360,39 +1375,64 @@ def validate_actions(actions_config: list) -> Dict[str, Any]:
             parts = _compile_action(item)
             compiled += len(parts)
             atype = (item or {}).get("type") or (item or {}).get("action")
-            if atype in {
-                "conditional_start",
-                "repeat_start",
-                "repeat_each_start",
-                "menu_start",
-            }:
-                gid = (item.get("params") or {}).get("group_id")
-                if not gid:
-                    warnings.append(
-                        f"actions[{i}] ({atype}): missing group_id "
-                        f"(auto-generated at build time; else/end won't match)"
-                    )
-                else:
-                    open_groups[gid] = open_groups.get(gid, 0) + 1
-            if atype in {
-                "conditional_end",
-                "repeat_end",
-                "repeat_each_end",
-                "menu_end",
-            }:
-                gid = (item.get("params") or {}).get("group_id")
+            params = item.get("params") or item.get("arguments") or {}
+            gid = params.get("group_id") if isinstance(params, dict) else None
+            if atype in start_types:
                 if not gid:
                     errors.append(f"actions[{i}] ({atype}): group_id is required")
                 else:
-                    open_groups[gid] = open_groups.get(gid, 0) - 1
+                    stack.append(
+                        {
+                            "kind": start_types[atype],
+                            "group_id": str(gid),
+                            "index": i,
+                            "has_else": False,
+                        }
+                    )
+            elif atype in {"conditional_else", "menu_item"}:
+                if not gid:
+                    errors.append(f"actions[{i}] ({atype}): group_id is required")
+                elif not stack:
+                    errors.append(f"actions[{i}] ({atype}): no open control-flow block")
+                else:
+                    expected_kind = "conditional" if atype == "conditional_else" else "menu"
+                    current = stack[-1]
+                    if current["kind"] != expected_kind or current["group_id"] != str(gid):
+                        errors.append(
+                            f"actions[{i}] ({atype}): expected open "
+                            f"{current['kind']} group_id={current['group_id']}"
+                        )
+                    elif atype == "conditional_else" and current["has_else"]:
+                        errors.append(
+                            f"actions[{i}] ({atype}): duplicate else for group_id={gid}"
+                        )
+                    elif atype == "conditional_else":
+                        current["has_else"] = True
+            elif atype in end_types:
+                if not gid:
+                    errors.append(f"actions[{i}] ({atype}): group_id is required")
+                elif not stack:
+                    errors.append(f"actions[{i}] ({atype}): no open control-flow block")
+                else:
+                    current = stack[-1]
+                    if (
+                        current["kind"] != end_types[atype]
+                        or current["group_id"] != str(gid)
+                    ):
+                        errors.append(
+                            f"actions[{i}] ({atype}): expected end for "
+                            f"{current['kind']} group_id={current['group_id']}"
+                        )
+                    else:
+                        stack.pop()
         except Exception as exc:
             errors.append(f"actions[{i}]: {exc}")
 
-    for gid, depth in open_groups.items():
-        if depth != 0:
-            warnings.append(
-                f"control-flow group_id={gid} is unbalanced (open depth={depth})"
-            )
+    for group in reversed(stack):
+        errors.append(
+            f"actions[{group['index']}]: unclosed {group['kind']} "
+            f"group_id={group['group_id']}"
+        )
 
     return {
         "ok": len(errors) == 0,
@@ -1406,8 +1446,8 @@ def build_shortcut_dict(
     actions_config: list,
     name: str = "Untitled",
     *,
-    icon_color: str | int | None = None,
-    icon_glyph: int | None = None,
+    icon_color: Optional[Union[str, int]] = None,
+    icon_glyph: Optional[int] = None,
     workflow_types: Optional[List[str]] = None,
     client_version: str = "2600.0.1",
     min_client_version: int = 900,
@@ -1545,8 +1585,8 @@ def build_shortcut_plist(
     *,
     sign: bool = True,
     sign_mode: str = "anyone",
-    icon_color: str | int | None = None,
-    icon_glyph: int | None = None,
+    icon_color: Optional[Union[str, int]] = None,
+    icon_glyph: Optional[int] = None,
     workflow_types: Optional[List[str]] = None,
 ) -> str:
     """

@@ -60,6 +60,44 @@ def test_validate_and_build() -> None:
         text = result["content"][0]["text"]
         payload = json.loads(text)
         assert_true(payload["size_bytes"] > 0, "inspect size")
+        assert_true(result["structuredContent"]["size_bytes"] > 0, "structured result")
+
+
+def test_control_flow_validation() -> None:
+    valid = [
+        {
+            "type": "conditional_start",
+            "params": {"group_id": "IF-1", "condition": "equals", "value": "yes"},
+        },
+        {"type": "menu_start", "params": {"group_id": "MENU-1", "prompt": "Pick"}},
+        {"type": "menu_item", "params": {"group_id": "MENU-1", "title": "One"}},
+        {"type": "menu_end", "params": {"group_id": "MENU-1"}},
+        {"type": "conditional_else", "params": {"group_id": "IF-1"}},
+        {"type": "conditional_end", "params": {"group_id": "IF-1"}},
+    ]
+    assert_true(validate_actions(valid)["ok"], "valid nested control flow rejected")
+
+    invalid_recipes = [
+        [
+            {"type": "conditional_start", "params": {}},
+            {"type": "conditional_end", "params": {"group_id": "IF-1"}},
+        ],
+        [
+            {"type": "conditional_start", "params": {"group_id": "IF-1"}},
+            {"type": "repeat_end", "params": {"group_id": "IF-1"}},
+        ],
+        [{"type": "menu_start", "params": {"group_id": "MENU-1"}}],
+        [
+            {"type": "conditional_start", "params": {"group_id": "IF-1"}},
+            {"type": "conditional_else", "params": {"group_id": "IF-1"}},
+            {"type": "conditional_else", "params": {"group_id": "IF-1"}},
+            {"type": "conditional_end", "params": {"group_id": "IF-1"}},
+        ],
+    ]
+    for recipe in invalid_recipes:
+        result = validate_actions(recipe)
+        assert_true(not result["ok"], f"invalid control flow accepted: {result}")
+        assert_true(result["errors"], f"missing validation errors: {result}")
 
 
 def test_templates_build() -> None:
@@ -152,14 +190,62 @@ def test_ndjson_initialize() -> None:
     assert_true("hello_world" in body, body)
 
 
+def test_protocol_error_recovery() -> None:
+    """Malformed NDJSON must get an error without poisoning the next request."""
+    proc = subprocess.Popen(
+        [sys.executable, os.path.join(ROOT, "server.py")],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    payload = "\n".join(
+        [
+            "{bad json",
+            json.dumps({"jsonrpc": "2.0", "id": 9, "method": "ping"}),
+            json.dumps({"jsonrpc": "2.0", "method": "tools/list"}),
+            "",
+        ]
+    )
+    out, err = proc.communicate(payload, timeout=15)
+    lines = [json.loads(line) for line in out.splitlines() if line.strip()]
+    assert_true(len(lines) == 2, f"unexpected responses: {out!r}\nstderr={err!r}")
+    assert_true(lines[0]["error"]["code"] == -32700, lines[0])
+    assert_true(lines[1]["id"] == 9 and lines[1]["result"] == {}, lines[1])
+
+
+def test_content_length_transport() -> None:
+    request = json.dumps(
+        {"jsonrpc": "2.0", "id": 11, "method": "ping"},
+        separators=(",", ":"),
+    ).encode("utf-8")
+    framed = f"Content-Length: {len(request)}\r\n\r\n".encode("ascii") + request
+    proc = subprocess.Popen(
+        [sys.executable, os.path.join(ROOT, "server.py")],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    out, err = proc.communicate(framed, timeout=15)
+    header, body = out.split(b"\r\n\r\n", 1)
+    length = int(header.decode("ascii").split(":", 1)[1].strip())
+    assert_true(len(body) == length, f"bad frame length: {out!r}")
+    response = json.loads(body.decode("utf-8"))
+    assert_true(response["id"] == 11 and response["result"] == {}, response)
+    assert_true(proc.returncode == 0, err.decode("utf-8", errors="replace"))
+
+
 def main() -> int:
     tests = [
         test_catalog,
         test_validate_and_build,
+        test_control_flow_validation,
         test_templates_build,
         test_tool_list_and_doctor,
         test_examples_load,
         test_ndjson_initialize,
+        test_protocol_error_recovery,
+        test_content_length_transport,
     ]
     failed = 0
     for fn in tests:
