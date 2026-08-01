@@ -114,7 +114,9 @@ CURATED_ALIASES: Dict[str, str] = {
     "take_screenshot": "is.workflow.actions.takescreenshot",
     "take_photo": "is.workflow.actions.takephoto",
     "select_photos": "is.workflow.actions.selectphoto",
-    "crop_image": "is.workflow.actions.cropimage",
+    # legacy cropimage is broken on modern macOS — keep image.crop as crop_image
+    "crop_image": "is.workflow.actions.image.crop",
+    "image_crop": "is.workflow.actions.image.crop",
     "resize_image": "is.workflow.actions.image.resize",
     "rotate_image": "is.workflow.actions.imagerotate",
     "ocr_extract_text": "is.workflow.actions.extracttextfromimage",

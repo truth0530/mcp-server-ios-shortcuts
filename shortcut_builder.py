@@ -879,31 +879,40 @@ def _compile_action(item: dict, *, coerce_mode: str = "smart") -> List[dict]:
             )
         ]
 
-    if atype == "crop_image":
-        pos = args.get("position")
-        params = {}
-        has_dims = any(k in args for k in ("width", "height", "x", "y", "WFCropImageWidth", "WFCropImageHeight", "WFCropImageX", "WFCropImageY"))
-        if pos:
+    if atype in {"crop_image", "image_crop"}:
+        # Legacy is.workflow.actions.cropimage is broken on modern macOS
+        # ("동작을 찾을 수 없습니다"). Prefer image.crop; allow explicit legacy.
+        use_legacy = _as_bool(args.get("legacy_cropimage", False), False)
+        pos = args.get("position", "Center")
+        params: Dict[str, Any] = {}
+        if use_legacy:
             params["WFCropImagePosition"] = str(pos)
-        elif has_dims:
-            params["WFCropImagePosition"] = "Custom"
-        else:
-            params["WFCropImagePosition"] = "Center"
-
+            for src, dst in (
+                ("width", "WFCropImageWidth"),
+                ("height", "WFCropImageHeight"),
+                ("x", "WFCropImageX"),
+                ("y", "WFCropImageY"),
+            ):
+                if src in args:
+                    params[dst] = float(args[src])
+            return [
+                {
+                    "WFWorkflowActionIdentifier": "is.workflow.actions.cropimage",
+                    "WFWorkflowActionParameters": params,
+                }
+            ]
+        # Modern path
+        params["WFImagePosition"] = str(pos)
         if "width" in args:
-            params["WFCropImageWidth"] = float(args["width"])
+            params["WFImageWidth"] = float(args["width"])
         if "height" in args:
-            params["WFCropImageHeight"] = float(args["height"])
-        if "x" in args:
-            params["WFCropImageX"] = float(args["x"])
-        if "y" in args:
-            params["WFCropImageY"] = float(args["y"])
-
-        for wf_k in ("WFCropImageWidth", "WFCropImageHeight", "WFCropImageX", "WFCropImageY"):
-            if wf_k in args:
-                params[wf_k] = args[wf_k]
-
-        return [create_action("crop_image", params)]
+            params["WFImageHeight"] = float(args["height"])
+        return [
+            {
+                "WFWorkflowActionIdentifier": "is.workflow.actions.image.crop",
+                "WFWorkflowActionParameters": params,
+            }
+        ]
 
     if atype == "resize_image":
         params = {}
@@ -1552,15 +1561,43 @@ def _semantic_check_action(
         except (TypeError, ValueError):
             errors.append("{0}: brightness must be a number".format(prefix))
 
-    if atype in {"crop_image", "is.workflow.actions.cropimage"}:
-        pos = params.get("position") or params.get("WFCropImagePosition")
-        has_dims = any(k in params for k in ("width", "height", "x", "y", "WFCropImageWidth", "WFCropImageHeight", "WFCropImageX", "WFCropImageY"))
-        if str(pos).lower() == "custom" and not has_dims:
+    if atype in {
+        "crop_image",
+        "image_crop",
+        "is.workflow.actions.cropimage",
+        "is.workflow.actions.image.crop",
+    }:
+        if atype == "is.workflow.actions.cropimage" or params.get("legacy_cropimage"):
             warnings.append(
-                "{0}: WFCropImagePosition is 'Custom' without width/height/x/y coordinates. "
-                "Shortcuts app will prompt 'Select a value for each parameter in this action'. "
-                "Set position to 'Center' or supply dimensions.".format(prefix)
+                "{0}: legacy is.workflow.actions.cropimage fails on modern macOS "
+                "('동작을 찾을 수 없습니다'). Prefer crop_image→image.crop or skip crop.".format(
+                    prefix
+                )
             )
+        if str(params.get("position") or params.get("WFCropImagePosition") or "").lower() == "custom":
+            has_dims = any(
+                k in params
+                for k in (
+                    "width",
+                    "height",
+                    "x",
+                    "y",
+                    "WFCropImageWidth",
+                    "WFCropImageHeight",
+                )
+            )
+            if not has_dims:
+                warnings.append(
+                    "{0}: Custom crop without dimensions may prompt in UI.".format(
+                        prefix
+                    )
+                )
+
+    if atype in {"vibrate", "is.workflow.actions.vibrate"}:
+        warnings.append(
+            "{0}: vibrate is often iOS-only; on macOS the shortcut may fail with "
+            "missing action. Omit for mac builds.".format(prefix)
+        )
 
     if atype in {"open_url"}:
         url = params.get("url")
