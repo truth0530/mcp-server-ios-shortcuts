@@ -42,7 +42,7 @@ from shortcut_builder import (
 )
 
 SERVER_NAME = "ios-shortcuts-mcp"
-SERVER_VERSION = "2.7.0"
+SERVER_VERSION = "2.9.1"
 PROTOCOL_VERSION = "2024-11-05"
 SUPPORTED_PROTOCOL_VERSIONS = (
     "2024-11-05",
@@ -317,8 +317,9 @@ TOOLS: List[Dict[str, Any]] = [
     ),
     _tool(
         "decompile_shortcut",
-        "Reverse-engineer a .shortcut file into an editable recipe JSON "
-        "(uses raw plist or sibling *_raw.shortcut). Enables modify/clone workflows.",
+        "Reverse-engineer a .shortcut file into an editable recipe JSON. "
+        "Supports raw plists, *_raw siblings, and **AEA1 signed library exports** "
+        "(decrypt via system aea + signing cert). Prefer this over guessing action IDs.",
         {
             "path": {"type": "string", "description": "Path to .shortcut file"},
             "prefer_curated": {
@@ -330,13 +331,69 @@ TOOLS: List[Dict[str, Any]] = [
         annotations=_ann(title="Decompile Shortcut", read_only=True, idempotent=True),
     ),
     _tool(
+        "extract_signed_shortcut",
+        "Decrypt AEA1-signed .shortcut (library export) → action inventory + raw plist path. "
+        "Use before improving any existing user shortcut. Without this, agents cannot see "
+        "real identifiers (e.g. image.crop, WFImage, WFText, true app bundle IDs).",
+        {
+            "path": {"type": "string", "description": "Path to signed or raw .shortcut"},
+            "output_dir": {
+                "type": "string",
+                "description": "Where to write extracted_source_raw.shortcut (default dist)",
+            },
+        },
+        ["path"],
+        annotations=_ann(title="Extract Signed Shortcut", read_only=False, idempotent=True),
+    ),
+    _tool(
+        "clone_shortcut",
+        "Clone an existing .shortcut (signed OK): extract → remap UUIDs/groups → write "
+        "raw + signed copy under a new name. Faithful structural duplicate for improve/diff.",
+        {
+            "path": {"type": "string", "description": "Source .shortcut path"},
+            "new_name": {
+                "type": "string",
+                "description": "WFWorkflowName / output stem (e.g. ImprovedShortcut)",
+            },
+            "output_dir": {"type": "string", "description": "Output directory (default dist)"},
+            "sign": {
+                "type": "boolean",
+                "description": "Run shortcuts sign -m anyone (default true)",
+            },
+        },
+        ["path", "new_name"],
+        annotations=_ann(title="Clone Shortcut", read_only=False, destructive=False),
+    ),
+    _tool(
+        "export_library_shortcut",
+        "Export a named shortcut from the local Shortcuts library via File→Export. "
+        "Uses clipboard paste of ASCII path/filename (avoids Korean IME path corruption). "
+        "Requires Accessibility for System Events. Does not delete existing files in export_dir.",
+        {
+            "name": {
+                "type": "string",
+                "description": "Library shortcut name (e.g. My Shortcut)",
+            },
+            "export_dir": {
+                "type": "string",
+                "description": "ASCII directory (default ~/Desktop/shortcut-export)",
+            },
+            "export_filename": {
+                "type": "string",
+                "description": "English stem without extension (default exported_shortcut)",
+            },
+        },
+        ["name"],
+        annotations=_ann(title="Export Library Shortcut", read_only=False, destructive=False),
+    ),
+    _tool(
         "compare_shortcuts",
-        "Compare two shortcut files or action recipes step-by-step (e.g. leave_improved vs 퇴근). "
+        "Compare two shortcut files or action recipes step-by-step (e.g. example_shortcut vs other). "
         "Decompiles both, identifies action sequence differences, parameter mismatches, "
         "missing required parameters, and emits unbound parameter warnings.",
         {
-            "path_a": {"type": "string", "description": "Path to first shortcut file (e.g. leave_improved_raw.shortcut)"},
-            "path_b": {"type": "string", "description": "Path to second shortcut file (e.g. 퇴근_raw.shortcut)"},
+            "path_a": {"type": "string", "description": "Path to first shortcut file (e.g. example_shortcut_raw.shortcut)"},
+            "path_b": {"type": "string", "description": "Path to second shortcut file (e.g. My Shortcut_raw.shortcut)"},
             "recipe_a": {"type": "array", "description": "Optional in-memory recipe for shortcut A"},
             "recipe_b": {"type": "array", "description": "Optional in-memory recipe for shortcut B"},
         },
@@ -362,7 +419,7 @@ TOOLS: List[Dict[str, Any]] = [
                     }
                 }
             },
-            "name": {"type": "string", "description": "Output name (default leave_improved_fixed)"},
+            "name": {"type": "string", "description": "Output name (default improved_fixed)"},
             "output_dir": {"type": "string", "description": "Output directory (default dist)"},
         },
         annotations=_ann(title="Bind Action Params", read_only=False, destructive=False),
@@ -795,6 +852,67 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
             prefer = _as_bool(args.get("prefer_curated", True), True)
             return _ok_json(decompile_shortcut(path, prefer_curated=prefer))
 
+        if tool_name == "extract_signed_shortcut":
+            from signed_shortcut import (
+                load_workflow_plist,
+                action_inventory,
+                write_raw_shortcut,
+                scrub_for_json,
+            )
+
+            path = resolve_read_path(args["path"], label="path")
+            out_dir = resolve_write_dir(args.get("output_dir") or DEFAULT_OUTPUT_DIR)
+            plist, meta = load_workflow_plist(path)
+            inv = action_inventory(plist)
+            raw_out = os.path.join(out_dir, "extracted_source_raw.shortcut")
+            write_raw_shortcut(plist, raw_out)
+            return _ok_json(
+                {
+                    "ok": True,
+                    "path": path,
+                    "meta": scrub_for_json(meta),
+                    "action_count": len(inv),
+                    "action_inventory": inv,
+                    "raw_path": raw_out,
+                    "name": plist.get("WFWorkflowName"),
+                    "client_version": plist.get("WFWorkflowClientVersion"),
+                }
+            )
+
+        if tool_name == "clone_shortcut":
+            from signed_shortcut import extract_and_clone, scrub_for_json
+
+            path = resolve_read_path(args["path"], label="path")
+            out_dir = resolve_write_dir(args.get("output_dir") or DEFAULT_OUTPUT_DIR)
+            new_name = str(args.get("new_name") or "ClonedShortcut")
+            sign = _as_bool(args.get("sign", True), True)
+            if SAFE_MODE:
+                sign = False
+            result = extract_and_clone(
+                path,
+                output_dir=out_dir,
+                new_name=new_name,
+                sign=sign,
+            )
+            return _ok_json(scrub_for_json(result))
+
+        if tool_name == "export_library_shortcut":
+            from signed_shortcut import export_library_shortcut, scrub_for_json
+
+            name = str(args["name"])
+            export_dir = args.get("export_dir")
+            if export_dir:
+                export_dir = resolve_write_dir(export_dir)
+            else:
+                export_dir = os.path.expanduser("~/Desktop/shortcut-export")
+                os.makedirs(export_dir, exist_ok=True)
+            result = export_library_shortcut(
+                name,
+                export_dir=export_dir,
+                export_filename=str(args.get("export_filename") or "exported_shortcut"),
+            )
+            return _ok_json(scrub_for_json(result))
+
         if tool_name == "compare_shortcuts":
             pa = resolve_read_path(args["path_a"], label="path_a") if args.get("path_a") else None
             pb = resolve_read_path(args["path_b"], label="path_b") if args.get("path_b") else None
@@ -806,7 +924,7 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
             p = resolve_read_path(args["path"], label="path") if args.get("path") else None
             acts = args.get("actions")
             pu = args.get("param_updates") or []
-            name = str(args.get("name") or "leave_improved_fixed")
+            name = str(args.get("name") or "improved_fixed")
             out_dir = resolve_write_dir(args.get("output_dir") or DEFAULT_OUTPUT_DIR)
             return _ok_json(
                 bind_recipe_params(
@@ -1601,6 +1719,24 @@ def handle_request(req: dict, *, framed: bool) -> None:
                             "description": "Action chaining / $ref syntax",
                             "mimeType": "application/json",
                         },
+                        {
+                            "uri": "shortcut://docs/runtime_traps",
+                            "name": "Runtime traps",
+                            "description": (
+                                "Device-verified pitfalls: volume restore, conditional "
+                                "WFInput, screenshot image sheet, crop, vibrate"
+                            ),
+                            "mimeType": "text/markdown",
+                        },
+                        {
+                            "uri": "shortcut://docs/clone_and_extract",
+                            "name": "Clone and extract",
+                            "description": (
+                                "AEA1 decrypt, library export, structural clone of "
+                                "existing shortcuts — required before improving real shortcuts"
+                            ),
+                            "mimeType": "text/markdown",
+                        },
                     ]
                 },
             },
@@ -1624,6 +1760,28 @@ def handle_request(req: dict, *, framed: bool) -> None:
             )
         elif uri == "shortcut://docs/magic_vars":
             body = json.dumps(explain_magic_syntax(), ensure_ascii=False, indent=2)
+        elif uri == "shortcut://docs/runtime_traps":
+            traps_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)),
+                "docs",
+                "RUNTIME_TRAPS.md",
+            )
+            try:
+                with open(traps_path, encoding="utf-8") as fh:
+                    body = fh.read()
+            except OSError as exc:
+                body = "RUNTIME_TRAPS.md unavailable: {0}".format(exc)
+        elif uri == "shortcut://docs/clone_and_extract":
+            clone_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)),
+                "docs",
+                "CLONE_AND_EXTRACT.md",
+            )
+            try:
+                with open(clone_path, encoding="utf-8") as fh:
+                    body = fh.read()
+            except OSError as exc:
+                body = "CLONE_AND_EXTRACT.md unavailable: {0}".format(exc)
         else:
             if not is_notification:
                 respond(

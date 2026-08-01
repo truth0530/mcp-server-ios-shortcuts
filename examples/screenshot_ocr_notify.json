@@ -1,0 +1,75 @@
+{
+  "name": "ScreenshotOcrNotify",
+  "icon_color": "orange",
+  "actions": [
+    {
+      "type": "comment",
+      "params": {
+        "text": "Screenshot OCR pattern: no crop, no volume restore, no vibrate (see docs/RUNTIME_TRAPS.md)"
+      }
+    },
+    {
+      "type": "open_app",
+      "params": {
+        "bundle_id": "com.example.app",
+        "app_name": "Example App"
+      }
+    },
+    {
+      "type": "delay",
+      "params": { "seconds": 3 }
+    },
+    {
+      "type": "take_screenshot",
+      "params": {}
+    },
+    {
+      "type": "ocr_extract_text",
+      "params": {}
+    },
+    {
+      "type": "conditional_start",
+      "params": {
+        "group_id": "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB",
+        "condition": "contains",
+        "value": "OK"
+      }
+    },
+    {
+      "type": "speak_text",
+      "params": {
+        "text": "Target text found",
+        "wait": true
+      }
+    },
+    {
+      "type": "show_notification",
+      "params": {
+        "title": "OCR match",
+        "body": "Screenshot text contained the target phrase"
+      }
+    },
+    {
+      "type": "conditional_else",
+      "params": { "group_id": "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB" }
+    },
+    {
+      "type": "speak_text",
+      "params": {
+        "text": "Target text not found",
+        "wait": true
+      }
+    },
+    {
+      "type": "show_notification",
+      "params": {
+        "title": "OCR miss",
+        "body": "Screenshot text did not contain the target phrase"
+      }
+    },
+    {
+      "type": "conditional_end",
+      "params": { "group_id": "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB" }
+    }
+  ]
+}

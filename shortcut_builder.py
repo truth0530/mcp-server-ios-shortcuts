@@ -93,8 +93,12 @@ ACTION_DOCS: Dict[str, Dict[str, Any]] = {
         "example": {"type": "speak_text", "params": {"text": "Done", "wait": True}},
     },
     "set_volume": {
-        "summary": "Set media volume (0.0–1.0) or a variable name",
-        "params": {"volume": "float or variable name string"},
+        "summary": (
+            "Set media volume to a literal 0.0–1.0. "
+            "Do NOT restore volume from a named variable string — "
+            "on iOS that often becomes '알 수 없는 동작' / unbound params."
+        ),
+        "params": {"volume": "float 0.0–1.0 (prefer literal; avoid variable names)"},
         "example": {"type": "set_volume", "params": {"volume": 1.0}},
     },
     "show_notification": {
@@ -221,11 +225,17 @@ ACTION_DOCS: Dict[str, Dict[str, Any]] = {
         },
     },
     "conditional_start": {
-        "summary": "Start If block (pair with conditional_else / conditional_end)",
+        "summary": (
+            "Start If block (pair with conditional_else / conditional_end). "
+            "Prefer previous-action magic stack (no var_name). "
+            "If var_name is set, compiler emits Get Variable then If "
+            "(does NOT put WFInput Variable on the If — that breaks iOS)."
+        ),
         "params": {
             "group_id": "uuid shared across the if/else/end trio",
             "condition": "equals|contains|greater_than|…",
             "value": "comparison value",
+            "var_name": "optional named variable; expands to get_variable + If",
         },
         "example": {
             "type": "conditional_start",
@@ -397,13 +407,72 @@ TEMPLATES: Dict[str, Dict[str, Any]] = {
         ],
     },
     "screenshot_ocr": {
-        "description": "Take a screenshot, OCR it, show result",
+        "description": (
+            "Screenshot → OCR → notify (adjacent magic stack; no crop, no volume restore)"
+        ),
         "actions": [
+            {"type": "take_screenshot", "params": {}, "as": "Shot"},
+            {"type": "ocr_extract_text", "params": {}, "as": "OCR"},
+            {
+                "type": "show_notification",
+                "params": {
+                    "title": "OCR",
+                    "body": {"$ref": "as:OCR"},
+                },
+            },
+        ],
+    },
+    "screenshot_ocr_contains": {
+        "description": (
+            "Screenshot → OCR → If contains text → notify. "
+            "No cropimage, no volume save/restore, no vibrate."
+        ),
+        "actions": [
+            {"type": "open_app", "params": {"bundle_id": "com.example.app", "app_name": "Example App"}},
+            {"type": "delay", "params": {"seconds": 3}},
             {"type": "take_screenshot", "params": {}},
             {"type": "ocr_extract_text", "params": {}},
-            {"type": "set_variable", "params": {"var_name": "OCR"}},
-            {"type": "get_variable", "params": {"var_name": "OCR"}},
-            {"type": "show_result", "params": {"text": ""}},
+            {
+                "type": "conditional_start",
+                "params": {
+                    "group_id": "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB",
+                    "condition": "contains",
+                    "value": "OK",
+                },
+            },
+            {
+                "type": "speak_text",
+                "params": {"text": "Target text found", "wait": True},
+            },
+            {
+                "type": "show_notification",
+                "params": {
+                    "title": "OCR match",
+                    "body": "Screenshot text contained the target phrase",
+                },
+            },
+            {
+                "type": "conditional_else",
+                "params": {"group_id": "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB"},
+            },
+            {
+                "type": "speak_text",
+                "params": {
+                    "text": "Target text not found",
+                    "wait": True,
+                },
+            },
+            {
+                "type": "show_notification",
+                "params": {
+                    "title": "OCR miss",
+                    "body": "Screenshot text did not contain the target phrase",
+                },
+            },
+            {
+                "type": "conditional_end",
+                "params": {"group_id": "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB"},
+            },
         ],
     },
     "open_url_and_wait": {
@@ -704,16 +773,22 @@ def _compile_action(item: dict, *, coerce_mode: str = "smart") -> List[dict]:
         if "number" in args:
             params["WFNumberValue"] = float(args["number"])
 
+        # Empirical (iOS leave shortcut, 2026-08): putting WFInput={Type:Variable}
+        # directly on is.workflow.actions.conditional often yields
+        # 「알 수 없는 동작」 / unbound params. Prefer magic stack from the
+        # previous action. When var_name is requested, expand to:
+        #   Get Variable → If (no WFInput on If).
         var_name = args.get("var_name") or args.get("variable") or args.get("input_var")
         if var_name:
-            params["WFInput"] = {
-                "Value": {
-                    "Type": "Variable",
-                    "VariableName": str(var_name),
-                },
-                "WFSerializationType": "WFTextTokenAttachment",
-            }
-        elif "WFInput" in args:
+            return [
+                create_action(
+                    "get_variable",
+                    {"WFVariable": _text_token_attachment(str(var_name))},
+                ),
+                create_action("conditional", params),
+            ]
+        if "WFInput" in args:
+            # Escape hatch for ActionOutput attachments only; Variable form is discouraged.
             params["WFInput"] = args["WFInput"]
 
         return [create_action("conditional", params)]
@@ -1544,14 +1619,27 @@ def _semantic_check_action(
     if atype in {"set_volume"}:
         vol = params.get("volume", 1.0)
         if isinstance(vol, dict):
-            pass  # magic ref
-        elif not isinstance(vol, str):
+            # Magic/ActionOutput ref — still risky for volume restore on device
+            warnings.append(
+                "{0}: set_volume from magic/variable attachment often breaks on iOS "
+                "('알 수 없는 동작' / unbound 미디어 음량). Prefer a literal float "
+                "0.0–1.0; avoid get_volume→set_variable→set_volume restore loops.".format(
+                    prefix
+                )
+            )
+        elif isinstance(vol, str):
+            warnings.append(
+                "{0}: set_volume(volume={1!r}) as a variable *name* serializes poorly "
+                "on iOS and frequently becomes '알 수 없는 동작'. Use a literal float "
+                "(e.g. 1.0) instead of volume restore.".format(prefix, vol)
+            )
+        else:
             try:
                 v = float(vol)
                 if v < 0.0 or v > 1.0:
                     errors.append("{0}: volume must be between 0.0 and 1.0".format(prefix))
             except (TypeError, ValueError):
-                errors.append("{0}: volume must be a number or variable name".format(prefix))
+                errors.append("{0}: volume must be a number".format(prefix))
 
     if atype in {"set_brightness"}:
         try:
@@ -1570,34 +1658,60 @@ def _semantic_check_action(
         if atype == "is.workflow.actions.cropimage" or params.get("legacy_cropimage"):
             warnings.append(
                 "{0}: legacy is.workflow.actions.cropimage fails on modern macOS "
-                "('동작을 찾을 수 없습니다'). Prefer crop_image→image.crop or skip crop.".format(
+                "('동작을 찾을 수 없습니다'). On iOS it may work, but bare crop without "
+                "dimensions often opens an interactive crop UI (취소/완료). "
+                "Prefer skip crop for full-frame OCR, or crop_image→image.crop with size.".format(
                     prefix
                 )
             )
-        if str(params.get("position") or params.get("WFCropImagePosition") or "").lower() == "custom":
-            has_dims = any(
-                k in params
-                for k in (
-                    "width",
-                    "height",
-                    "x",
-                    "y",
-                    "WFCropImageWidth",
-                    "WFCropImageHeight",
-                )
+        has_dims = any(
+            k in params
+            for k in (
+                "width",
+                "height",
+                "x",
+                "y",
+                "WFCropImageWidth",
+                "WFCropImageHeight",
+                "WFImageWidth",
+                "WFImageHeight",
             )
-            if not has_dims:
-                warnings.append(
-                    "{0}: Custom crop without dimensions may prompt in UI.".format(
-                        prefix
-                    )
-                )
+        )
+        if not has_dims:
+            warnings.append(
+                "{0}: crop without width/height often presents an interactive "
+                "「이미지」 sheet requiring Cancel/Done — bad for unattended flows. "
+                "Skip crop (full-screen OCR) or supply dimensions.".format(prefix)
+            )
 
     if atype in {"vibrate", "is.workflow.actions.vibrate"}:
         warnings.append(
             "{0}: vibrate is often iOS-only; on macOS the shortcut may fail with "
             "missing action. Omit for mac builds.".format(prefix)
         )
+
+    if atype in {"take_screenshot", "is.workflow.actions.takescreenshot"}:
+        warnings.append(
+            "{0}: keep the next action an image consumer (ocr_extract_text / crop / "
+            "resize). If the following step fails or is unbound, iOS shows a stuck "
+            "「이미지」 popup requiring Cancel/Done.".format(prefix)
+        )
+
+    if atype in {"conditional_start"}:
+        if params.get("var_name") or params.get("variable") or params.get("input_var"):
+            warnings.append(
+                "{0}: var_name expands to Get Variable → If (no WFInput on If). "
+                "Prefer placing OCR/text as the previous action and omit var_name.".format(
+                    prefix
+                )
+            )
+        if "WFInput" in params:
+            warnings.append(
+                "{0}: WFInput Variable on conditional frequently breaks on iOS. "
+                "Prefer magic stack from previous action; see docs/RUNTIME_TRAPS.md.".format(
+                    prefix
+                )
+            )
 
     if atype in {"open_url"}:
         url = params.get("url")
@@ -1868,6 +1982,9 @@ def validate_actions(
             )
         )
 
+    # Sequence heuristics (leave-shortcut postmortem 2026-08)
+    warnings.extend(_sequence_warnings(actions_config or []))
+
     return {
         "ok": len(errors) == 0,
         "actions_compiled": compiled,
@@ -1875,6 +1992,72 @@ def validate_actions(
         "warnings": warnings,
         "risks": sorted(set(risks)),
     }
+
+
+def _sequence_warnings(actions_config: list) -> List[str]:
+    """Cross-step traps that single-action checks miss."""
+    out: List[str] = []
+    types: List[str] = []
+    for item in actions_config:
+        if not isinstance(item, dict):
+            types.append("")
+            continue
+        types.append(str(item.get("type") or item.get("action") or "").lower())
+
+    def is_vol_set(t: str) -> bool:
+        return t in {"set_volume", "is.workflow.actions.setvolume"}
+
+    def is_vol_get(t: str) -> bool:
+        return t in {"get_volume", "is.workflow.actions.getvolume"}
+
+    def is_set_var(t: str) -> bool:
+        return t in {"set_variable", "is.workflow.actions.setvariable"}
+
+    def is_shot(t: str) -> bool:
+        return t in {"take_screenshot", "is.workflow.actions.takescreenshot"}
+
+    def is_image_consumer(t: str) -> bool:
+        return t in {
+            "ocr_extract_text",
+            "is.workflow.actions.extracttextfromimage",
+            "crop_image",
+            "image_crop",
+            "is.workflow.actions.cropimage",
+            "is.workflow.actions.image.crop",
+            "resize_image",
+            "is.workflow.actions.image.resize",
+            "rotate_image",
+            "is.workflow.actions.imagerotate",
+            "make_pdf",
+            "is.workflow.actions.makepdf",
+            "save_file",
+            "is.workflow.actions.documentpicker.save",
+            "set_variable",  # may store image
+            "is.workflow.actions.setvariable",
+        }
+
+    for i in range(len(types) - 2):
+        if is_vol_get(types[i]) and is_set_var(types[i + 1]) and is_vol_set(types[i + 2]):
+            out.append(
+                "actions[{0}..{1}]: get_volume→set_variable→set_volume restore loop "
+                "often becomes '알 수 없는 동작' (미디어 음량) on iOS — omit volume "
+                "save/restore for unattended shortcuts (docs/RUNTIME_TRAPS.md).".format(
+                    i, i + 2
+                )
+            )
+
+    for i, t in enumerate(types):
+        if not is_shot(t):
+            continue
+        nxt = types[i + 1] if i + 1 < len(types) else ""
+        if nxt and not is_image_consumer(nxt):
+            out.append(
+                "actions[{0}]: take_screenshot is followed by {1!r}, not an image "
+                "consumer — iOS may show a stuck 「이미지」 popup. Put "
+                "ocr_extract_text (or crop/resize) immediately after.".format(i, nxt)
+            )
+
+    return out
 
 
 def actions_summary(actions_config: list) -> List[Dict[str, Any]]:
@@ -2329,7 +2512,19 @@ def compare_shortcut_recipes(
     recommendations = []
     if val_a.get("warnings"):
         for w in val_a["warnings"]:
-            if "Shortcuts app will prompt" in w or "Custom" in w:
+            # Surface device-trap warnings (crop interactive UI, volume, etc.)
+            if any(
+                needle in w
+                for needle in (
+                    "Shortcuts app will prompt",
+                    "Custom",
+                    "interactive",
+                    "이미지",
+                    "알 수 없는",
+                    "restore loop",
+                    "crop without",
+                )
+            ):
                 recommendations.append("Shortcut A Warning: {0}".format(w))
 
     return {
@@ -2357,7 +2552,7 @@ def bind_recipe_params(
     path: Optional[str] = None,
     actions: Optional[list] = None,
     param_updates: Optional[list] = None,
-    name: str = "leave_improved_fixed",
+    name: str = "improved_fixed",
     output_dir: Optional[str] = None,
     sign: bool = True,
     sign_mode: str = "anyone",

@@ -6,7 +6,7 @@ Zero-dependency **Model Context Protocol (MCP)** server for macOS that lets AI c
 
 | | |
 |---|---|
-| **Version** | 2.7.0 |
+| **Version** | 2.9.0 |
 | **Runtime** | Python 3.8+ (stdlib only — no `pip install`) |
 | **OS** | macOS Monterey+ (`shortcuts` CLI) |
 | **License** | MIT |
@@ -432,6 +432,34 @@ Env: `IOS_SHORTCUTS_MCP_LEARN_ROOTS`, `IOS_SHORTCUTS_MCP_LEARN_SIGN=1` (optional
 ---
 
 ## Changelog
+
+### 2.9.1
+
+- `sign_shortcut`: validate raw bplist + dangling ActionOutput; document **only**
+  `shortcuts sign -m anyone -i … -o …` (long flags fail)
+- Guard: refuse signing AEA1 input; refuse write/clone with dangling OutputUUID
+- Docs: “definition of done” requires signed importable artifact, not raw alone
+
+### 2.9.0
+
+**Clone & extract existing shortcuts** (stop guessing action graphs):
+
+- `signed_shortcut.py`: AEA1 decrypt (`aea` + leaf cert pubkey), inventory, UUID-safe clone
+- Tools: `extract_signed_shortcut`, `clone_shortcut`, `export_library_shortcut`
+- `decompile_shortcut` now decrypts signed library exports (not only `*_raw` siblings)
+- Docs: [docs/CLONE_AND_EXTRACT.md](./docs/CLONE_AND_EXTRACT.md)
+- Export via clipboard ASCII path (avoids Korean IME → Macintosh HD save errors)
+
+### 2.8.0
+
+Device-verified runtime traps from real iOS Shortcuts:
+
+- **No volume restore**: `set_volume` from a variable name / magic attachment warned; get→set_var→set_volume sequence flagged
+- **Conditional**: `var_name` expands to **Get Variable → If** (never `WFInput` Variable on If — that broke iOS)
+- **Screenshot chain**: warn if next step is not an image consumer (stuck 「이미지」 UI)
+- **Crop**: bare crop without dimensions → interactive Cancel/Done warning; prefer skip crop for OCR
+- Template **`screenshot_ocr_contains`**, example `examples/screenshot_ocr_notify.json`
+- Docs: [docs/RUNTIME_TRAPS.md](./docs/RUNTIME_TRAPS.md)
 
 ### 2.7.0
 

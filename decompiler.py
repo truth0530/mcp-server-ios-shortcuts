@@ -67,7 +67,14 @@ def _preferred_short(identifier: str) -> str:
 
 
 def _load_plist_from_shortcut(path: str) -> Tuple[dict, Dict[str, Any]]:
-    """Return (plist, meta) with resolution notes."""
+    """Return (plist, meta) with resolution notes.
+
+    Resolution order:
+      1. Raw bplist / XML
+      2. Sibling ``*_raw.shortcut``
+      3. **AEA1 decrypt** via ``signed_shortcut.load_workflow_plist``
+         (system ``aea`` + leaf cert pubkey) — required for library exports
+    """
     path = os.path.abspath(path)
     meta: Dict[str, Any] = {
         "requested_path": path,
@@ -82,8 +89,9 @@ def _load_plist_from_shortcut(path: str) -> Tuple[dict, Dict[str, Any]]:
 
     try:
         plist = plistlib.loads(data)
-        meta["format"] = "plist"
-        return plist, meta
+        if isinstance(plist, dict) and "WFWorkflowActions" in plist:
+            meta["format"] = "plist"
+            return plist, meta
     except Exception:
         pass
 
@@ -93,17 +101,30 @@ def _load_plist_from_shortcut(path: str) -> Tuple[dict, Dict[str, Any]]:
             raw_data = f.read()
         try:
             plist = plistlib.loads(raw_data)
-            meta["format"] = "plist_via_raw_sibling"
-            meta["source_path"] = raw
-            meta["signed_path"] = path
-            return plist, meta
+            if isinstance(plist, dict) and "WFWorkflowActions" in plist:
+                meta["format"] = "plist_via_raw_sibling"
+                meta["source_path"] = raw
+                meta["signed_path"] = path
+                return plist, meta
         except Exception as exc:
             meta["raw_error"] = str(exc)
 
+    # AEA1 signed library export / anyone-signed package
+    try:
+        from signed_shortcut import load_workflow_plist, SignedShortcutError
+
+        plist, smeta = load_workflow_plist(path)
+        meta["format"] = smeta.get("format") or "aea1"
+        meta["aea_decrypted"] = bool(smeta.get("aea_decrypted"))
+        meta["source_path"] = path
+        meta["extract"] = smeta
+        return plist, meta
+    except Exception as exc:
+        meta["aea_error"] = str(exc)
+
     raise ValueError(
-        "Cannot decompile signed/opaque shortcut without a raw plist sibling. "
-        "Rebuild with this server (keeps *_raw.shortcut) or supply an unsigned export. "
-        "path={0}".format(path)
+        "Cannot decompile shortcut. Tried raw plist, *_raw sibling, and AEA1 decrypt "
+        "(aea + signing cert). path={0} meta={1}".format(path, meta)
     )
 
 
