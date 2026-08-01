@@ -29,7 +29,9 @@ from shortcut_builder import (
     ACTION_RECIPE_ITEM_SCHEMA,
     DANGEROUS_ACTIONS,
     TEMPLATES,
+    bind_recipe_params,
     build_shortcut_plist,
+    compare_shortcut_recipes,
     compile_recipe,
     get_template,
     inspect_shortcut_file,
@@ -326,6 +328,44 @@ TOOLS: List[Dict[str, Any]] = [
         },
         ["path"],
         annotations=_ann(title="Decompile Shortcut", read_only=True, idempotent=True),
+    ),
+    _tool(
+        "compare_shortcuts",
+        "Compare two shortcut files or action recipes step-by-step (e.g. leave_improved vs 퇴근). "
+        "Decompiles both, identifies action sequence differences, parameter mismatches, "
+        "missing required parameters, and emits unbound parameter warnings.",
+        {
+            "path_a": {"type": "string", "description": "Path to first shortcut file (e.g. leave_improved_raw.shortcut)"},
+            "path_b": {"type": "string", "description": "Path to second shortcut file (e.g. 퇴근_raw.shortcut)"},
+            "recipe_a": {"type": "array", "description": "Optional in-memory recipe for shortcut A"},
+            "recipe_b": {"type": "array", "description": "Optional in-memory recipe for shortcut B"},
+        },
+        annotations=_ann(title="Compare Shortcuts", read_only=True, idempotent=True),
+    ),
+    _tool(
+        "bind_action_params",
+        "Bind, update, or fix parameter values for specific actions in a shortcut file or recipe "
+        "(e.g. set crop_image position/width/height to fix unbound parameter errors). "
+        "Re-compiles, validates, and re-signs the updated shortcut.",
+        {
+            "path": {"type": "string", "description": "Path to target shortcut file"},
+            "actions": {"type": "array", "description": "Optional recipe array"},
+            "param_updates": {
+                "type": "array",
+                "description": "List of parameter bindings: [{action_index: 8, params: {position: 'Center'}}, {action_type: 'crop_image', params: {width: 300, height: 500}}]",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "action_index": {"type": "integer"},
+                        "action_type": {"type": "string"},
+                        "params": {"type": "object"}
+                    }
+                }
+            },
+            "name": {"type": "string", "description": "Output name (default leave_improved_fixed)"},
+            "output_dir": {"type": "string", "description": "Output directory (default dist)"},
+        },
+        annotations=_ann(title="Bind Action Params", read_only=False, destructive=False),
     ),
     _tool(
         "learn_from_corpus",
@@ -754,6 +794,30 @@ def handle_tool_call(tool_name: str, arguments: Optional[dict]) -> dict:
             path = resolve_read_path(args["path"], label="path")
             prefer = _as_bool(args.get("prefer_curated", True), True)
             return _ok_json(decompile_shortcut(path, prefer_curated=prefer))
+
+        if tool_name == "compare_shortcuts":
+            pa = resolve_read_path(args["path_a"], label="path_a") if args.get("path_a") else None
+            pb = resolve_read_path(args["path_b"], label="path_b") if args.get("path_b") else None
+            ra = args.get("recipe_a")
+            rb = args.get("recipe_b")
+            return _ok_json(compare_shortcut_recipes(path_a=pa, path_b=pb, recipe_a=ra, recipe_b=rb))
+
+        if tool_name == "bind_action_params":
+            p = resolve_read_path(args["path"], label="path") if args.get("path") else None
+            acts = args.get("actions")
+            pu = args.get("param_updates") or []
+            name = str(args.get("name") or "leave_improved_fixed")
+            out_dir = resolve_write_dir(args.get("output_dir") or DEFAULT_OUTPUT_DIR)
+            return _ok_json(
+                bind_recipe_params(
+                    path=p,
+                    actions=acts,
+                    param_updates=pu,
+                    name=name,
+                    output_dir=out_dir,
+                    sign=not SAFE_MODE,
+                )
+            )
 
         if tool_name == "learn_from_corpus":
             from param_learning import (

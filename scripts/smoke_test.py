@@ -779,6 +779,32 @@ def test_safe_mode_tool_block() -> None:
     assert_true(run_result["structuredContent"]["code"] == "SAFE_MODE", run_result)
 
 
+def test_compare_and_bind_params() -> None:
+    from shortcut_builder import compare_shortcut_recipes, bind_recipe_params
+    recipe_a = [
+        {"type": "crop_image", "params": {"position": "Custom"}},
+        {"type": "open_app", "params": {"bundle_id": "com.apple.Safari"}},
+    ]
+    recipe_b = [
+        {"type": "crop_image", "params": {"position": "Center"}},
+        {"type": "open_app", "params": {"bundle_id": "com.apple.Safari"}},
+    ]
+    comp = compare_shortcut_recipes(recipe_a=recipe_a, recipe_b=recipe_b)
+    assert_true(comp["ok"], "compare_shortcut_recipes failed")
+    assert_true(len(comp["recommendations"]) >= 1, "expected crop_image warning in comparison")
+
+    with tempfile.TemporaryDirectory() as td:
+        bound = bind_recipe_params(
+            actions=recipe_a,
+            param_updates=[{"action_index": 0, "params": {"position": "Center"}}],
+            name="BoundTest",
+            output_dir=td,
+            sign=False,
+        )
+        assert_true(bound["ok"], "bind_recipe_params failed")
+        assert_true(bound["applied_param_updates"] == 1, "expected 1 applied update")
+
+
 def main() -> int:
     tests = [
         test_catalog,
@@ -802,6 +828,7 @@ def main() -> int:
         test_protocol_error_recovery,
         test_content_length_transport,
         test_safe_mode_tool_block,
+        test_compare_and_bind_params,
     ]
     failed = 0
     for fn in tests:

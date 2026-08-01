@@ -35,6 +35,8 @@ from magic_vars import (
 )
 from wf_serialization import coerce_params
 
+_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 # ---------------------------------------------------------------------------
 # Action catalog (compat + curated surface)
 # ---------------------------------------------------------------------------
@@ -865,12 +867,30 @@ def _compile_action(item: dict, *, coerce_mode: str = "smart") -> List[dict]:
         ]
 
     if atype == "crop_image":
-        return [
-            create_action(
-                "crop_image",
-                {"WFCropImagePosition": args.get("position", "Custom")},
-            )
-        ]
+        pos = args.get("position")
+        params = {}
+        has_dims = any(k in args for k in ("width", "height", "x", "y", "WFCropImageWidth", "WFCropImageHeight", "WFCropImageX", "WFCropImageY"))
+        if pos:
+            params["WFCropImagePosition"] = str(pos)
+        elif has_dims:
+            params["WFCropImagePosition"] = "Custom"
+        else:
+            params["WFCropImagePosition"] = "Center"
+
+        if "width" in args:
+            params["WFCropImageWidth"] = float(args["width"])
+        if "height" in args:
+            params["WFCropImageHeight"] = float(args["height"])
+        if "x" in args:
+            params["WFCropImageX"] = float(args["x"])
+        if "y" in args:
+            params["WFCropImageY"] = float(args["y"])
+
+        for wf_k in ("WFCropImageWidth", "WFCropImageHeight", "WFCropImageX", "WFCropImageY"):
+            if wf_k in args:
+                params[wf_k] = args[wf_k]
+
+        return [create_action("crop_image", params)]
 
     if atype == "resize_image":
         params = {}
@@ -1518,6 +1538,16 @@ def _semantic_check_action(
                 errors.append("{0}: brightness must be between 0.0 and 1.0".format(prefix))
         except (TypeError, ValueError):
             errors.append("{0}: brightness must be a number".format(prefix))
+
+    if atype in {"crop_image", "is.workflow.actions.cropimage"}:
+        pos = params.get("position") or params.get("WFCropImagePosition")
+        has_dims = any(k in params for k in ("width", "height", "x", "y", "WFCropImageWidth", "WFCropImageHeight", "WFCropImageX", "WFCropImageY"))
+        if str(pos).lower() == "custom" and not has_dims:
+            warnings.append(
+                "{0}: WFCropImagePosition is 'Custom' without width/height/x/y coordinates. "
+                "Shortcuts app will prompt 'Select a value for each parameter in this action'. "
+                "Set position to 'Center' or supply dimensions.".format(prefix)
+            )
 
     if atype in {"open_url"}:
         url = params.get("url")
@@ -2186,3 +2216,147 @@ def build_shortcut_plist(
             if isinstance(item, dict) and item.get("as")
         },
     }
+
+
+def compare_shortcut_recipes(
+    path_a: Optional[str] = None,
+    path_b: Optional[str] = None,
+    recipe_a: Optional[list] = None,
+    recipe_b: Optional[list] = None,
+) -> Dict[str, Any]:
+    """Compare two shortcuts or action recipes step-by-step and highlight parameter diffs/unbound warnings."""
+    from decompiler import decompile_shortcut
+
+    def _resolve_actions(path: Optional[str], rec: Optional[list]) -> Tuple[list, Dict[str, Any]]:
+        if rec and isinstance(rec, list):
+            return rec, {"source": "in_memory_recipe", "action_count": len(rec)}
+        if path and isinstance(path, str):
+            dec = decompile_shortcut(path)
+            return dec.get("actions") or [], dec
+        raise ValueError("Must provide path_a/recipe_a or path_b/recipe_b")
+
+    actions_a, meta_a = _resolve_actions(path_a, recipe_a)
+    actions_b, meta_b = _resolve_actions(path_b, recipe_b)
+
+    val_a = validate_actions(actions_a, allow_empty=True)
+    val_b = validate_actions(actions_b, allow_empty=True)
+
+    max_len = max(len(actions_a), len(actions_b))
+    step_diffs = []
+    param_diffs = []
+
+    for i in range(max_len):
+        act_a = actions_a[i] if i < len(actions_a) else None
+        act_b = actions_b[i] if i < len(actions_b) else None
+
+        type_a = (act_a.get("type") or act_a.get("wf_identifier")) if isinstance(act_a, dict) else None
+        type_b = (act_b.get("type") or act_b.get("wf_identifier")) if isinstance(act_b, dict) else None
+
+        params_a = (act_a.get("params") or {}) if isinstance(act_a, dict) else {}
+        params_b = (act_b.get("params") or {}) if isinstance(act_b, dict) else {}
+
+        diff_keys = set(params_a.keys()) ^ set(params_b.keys())
+        mismatched_vals = {
+            k: {"a": params_a.get(k), "b": params_b.get(k)}
+            for k in set(params_a.keys()) & set(params_b.keys())
+            if params_a.get(k) != params_b.get(k)
+        }
+
+        diff_info = {
+            "index": i,
+            "type_a": type_a,
+            "type_b": type_b,
+            "params_a": params_a,
+            "params_b": params_b,
+            "type_match": type_a == type_b,
+            "param_diff_keys": sorted(list(diff_keys)),
+            "param_value_mismatches": mismatched_vals,
+        }
+        step_diffs.append(diff_info)
+        if diff_keys or mismatched_vals or type_a != type_b:
+            param_diffs.append(diff_info)
+
+    recommendations = []
+    if val_a.get("warnings"):
+        for w in val_a["warnings"]:
+            if "Shortcuts app will prompt" in w or "Custom" in w:
+                recommendations.append("Shortcut A Warning: {0}".format(w))
+
+    return {
+        "ok": True,
+        "shortcut_a": {
+            "path": path_a,
+            "action_count": len(actions_a),
+            "warnings": val_a.get("warnings") or [],
+            "errors": val_a.get("errors") or [],
+        },
+        "shortcut_b": {
+            "path": path_b,
+            "action_count": len(actions_b),
+            "warnings": val_b.get("warnings") or [],
+            "errors": val_b.get("errors") or [],
+        },
+        "step_count_max": max_len,
+        "different_action_count": len(param_diffs),
+        "param_diffs": param_diffs,
+        "recommendations": recommendations,
+    }
+
+
+def bind_recipe_params(
+    path: Optional[str] = None,
+    actions: Optional[list] = None,
+    param_updates: Optional[list] = None,
+    name: str = "leave_improved_fixed",
+    output_dir: Optional[str] = None,
+    sign: bool = True,
+    sign_mode: str = "anyone",
+) -> Dict[str, Any]:
+    """Bind or update parameter values for specific actions in a shortcut file or recipe."""
+    from decompiler import decompile_shortcut
+
+    if not output_dir:
+        output_dir = os.path.join(_ROOT, "dist")
+
+    if actions and isinstance(actions, list):
+        target_actions = [dict(a) for a in actions]
+    elif path and isinstance(path, str):
+        dec = decompile_shortcut(path)
+        target_actions = dec.get("actions") or []
+    else:
+        raise ValueError("Must provide either 'path' or 'actions'")
+
+    if not param_updates or not isinstance(param_updates, list):
+        param_updates = []
+
+    applied_count = 0
+    for update in param_updates:
+        if not isinstance(update, dict):
+            continue
+        idx = update.get("action_index")
+        atype = update.get("action_type")
+        new_params = update.get("params") or {}
+        if not isinstance(new_params, dict):
+            continue
+
+        for i, act in enumerate(target_actions):
+            if not isinstance(act, dict):
+                continue
+            cur_type = act.get("type") or act.get("wf_identifier")
+            if idx is not None and i == idx:
+                act.setdefault("params", {}).update(new_params)
+                applied_count += 1
+            elif idx is None and atype and cur_type == atype:
+                act.setdefault("params", {}).update(new_params)
+                applied_count += 1
+
+    built = build_shortcut_plist(
+        target_actions,
+        name=name,
+        output_dir=output_dir,
+        sign=sign,
+        sign_mode=sign_mode,
+    )
+    built["applied_param_updates"] = applied_count
+    built["updated_actions"] = target_actions
+    return built
