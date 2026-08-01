@@ -703,6 +703,19 @@ def _compile_action(item: dict, *, coerce_mode: str = "smart") -> List[dict]:
             params["WFConditionalActionString"] = str(args["value"])
         if "number" in args:
             params["WFNumberValue"] = float(args["number"])
+
+        var_name = args.get("var_name") or args.get("variable") or args.get("input_var")
+        if var_name:
+            params["WFInput"] = {
+                "Value": {
+                    "Type": "Variable",
+                    "VariableName": str(var_name),
+                },
+                "WFSerializationType": "WFTextTokenAttachment",
+            }
+        elif "WFInput" in args:
+            params["WFInput"] = args["WFInput"]
+
         return [create_action("conditional", params)]
 
     if atype == "conditional_else":
